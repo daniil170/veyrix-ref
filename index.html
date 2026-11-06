@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Studio Concept Presentation — 3D Space &amp; Editorial Collage</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<title>STUDIO — 3D Space Gallery</title>
 <style>
 :root {
-  --bg-space: #ecebe8;
-  --bg-collage: #0d0d0e;
+  --bg: #ecebe8;
+  --sheet: #ffffff;
   --ink: #111111;
   --mut: #7a7873;
-  --soft: #c9c7c1;
   --line: #111111;
+  --soft: #c9c7c1;
   --border-light: rgba(0, 0, 0, 0.08);
   font: 13px/1.45 "Helvetica Neue", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
 * {
@@ -27,15 +27,12 @@
 html, body {
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
-  background: var(--bg-space);
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: var(--bg);
   color: var(--ink);
-  transition: background 0.4s ease, color 0.4s ease;
-}
-
-body.mode-collage {
-  background: var(--bg-collage);
-  color: #f0f0f0;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 button, input, summary {
@@ -50,131 +47,66 @@ button, summary {
   outline-offset: 3px;
 }
 
-/* ================= Top Bar & Master Switcher ================= */
-.top-header {
+/* ================= Top Bar ================= */
+.top {
   position: fixed;
-  top: 0;
   left: 0;
   right: 0;
-  height: 56px;
+  top: 0;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 24px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 calc(20px + env(safe-area-inset-right, 0px)) 0 calc(20px + env(safe-area-inset-left, 0px));
-  z-index: 80;
   pointer-events: none;
+  z-index: 25;
+  font-weight: 700;
+  letter-spacing: .04em;
+  font-size: 13px;
 }
 
-.brand-wrap {
+.top-brand {
   pointer-events: auto;
   display: flex;
   align-items: baseline;
   gap: 12px;
-  font-weight: 700;
-  letter-spacing: .08em;
-  font-size: 13px;
 }
 
-.brand-wrap span {
+.top-brand b {
+  letter-spacing: .08em;
+}
+
+.top-brand span {
   font-weight: 400;
   color: var(--mut);
   font-size: 11px;
 }
 
-/* Central segmented switcher */
-.concept-switcher {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: inline-flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  padding: 4px;
-  border-radius: 30px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+.top-zoom-info {
   pointer-events: auto;
-  gap: 3px;
-}
-
-body.mode-collage .concept-switcher {
-  background: rgba(28, 28, 30, 0.85);
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-}
-
-.switcher-btn {
-  border: none;
-  background: transparent;
-  padding: 6px 14px;
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .02em;
+  font-weight: 500;
   color: var(--mut);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 4px 10px;
   border-radius: 20px;
-  transition: all .2s cubic-bezier(.16, 1, .3, 1);
-  display: inline-flex;
+  border: 1px solid var(--border-light);
+  display: flex;
   align-items: center;
   gap: 6px;
-  white-space: nowrap;
 }
 
-.switcher-btn .badge {
-  font-size: 9px;
-  padding: 1px 5px;
-  border-radius: 10px;
-  background: rgba(0,0,0,0.06);
-}
-
-body.mode-collage .switcher-btn .badge {
-  background: rgba(255,255,255,0.1);
-}
-
-.switcher-btn.active {
-  background: var(--ink);
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
-}
-
-body.mode-collage .switcher-btn.active {
-  background: #ffffff;
-  color: #000000;
-  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.15);
-}
-
-.header-right {
-  pointer-events: auto;
-  font-size: 11px;
-  color: var(--mut);
-  font-weight: 500;
-}
-
-/* ================= View Container Sections ================= */
-.view-section {
-  display: none;
-  width: 100%;
-}
-.view-section.active {
-  display: block;
-}
-
-/* ================= OPTION 1: 3D SPACE ================= */
-#space-view {
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
+/* ================= 3D Space & World ================= */
 #space {
-  position: absolute;
+  position: fixed;
   inset: 0;
   touch-action: none;
   cursor: grab;
-  perspective: 1200px;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow: hidden;
+  perspective: 1100px;
   perspective-origin: 50% 50%;
   z-index: 1;
 }
@@ -193,44 +125,89 @@ body.mode-collage .switcher-btn.active {
   will-change: transform;
 }
 
+/* ================= Space Cards (NO WHITE BORDERS, BORDERLESS NATURAL CUTS) ================= */
 .card {
   position: absolute;
   left: 0;
   top: 0;
-  background: #ffffff;
-  border-radius: 4px;
-  will-change: transform;
+  background: transparent;
+  will-change: transform, opacity;
   cursor: pointer;
-  box-shadow: 0 10px 28px rgba(0,0,0,.12);
   transform-style: preserve-3d;
+  border-radius: 6px;
   overflow: hidden;
-  border: 1px solid rgba(0,0,0,.05);
-  transition: box-shadow .25s ease, border-color .25s ease;
+  border: none;
+  padding: 0;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15), 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: box-shadow .25s ease, filter .25s ease;
 }
 
 .card:hover {
-  border-color: rgba(0,0,0,.2);
-  box-shadow: 0 18px 40px rgba(0,0,0,.18);
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.28), 0 4px 12px rgba(0, 0, 0, 0.12);
+  filter: brightness(1.03);
+}
+
+/* Hardware performance tuning on mobile without visual loss */
+@media (max-width: 860px) {
+  .card {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
+  }
 }
 
 .card-img-wrap {
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #ffffff;
-  padding: 8px;
+  display: block;
+  background: transparent;
+  position: relative;
 }
 
 .card-img-wrap img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
   pointer-events: none;
+  background: #e0ded9;
 }
 
+/* ================= Zoom Controls Indicator & Reset ================= */
+.zoom-controls {
+  position: fixed;
+  right: 20px;
+  bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.zoom-btn {
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-light);
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  transition: all .2s ease;
+}
+.zoom-btn:hover {
+  background: #ffffff;
+  transform: scale(1.06);
+}
+.zoom-btn:active {
+  transform: scale(0.94);
+}
+
+/* ================= Bottom Bar & Floating Hint ================= */
 .hint {
   position: fixed;
   left: 0;
@@ -240,7 +217,7 @@ body.mode-collage .switcher-btn.active {
   color: var(--mut);
   pointer-events: none;
   transition: opacity .6s;
-  z-index: 10;
+  z-index: 15;
   font-size: 11px;
   letter-spacing: .02em;
 }
@@ -252,7 +229,7 @@ body.mode-collage .switcher-btn.active {
   bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   display: flex;
   justify-content: center;
-  z-index: 12;
+  z-index: 20;
   padding: 0 16px;
   pointer-events: none;
 }
@@ -260,15 +237,15 @@ body.mode-collage .switcher-btn.active {
 .pills {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   padding: 4px 6px;
   background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 40px;
   border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.04);
-  max-width: 100%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  max-width: calc(100vw - 32px);
   overflow-x: auto;
   scrollbar-width: none;
   pointer-events: auto;
@@ -279,8 +256,8 @@ body.mode-collage .switcher-btn.active {
 .pills button {
   background: transparent;
   border: none;
-  padding: 7px 14px;
-  min-height: 32px;
+  padding: 6px 12px;
+  min-height: 30px;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: .02em;
@@ -305,13 +282,42 @@ body.mode-collage .switcher-btn.active {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Custom Floating Cursor */
+@media (max-width: 600px) {
+  .pills-wrap {
+    padding: 0 8px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+  .pills {
+    max-width: calc(100vw - 16px);
+    padding: 3px 4px;
+    gap: 2px;
+  }
+  .pills button {
+    padding: 5px 9px;
+    font-size: 10.5px;
+    min-height: 28px;
+  }
+  .zoom-controls {
+    right: 12px;
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+  .zoom-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  .hint {
+    bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* ================= Custom Floating Cursor (GN.D style) ================= */
 .custom-cursor {
   position: fixed;
   top: 0;
   left: 0;
   pointer-events: none;
-  z-index: 25;
+  z-index: 30;
   display: flex;
   align-items: center;
   gap: 7px;
@@ -338,14 +344,16 @@ body.mode-collage .switcher-btn.active {
   white-space: nowrap;
 }
 
-.custom-cursor.visible { opacity: 1; }
+.custom-cursor.visible {
+  opacity: 1;
+}
 
-/* 3D Space Viewer Modal (AFTER Screenshot 1) */
+/* ================= PRODUCT PAGE / VIEWER MODAL ================= */
 #viewer {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: #ffffff;
+  background: var(--sheet);
   visibility: hidden;
   clip-path: inset(0 0 0 0 round 0);
   transition: clip-path .4s cubic-bezier(.22, .8, .2, 1);
@@ -373,45 +381,52 @@ body.mode-collage .switcher-btn.active {
   background: #ffffff;
 }
 
+/* First Screen: Screen 1 of Product View (Enhanced: Buttons distributed to edges, photo maximized) */
 .first {
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: calc(60px + env(safe-area-inset-top, 0px)) 24px 28px;
+  padding: calc(56px + env(safe-area-inset-top, 0px)) calc(36px + env(safe-area-inset-right, 0px)) 24px calc(36px + env(safe-area-inset-left, 0px));
   transform-origin: 50% 35%;
   will-change: transform, opacity;
 }
 
+/* Edge-to-Edge Desktop Layout: Left column glued to left edge, right column glued to right edge, photo takes full center */
 .cols {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px 16px;
-  max-width: 1120px;
+  grid-template-columns: 240px 1fr 280px;
+  gap: 40px;
+  max-width: 1600px;
   width: 100%;
   margin: 0 auto;
   align-items: center;
+  height: 100%;
 }
 
+/* Middle: Maximized Product Photo */
 .mid {
-  grid-column: 1/-1;
+  grid-column: 2;
   grid-row: 1;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 
 .track {
   display: flex;
   width: 100%;
-  max-width: 520px;
-  height: min(44svh, 420px);
-  height: min(44vh, 420px);
+  max-width: 820px;
+  height: min(72svh, 720px);
+  height: min(72vh, 720px);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   overscroll-behavior-x: contain;
+  align-items: center;
 }
 .track::-webkit-scrollbar { display: none; }
 
@@ -430,13 +445,14 @@ body.mode-collage .switcher-btn.active {
   max-height: 100%;
   object-fit: contain;
   display: block;
+  filter: drop-shadow(0 14px 28px rgba(0,0,0,0.09));
 }
 
 .dots {
   display: flex;
   justify-content: center;
   gap: 6px;
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
 .dots i {
@@ -445,9 +461,20 @@ body.mode-collage .switcher-btn.active {
   background: var(--soft);
   transition: background .2s;
 }
-.dots i.on { background: var(--ink); }
+.dots i.on {
+  background: var(--ink);
+}
 
-.left { grid-row: 2; }
+/* Left Edge Column: Size, Variant, Size Guide */
+.left {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+}
+
 .lab {
   font-weight: 700;
   letter-spacing: .03em;
@@ -460,7 +487,7 @@ body.mode-collage .switcher-btn.active {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 .opts button {
@@ -491,7 +518,7 @@ details {
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 summary {
@@ -516,14 +543,20 @@ td, th {
 }
 th { font-weight: 700; }
 
+/* Right Edge Column: Title, Price, Buy Row, Details, Shipping */
 .right {
-  grid-row: 2;
+  grid-column: 3;
+  grid-row: 1;
   text-align: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
 }
 
 .right h2 {
   margin: 0 0 6px;
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.25;
   font-weight: 700;
   text-transform: uppercase;
@@ -531,16 +564,16 @@ th { font-weight: 700; }
 }
 
 .pr {
-  margin-bottom: 14px;
-  font-size: 13px;
-  font-weight: 500;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .buyrow {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .buyrow input {
@@ -551,19 +584,21 @@ th { font-weight: 700; }
   background: #ffffff;
   font-weight: 600;
 }
-.buyrow input:hover, .buyrow input:focus { border-color: var(--ink); }
+.buyrow input:hover, .buyrow input:focus {
+  border-color: var(--ink);
+}
 
 .buy {
   min-height: 44px;
-  min-width: 90px;
-  padding: 0 16px;
+  min-width: 100px;
+  padding: 0 18px;
   background: var(--ink);
   color: #ffffff;
   border: 1px solid var(--ink);
   font-weight: 700;
   text-transform: uppercase;
   font-size: 11px;
-  letter-spacing: .03em;
+  letter-spacing: .04em;
   transition: opacity .2s, transform .1s, background .2s;
 }
 
@@ -582,23 +617,28 @@ th { font-weight: 700; }
   font-size: 11px;
   text-transform: uppercase;
   font-weight: 500;
-  line-height: 1.4;
+  line-height: 1.45;
   letter-spacing: .02em;
 }
-.right p.ship { font-weight: 700; }
 
+.right p.ship {
+  font-weight: 700;
+}
+
+/* Close / Back button */
 .x {
   position: fixed;
   top: calc(14px + env(safe-area-inset-top, 0px));
-  left: 18px;
-  z-index: 110;
+  left: 20px;
+  z-index: 120;
   background: #ffffff;
   border: 1px solid var(--ink);
-  min-height: 42px;
+  min-height: 40px;
   padding: 0 16px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: .02em;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
   transition: background .2s, color .2s;
   display: inline-flex;
   align-items: center;
@@ -609,6 +649,7 @@ th { font-weight: 700; }
   color: #ffffff;
 }
 
+/* ================= 2ND SCREEN: SCROLL SECTION (Curving Sheet, Specs & Related) ================= */
 .detail {
   position: relative;
   z-index: 2;
@@ -617,817 +658,231 @@ th { font-weight: 700; }
   background: #ffffff;
   border-radius: 28px 28px 0 0;
   box-shadow: 0 -20px 48px rgba(0, 0, 0, .08);
-  padding: 44px 24px calc(64px + env(safe-area-inset-bottom, 0px));
+  padding: 48px 24px calc(64px + env(safe-area-inset-bottom, 0px));
 }
 
-.dw { max-width: 780px; margin: 0 auto; }
-.detail h3 { margin: 0 0 14px; font-size: 15px; text-transform: uppercase; letter-spacing: .04em; font-weight: 700; }
-.detail p { margin: 0 0 18px; max-width: 65ch; line-height: 1.6; color: #333333; }
-.spec { list-style: none; padding: 0; margin: 0 0 48px; border-top: 1px solid var(--ink); }
-.spec li { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--soft); font-size: 12px; }
-.spec span { color: var(--mut); }
-
-.rel { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.rel button { background: #ffffff; border: 1px solid var(--soft); padding: 0 0 10px; text-align: left; transition: border-color .15s; }
-.rel button:hover { border-color: var(--ink); }
-.rel .t { aspect-ratio: 4/5; background: #fafafa; display: flex; align-items: center; justify-content: center; padding: 8px; }
-.rel .t img { width: 100%; height: 100%; object-fit: contain; display: block; }
-.rel b { display: block; margin: 8px 8px 0; font-size: 11px; text-transform: uppercase; }
-.rel span { margin: 0 8px; color: var(--mut); font-size: 11px; }
-
-@media (min-width: 768px) {
-  .cols { grid-template-columns: 1fr 1.6fr 1fr; align-items: center; gap: 36px; }
-  .mid { grid-column: 2; grid-row: 1; }
-  .left { grid-column: 1; grid-row: 1; }
-  .right { grid-column: 3; grid-row: 1; }
-  .track { height: min(64svh, 580px); height: min(64vh, 580px); }
-  .rel { gap: 18px; }
-}
-
-/* ================= OPTION 2: EDITORIAL COLLAGE ================= */
-#collage-view {
-  min-height: 100vh;
-  padding: 80px 24px 60px;
-  max-width: 1400px;
+.dw {
+  max-width: 820px;
   margin: 0 auto;
 }
 
-.hero-meta {
+.detail h3 {
+  margin: 0 0 14px;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  font-weight: 700;
+}
+
+.detail p {
+  margin: 0 0 18px;
+  max-width: 65ch;
+  line-height: 1.6;
+  color: #333333;
+}
+
+.spec {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 48px;
+  border-top: 1px solid var(--ink);
+}
+
+.spec li {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 16px;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--soft);
+  font-size: 12px;
 }
 
-.hero-title {
-  font-size: clamp(22px, 3.8vw, 40px);
-  font-weight: 700;
-  letter-spacing: -.02em;
-  line-height: 1.1;
-  text-transform: uppercase;
-  color: #ffffff;
+.spec span {
+  color: var(--mut);
 }
 
-.hero-sub {
-  color: #888;
-  font-size: 11px;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  max-width: 320px;
-  text-align: right;
-}
-
-.collage-grid {
+.rel {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-auto-rows: 85px;
-  gap: 18px;
-  margin-bottom: 60px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
 }
 
-.collage-item {
-  position: relative;
-  background: #18181b;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  cursor: pointer;
-  transition: transform .35s cubic-bezier(.16, 1, .3, 1), box-shadow .35s ease, border-color .35s ease;
+.rel button {
+  background: #ffffff;
+  border: 1px solid var(--soft);
+  padding: 0 0 10px;
+  text-align: left;
+  transition: border-color .15s, box-shadow .15s;
 }
 
-.collage-item:hover {
-  transform: translateY(-6px) scale(1.015);
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-  z-index: 10;
+.rel button:hover, .rel button:active {
+  border-color: var(--ink);
+  box-shadow: 0 6px 16px rgba(0,0,0,.06);
 }
 
-.collage-item img {
+.rel .t {
+  aspect-ratio: 4/5;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+.rel .t img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform .6s cubic-bezier(.16, 1, .3, 1);
-}
-.collage-item:hover img { transform: scale(1.05); }
-
-.collage-item.product-cutout {
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-}
-.collage-item.product-cutout img { object-fit: contain; }
-
-.item-tag {
-  position: absolute;
-  bottom: 12px;
-  left: 12px;
-  right: 12px;
-  background: rgba(15, 15, 17, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
-  padding: 8px 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: all .25s ease;
 }
 
-.collage-item:hover .item-tag {
-  background: #ffffff;
-  color: #111111;
-  border-color: #ffffff;
-}
-
-.tag-title {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .03em;
-}
-
-.tag-price {
-  font-size: 11px;
-  font-weight: 500;
-  opacity: .8;
-}
-
-.view-btn-pill {
-  font-size: 10px;
-  font-weight: 700;
-  padding: 3px 8px;
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 3px;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-}
-
-.collage-item:hover .view-btn-pill {
-  background: #111111;
-  color: #ffffff;
-}
-
-.c-cell-1 { grid-column: 1 / 6; grid-row: 1 / 6; }
-.c-cell-2 { grid-column: 6 / 9; grid-row: 1 / 4; }
-.c-cell-3 { grid-column: 9 / 13; grid-row: 1 / 6; }
-.c-cell-4 { grid-column: 6 / 9; grid-row: 4 / 8; }
-.c-cell-5 { grid-column: 1 / 4; grid-row: 6 / 10; }
-.c-cell-6 { grid-column: 4 / 6; grid-row: 6 / 10; }
-.c-cell-7 { grid-column: 9 / 13; grid-row: 6 / 10; }
-
-.collage-banner {
-  grid-column: 1 / 13;
-  grid-row: 10 / 12;
-  background: #1c1c1f;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 32px;
-}
-
-.collage-banner h3 { font-size: 18px; text-transform: uppercase; letter-spacing: .04em; color: #fff; }
-.collage-banner p { color: #888; font-size: 12px; }
-
-.catalog-cta {
-  background: #ffffff;
-  color: #000000;
-  border: none;
-  padding: 12px 24px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  border-radius: 3px;
-  transition: transform .1s, opacity .2s;
-}
-.catalog-cta:hover { opacity: .9; }
-
-/* Product Modal for Option 2 (AFTER Screenshot 2: GLOE Skull Bones Jeans) */
-#productViewer2 {
-  position: fixed;
-  inset: 0;
-  z-index: 120;
-  background: rgba(0, 0, 0, 0.72);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity .32s cubic-bezier(.16, 1, .3, 1), visibility .32s;
-}
-
-#productViewer2.open {
-  visibility: visible;
-  opacity: 1;
-}
-
-.modal-window2 {
-  width: 100%;
-  max-width: 1040px;
-  max-height: 92vh;
-  background: #ffffff;
-  color: #111111;
-  border-radius: 28px;
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.4);
-  position: relative;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  transform: translateY(20px) scale(0.98);
-  transition: transform .35s cubic-bezier(.16, 1, .3, 1);
-  padding: 48px 44px;
-}
-
-#productViewer2.open .modal-window2 {
-  transform: translateY(0) scale(1);
-}
-
-.close-btn2 {
-  position: absolute;
-  top: 22px;
-  right: 26px;
-  background: transparent;
-  border: none;
-  font-size: 20px;
-  color: #888888;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all .15s ease;
-}
-.close-btn2:hover {
-  background: #f0f0f0;
-  color: #111111;
-}
-
-.product-card-grid2 {
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 50px;
-  align-items: start;
-}
-
-.prod-visual2 {
-  position: relative;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  min-height: 480px;
-}
-
-.prod-visual2 img {
-  max-width: 100%;
-  max-height: 520px;
-  object-fit: contain;
+.rel b {
   display: block;
-}
-
-.nav-arrow2 {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  font-size: 20px;
-  color: #c0c0c0;
-  cursor: pointer;
-  padding: 10px;
-}
-.nav-arrow2:hover { color: #111; }
-.nav-arrow2.left { left: 0; }
-.nav-arrow2.right { right: 0; }
-
-.prod-info2 {
-  display: flex;
-  flex-direction: column;
-}
-
-.prod-title2 {
-  font-size: 17px;
-  font-weight: 700;
-  line-height: 1.3;
-  text-transform: capitalize;
-  margin-bottom: 8px;
-  letter-spacing: .01em;
-}
-
-.prod-price2 {
-  font-size: 15px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.ship-note2 { font-size: 11px; color: #777; margin-bottom: 8px; }
-.installments2 { font-size: 11px; color: #555; margin-bottom: 24px; }
-.installments2 strong { font-weight: 600; color: #111; }
-.installments2 a { color: #2563eb; text-decoration: underline; margin-left: 3px; }
-
-.size-header-row2 {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 10px;
-}
-.size-label2 { font-size: 11px; font-weight: 600; color: #111; }
-.size-guide-link2 { font-size: 11px; color: #777; text-decoration: none; }
-
-.size-matrix2 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-bottom: 24px;
-}
-
-.size-tile2 {
-  background: #f7f7f8;
-  border: 1px solid transparent;
-  color: #444;
-  height: 42px;
-  border-radius: 4px;
+  margin: 8px 8px 0;
   font-size: 11px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all .15s ease;
-}
-.size-tile2:hover { background: #ececed; color: #111; }
-.size-tile2.active { background: #000000; color: #ffffff; font-weight: 600; }
-
-.add-to-cart-btn2 {
-  width: 100%;
-  height: 48px;
-  background: #000000;
-  color: #ffffff;
-  border: none;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: .08em;
   text-transform: uppercase;
-  margin-bottom: 28px;
-  cursor: pointer;
-  transition: opacity .2s, transform .1s;
+  letter-spacing: .02em;
 }
-.add-to-cart-btn2:hover { opacity: .88; }
-.add-to-cart-btn2:active { transform: scale(.99); }
 
-.accordion2 { border-top: 1px solid #e5e5e7; }
-.accordion-item2 { border-bottom: 1px solid #e5e5e7; }
-.accordion-header2 {
-  width: 100%;
-  padding: 14px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: none;
-  border: none;
+.rel span {
+  margin: 0 8px;
+  color: var(--mut);
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-  color: #111;
-  text-align: left;
 }
-.accordion-header2 .icon { font-size: 14px; font-weight: 400; color: #888; }
-.accordion-content2 {
-  padding-bottom: 14px;
-  font-size: 12px;
-  line-height: 1.6;
-  color: #555;
-  display: none;
-}
-.accordion-item2.active .accordion-content2 { display: block; }
 
-.trust-badges2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px 18px;
-  margin-top: 24px;
-  padding-top: 8px;
-}
-.badge-item2 { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #444; }
-.badge-item2 svg { width: 15px; height: 15px; color: #111; flex-shrink: 0; }
-
+/* ================= Mobile Layout Adaptations ================= */
 @media (max-width: 860px) {
-  .collage-grid { grid-template-columns: repeat(6, 1fr); }
-  .c-cell-1 { grid-column: 1 / 7; grid-row: 1 / 5; }
-  .c-cell-2 { grid-column: 1 / 4; grid-row: 5 / 8; }
-  .c-cell-3 { grid-column: 4 / 7; grid-row: 5 / 8; }
-  .c-cell-4 { grid-column: 1 / 7; grid-row: 8 / 12; }
-  .c-cell-5 { grid-column: 1 / 4; grid-row: 12 / 15; }
-  .c-cell-6 { grid-column: 4 / 7; grid-row: 12 / 15; }
-  .c-cell-7 { grid-column: 1 / 7; grid-row: 15 / 19; }
-  .collage-banner { grid-column: 1 / 7; grid-row: 19 / 22; flex-direction: column; gap: 16px; text-align: center; padding: 20px; }
-
-  /* Mobile Bottom-Sheet Product Card (Option 2) */
-  #productViewer2 {
-    padding: 0;
-    align-items: flex-end;
+  .cols {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    height: auto;
   }
-  
-  .modal-window2 {
-    max-height: 90vh;
-    border-radius: 24px 24px 0 0;
-    padding: 20px 18px calc(36px + env(safe-area-inset-bottom, 0px));
-    transform: translateY(100%);
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.4);
+  .mid {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    height: auto;
   }
-  #productViewer2.open .modal-window2 {
-    transform: translateY(0);
+  .track {
+    max-width: 100%;
+    height: min(44svh, 380px);
   }
-
-  /* Drag handle on top of mobile sheet */
-  .modal-window2::before {
-    content: '';
-    display: block;
-    width: 36px;
-    height: 4px;
-    background: #d4d4d8;
-    border-radius: 2px;
-    margin: 0 auto 16px;
+  .left {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
   }
-
-  .close-btn2 {
-    top: 14px;
-    right: 14px;
-    width: 32px;
-    height: 32px;
-    background: #f4f4f5;
+  .right {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: start;
   }
-
-  .product-card-grid2 {
-    grid-template-columns: 1fr;
-    gap: 18px;
+  .first {
+    padding: calc(64px + env(safe-area-inset-top, 0px)) 16px 20px;
   }
-
-  .prod-visual2 {
-    min-height: 220px;
-    max-height: 280px;
-    padding: 8px;
-    background: #fafafa;
-    border-radius: 12px;
-  }
-
-  .prod-visual2 img {
-    max-height: 250px;
-  }
-
-  .prod-title2 {
-    font-size: 16px;
-    margin-bottom: 6px;
-  }
-
-  .prod-price2 {
-    font-size: 14px;
-    margin-bottom: 2px;
-  }
-
-  .installments2 {
-    font-size: 11px;
-    margin-bottom: 16px;
-  }
-
-  .size-matrix2 {
-    gap: 6px;
-    margin-bottom: 18px;
-  }
-
-  .size-tile2 {
-    height: 36px;
-    font-size: 10px;
-  }
-
-  .add-to-cart-btn2 {
-    height: 44px;
-    font-size: 11px;
-    margin-bottom: 20px;
-  }
-
-  .trust-badges2 {
-    grid-template-columns: 1fr;
-    gap: 10px;
-    margin-top: 18px;
-  }
-
-  .concept-switcher {
-    padding: 3px;
-    gap: 2px;
-  }
-  .switcher-btn {
-    padding: 5px 10px;
-    font-size: 10px;
+  .rel {
+    grid-template-columns: 1fr 1fr;
   }
 }
 </style>
 </head>
 <body>
 
-<!-- Header with Instant Tab Switcher -->
-<header class="top-header">
-  <div class="brand-wrap">
+<!-- Top Navigation -->
+<div class="top">
+  <div class="top-brand">
     <b>STUDIO</b>
-    <span id="count">12 pieces</span>
+    <span id="count">50 pieces</span>
   </div>
-
-  <!-- Master Concept Switcher -->
-  <nav class="concept-switcher" aria-label="Concept variants">
-    <button class="switcher-btn active" id="btnModeSpace">
-      1. 3D Space <span class="badge">Sphere</span>
-    </button>
-    <button class="switcher-btn" id="btnModeCollage">
-      2. Abstract Collage <span class="badge">Editorial</span>
-    </button>
-  </nav>
-
-  <div class="header-right">
-    <span id="viewModeHint">Interactive Prototype</span>
-  </div>
-</header>
-
-<!-- ================= 1. OPTION: 3D SPACE VIEW ================= -->
-<div class="view-section active" id="sec-space">
-  <div id="space-view">
-    <main id="space" aria-label="Product 3D space">
-      <div id="world"></div>
-    </main>
-
-    <div class="hint" id="hint">Drag to rotate, tap a piece to open it</div>
-
-    <!-- Category Switcher Floating Glass Pill -->
-    <div class="pills-wrap">
-      <nav class="pills" id="pills" aria-label="Groups"></nav>
-    </div>
-
-    <!-- Custom Cursor -->
-    <div class="custom-cursor" id="cursor">
-      <div class="cursor-ring"></div>
-      <span class="cursor-label" id="cursorLabel">View</span>
-    </div>
-
-    <!-- Product Viewer 1 (Sticky & Scroll After Replica) -->
-    <div id="viewer" role="dialog" aria-modal="true" aria-label="Product">
-      <button class="x" id="close">← Back to space</button>
-      <div class="scroll" id="scroll">
-        <div class="stage">
-          <div class="pin">
-            <div class="first" id="first">
-              <div class="cols">
-                <!-- Left (SIZE, SLEEVE LENGTH, SIZE GUIDE) -->
-                <div class="left">
-                  <div class="lab">Size</div>
-                  <div class="opts" id="sz" role="radiogroup" aria-label="Size"></div>
-                  
-                  <div class="lab" id="ol">Sleeve Length Type</div>
-                  <div class="opts" id="op" role="radiogroup"></div>
-                  
-                  <details>
-                    <summary>Size guide</summary>
-                    <table>
-                      <tr><th>Size</th><th>Chest, cm</th><th>Length, cm</th></tr>
-                      <tr><td>XS</td><td>96</td><td>66</td></tr>
-                      <tr><td>S</td><td>100</td><td>68</td></tr>
-                      <tr><td>M</td><td>104</td><td>70</td></tr>
-                      <tr><td>L</td><td>108</td><td>72</td></tr>
-                    </table>
-                  </details>
-                </div>
-
-                <!-- Middle (Track + Indicators) -->
-                <div class="mid">
-                  <div class="track" id="track"></div>
-                  <div class="dots" id="dots"></div>
-                </div>
-
-                <!-- Right (Title, Price, Quantity + Button, Description, Shipping) -->
-                <div class="right">
-                  <h2 id="nm"></h2>
-                  <div class="pr" id="pr"></div>
-                  <div class="buyrow">
-                    <input id="qty" type="number" min="1" max="9" value="1" aria-label="Quantity">
-                    <button class="buy" id="buy">SOLD OUT</button>
-                  </div>
-                  <p id="ds"></p>
-                  <p class="ship">(ALLOW 2–3 WEEKS SHIPPING TIME)</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <section class="detail">
-          <div class="dw">
-            <h3>Details</h3>
-            <p id="long"></p>
-            <ul class="spec" id="spec"></ul>
-            <h3>You may also like</h3>
-            <div class="rel" id="rel"></div>
-          </div>
-        </section>
-      </div>
-    </div>
+  <div class="top-zoom-info" id="zoomInfo">
+    <span id="zoomPercent">100%</span>
+    <span style="opacity:0.5;">• Scroll/Pinch to Zoom</span>
   </div>
 </div>
 
-<!-- ================= 2. OPTION: EDITORIAL COLLAGE VIEW ================= -->
-<div class="view-section" id="sec-collage">
-  <div id="collage-view">
-    <div class="hero-meta">
-      <h1 class="hero-title">Visual Collage &amp; Product Space</h1>
-      <div class="hero-sub">Abstract moodboard with seamless product transitions</div>
-    </div>
+<!-- 3D Space Canvas -->
+<main id="space" aria-label="Product space">
+  <div id="world"></div>
+</main>
 
-    <!-- Abstract Collage Grid -->
-    <div class="collage-grid">
-      <div class="collage-item c-cell-1" data-id="mood1">
-        <img src="items/mood_lookbook_1.jpg" alt="Editorial Lookbook">
-        <div class="item-tag">
-          <div>
-            <div class="tag-title">Season Lookbook — Milan</div>
-            <div class="tag-price">Editorial Photography</div>
-          </div>
-          <span class="view-btn-pill">Explore</span>
-        </div>
-      </div>
+<!-- Floating Hint -->
+<div class="hint" id="hint">Drag to rotate • Pinch / Wheel to zoom in/out • Tap piece to open</div>
 
-      <!-- Cutout 1: Skull Bones Jeans -->
-      <div class="collage-item product-cutout c-cell-2" data-id="jeans">
-        <img src="items/gloe_skull_jeans.jpg" alt="GLOE Skull Bones Jeans">
-        <div class="item-tag">
-          <div>
-            <div class="tag-title">GLOE Skull Bones Jeans</div>
-            <div class="tag-price">$85.00</div>
-          </div>
-          <span class="view-btn-pill">View</span>
-        </div>
-      </div>
+<!-- On-screen Zoom +/- Buttons for Easy Touch Navigation -->
+<div class="zoom-controls">
+  <button class="zoom-btn" id="btnZoomIn" title="Zoom in">+</button>
+  <button class="zoom-btn" id="btnZoomOut" title="Zoom out">−</button>
+</div>
 
-      <div class="collage-item c-cell-3" data-id="mood2">
-        <img src="items/mood_streetwear.jpg" alt="Streetwear Archive">
-        <div class="item-tag">
-          <div>
-            <div class="tag-title">Volume &amp; Silhouette</div>
-            <div class="tag-price">Drop 03 Archive</div>
-          </div>
-          <span class="view-btn-pill">View</span>
-        </div>
-      </div>
+<!-- Floating Glass Pill Category Bar -->
+<div class="pills-wrap">
+  <nav class="pills" id="pills" aria-label="Groups"></nav>
+</div>
 
-      <!-- Cutout 2: Christmas Tragedy Tee -->
-      <div class="collage-item product-cutout c-cell-4" data-id="tee">
-        <img src="items/christmas_tragedy_tee.jpg" alt="Christmas Tragedy Tee">
-        <div class="item-tag">
-          <div>
-            <div class="tag-title">Christmas Tragedy Tee</div>
-            <div class="tag-price">$50.00 — Sold Out</div>
-          </div>
-          <span class="view-btn-pill">View</span>
-        </div>
-      </div>
+<!-- Custom Floating Cursor (Desktop GN.D style) -->
+<div class="custom-cursor" id="cursor">
+  <div class="cursor-ring"></div>
+  <span class="cursor-label" id="cursorLabel">View</span>
+</div>
 
-      <!-- Cutout 3: Anti Ballet Long Sleeve -->
-      <div class="collage-item product-cutout c-cell-5" data-id="ls">
-        <img src="items/anti_ballet_ls.jpg" alt="Anti Ballet L/S">
-        <div class="item-tag">
-          <div>
-            <div class="tag-title">Anti Ballet L/S</div>
-            <div class="tag-price">$80.00</div>
-          </div>
-          <span class="view-btn-pill">View</span>
-        </div>
-      </div>
-
-      <div class="collage-item c-cell-6" data-id="mood3">
-        <img src="items/mood_detail.jpg" alt="Fabric & Distress">
-        <div class="item-tag">
-          <div>
-            <div class="tag-title">Distressed Textures</div>
-            <div class="tag-price">Craftsmanship</div>
-          </div>
-          <span class="view-btn-pill">Inspect</span>
-        </div>
-      </div>
-
-      <div class="collage-item c-cell-7" data-id="mood4">
-        <img src="items/mood_lookbook_2.jpg" alt="Editorial Silhouette">
-        <div class="item-tag">
-          <div>
-            <div class="tag-title">Campaign Archive 2026</div>
-            <div class="tag-price">Capsule Preview</div>
-          </div>
-          <span class="view-btn-pill">Explore</span>
-        </div>
-      </div>
-
-      <div class="collage-banner">
-        <div>
-          <h3>Complete Studio Catalogue</h3>
-          <p>Curated capsules of denim, knitwear, and graphic essentials.</p>
-        </div>
-        <button class="catalog-cta" id="openCatalogBtn">Browse All Pieces (12)</button>
-      </div>
-    </div>
-
-    <!-- Product Viewer 2 (Exact Replica of AFTER Screenshot 2) -->
-    <div id="productViewer2" role="dialog" aria-modal="true" aria-label="Product Page">
-      <div class="modal-window2">
-        <button class="close-btn2" id="closeBtn2" aria-label="Close">✕</button>
-
-        <div class="product-card-grid2">
-          <!-- Left Visual -->
-          <div class="prod-visual2">
-            <button class="nav-arrow2 left" id="prevSlide2" aria-label="Previous">‹</button>
-            <img id="mImg2" src="items/gloe_skull_jeans.jpg" alt="Black Faded Wide Leg GLOE Skull Bones Jeans">
-            <button class="nav-arrow2 right" id="nextSlide2" aria-label="Next">›</button>
-          </div>
-
-          <!-- Right Info Area -->
-          <div class="prod-info2">
-            <h1 class="prod-title2" id="mTitle2">Black Faded Wide Leg<br>GLOE Skull Bones Jeans</h1>
-            <div class="prod-price2" id="mPrice2">$85.00</div>
-            <div class="ship-note2">Shipping calculated at checkout.</div>
-            <div class="installments2">
-              Pay in 4 interest-free installments of <strong>$21.25</strong> with <strong>shop</strong><a href="#">Learn more</a>
+<!-- ================= Product Detail Modal (Viewer with Edge Buttons & Huge Photo) ================= -->
+<div id="viewer" role="dialog" aria-modal="true" aria-label="Product">
+  <button class="x" id="close">← Back to space</button>
+  <div class="scroll" id="scroll">
+    <div class="stage">
+      <div class="pin">
+        <div class="first" id="first">
+          <div class="cols">
+            <!-- Left Edge (SIZE, SLEEVE LENGTH TYPE, SIZE GUIDE) -->
+            <div class="left">
+              <div class="lab">Size</div>
+              <div class="opts" id="sz" role="radiogroup" aria-label="Size"></div>
+              
+              <div class="lab" id="ol">Sleeve Length Type</div>
+              <div class="opts" id="op" role="radiogroup"></div>
+              
+              <details>
+                <summary>Size guide</summary>
+                <table>
+                  <tr><th>Size</th><th>Chest, cm</th><th>Length, cm</th></tr>
+                  <tr><td>XS</td><td>96</td><td>66</td></tr>
+                  <tr><td>S</td><td>100</td><td>68</td></tr>
+                  <tr><td>M</td><td>104</td><td>70</td></tr>
+                  <tr><td>L</td><td>108</td><td>72</td></tr>
+                </table>
+              </details>
             </div>
 
-            <div class="size-header-row2">
-              <span class="size-label2">Size</span>
-              <a href="#" class="size-guide-link2">Size Guide</a>
+            <!-- Middle (Maximized Product Gallery Track) -->
+            <div class="mid">
+              <div class="track" id="track"></div>
+              <div class="dots" id="dots"></div>
             </div>
 
-            <div class="size-matrix2" id="sizeMatrix2">
-              <button class="size-tile2" data-sz="Extra Small">Extra Small</button>
-              <button class="size-tile2 active" data-sz="Small">Small</button>
-              <button class="size-tile2" data-sz="Medium">Medium</button>
-              <button class="size-tile2" data-sz="Large">Large</button>
-              <button class="size-tile2" data-sz="Extra Large">Extra Large</button>
-              <button class="size-tile2" data-sz="XX Large">XX Large</button>
-              <button class="size-tile2" data-sz="XXX Large">XXX Large</button>
-            </div>
-
-            <button class="add-to-cart-btn2" id="addToCartBtn2">ADD TO CART</button>
-
-            <div class="accordion2">
-              <div class="accordion-item2 active">
-                <button class="accordion-header2">
-                  <span>DESCRIPTION</span>
-                  <span class="icon">+</span>
-                </button>
-                <div class="accordion-content2">
-                  100% Cotton blend black washed denim with custom fading. Features back pocket skull &amp; crossbones embroidery, stud detailing on pocket seams, and custom woven size/wash tag. Relaxed wide leg silhouette.
-                </div>
+            <!-- Right Edge (Title, Price, Quantity + Button, Description, Shipping) -->
+            <div class="right">
+              <h2 id="nm"></h2>
+              <div class="pr" id="pr"></div>
+              <div class="buyrow">
+                <input id="qty" type="number" min="1" max="9" value="1" aria-label="Quantity">
+                <button class="buy" id="buy">SOLD OUT</button>
               </div>
-
-              <div class="accordion-item2">
-                <button class="accordion-header2">
-                  <span>CARE &amp; MAINTENANCE</span>
-                  <span class="icon">+</span>
-                </button>
-                <div class="accordion-content2">
-                  Machine wash cold inside out with like colors. Hang dry recommended to maintain custom fade and avoid shrinkage.
-                </div>
-              </div>
-            </div>
-
-            <!-- Trust Badges -->
-            <div class="trust-badges2">
-              <div class="badge-item2">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                <span>Fast Worldwide Shipping</span>
-              </div>
-              <div class="badge-item2">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
-                <span>Easy Returns</span>
-              </div>
-              <div class="badge-item2">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                <span>Guaranteed Quality</span>
-              </div>
-              <div class="badge-item2">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                <span>Customer Satisfaction</span>
-              </div>
+              <p id="ds"></p>
+              <p class="ship">(ALLOW 2–3 WEEKS SHIPPING TIME)</p>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Scroll Details Section (2nd screen) -->
+    <section class="detail">
+      <div class="dw">
+        <h3>Details</h3>
+        <p id="long"></p>
+        <ul class="spec" id="spec"></ul>
+        <h3>You may also like</h3>
+        <div class="rel" id="rel"></div>
+      </div>
+    </section>
   </div>
 </div>
 
@@ -1436,36 +891,7 @@ const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-/* ================= Single-Page Mode Switcher ================= */
-const btnModeSpace = $('#btnModeSpace');
-const btnModeCollage = $('#btnModeCollage');
-const secSpace = $('#sec-space');
-const secCollage = $('#sec-collage');
-let currentMode = 'space';
-
-function switchMode(mode) {
-  currentMode = mode;
-  if (mode === 'space') {
-    btnModeSpace.classList.add('active');
-    btnModeCollage.classList.remove('active');
-    secSpace.classList.add('active');
-    secCollage.classList.remove('active');
-    document.body.classList.remove('mode-collage');
-    window.scrollTo({ top: 0, behavior: 'instant' });
-    layout();
-  } else {
-    btnModeCollage.classList.add('active');
-    btnModeSpace.classList.remove('active');
-    secCollage.classList.add('active');
-    secSpace.classList.remove('active');
-    document.body.classList.add('mode-collage');
-  }
-}
-
-btnModeSpace.addEventListener('click', () => switchMode('space'));
-btnModeCollage.addEventListener('click', () => switchMode('collage'));
-
-/* ================= 3D Space Data & Physics ================= */
+// Groups metadata
 const G = {
   tees: {
     n: 'Tees',
@@ -1498,108 +924,91 @@ const G = {
     d: 'Studio architectural outerwear tailored with Japanese fabrics.',
     l: 'Dense twill weave, customized tonal snap buttons and structured shoulder line.',
     m: 'Technical Cotton & Wool, 320 gsm'
+  },
+  pants: {
+    n: 'Denim',
+    ol: 'Leg Fit',
+    o: ['Wide Leg', 'Straight'],
+    d: '100% Cotton blend washed denim with custom fading.',
+    l: 'Relaxed wide leg silhouette, reinforced double needle seams, custom woven size and wash tag.',
+    m: 'Heavy 14oz Denim / Twill'
+  },
+  acc: {
+    n: 'Items',
+    ol: 'Finish',
+    o: ['Standard', 'Matte'],
+    d: 'Studio hardware, headwear and leather goods.',
+    l: 'Precision crafted accessories designed for everyday utility.',
+    m: 'Chino Twill / Full Grain Leather'
   }
 };
 
-const I = [
-  {
-    slug: 'christmas-tragedy-tee',
-    name: 'Christmas Tragedy Tee',
-    price: 50,
-    g: 'tees',
-    img: 'items/christmas_tragedy_tee.jpg',
-    soldOut: true
-  },
-  {
-    slug: 'anti-ballet-ls',
-    name: 'Anti Ballet L/S',
-    price: 80,
-    g: 'ls',
-    img: 'items/anti_ballet_ls.jpg',
-    soldOut: true
-  },
-  {
-    slug: 'quiet-hour-tee',
-    name: 'Quiet Hour Tee',
-    price: 48,
-    g: 'tees',
-    img: 'items/tee_black.jpg',
-    soldOut: false
-  },
-  {
-    slug: 'ash-cutoff-tee',
-    name: 'Ash Cutoff Tee',
-    price: 52,
-    g: 'tees',
-    img: 'items/tee_white.jpg',
-    soldOut: false
-  },
-  {
-    slug: 'blown-elbow-ls',
-    name: 'Blown Elbow L/S',
-    price: 85,
-    g: 'ls',
-    img: 'items/ls_black.jpg',
-    soldOut: false
-  },
-  {
-    slug: 'cold-room-hoodie',
-    name: 'Cold Room Hoodie',
-    price: 140,
-    g: 'hd',
-    img: 'items/hoodie_black.jpg',
-    soldOut: false
-  },
-  {
-    slug: 'ash-hoodie',
-    name: 'Ash Rib Hoodie',
-    price: 135,
-    g: 'hd',
-    img: 'items/hoodie_grey.jpg',
-    soldOut: false
-  },
-  {
-    slug: 'oatmeal-crewneck',
-    name: 'Oatmeal Crewneck',
-    price: 115,
-    g: 'tees',
-    img: 'items/crewneck_beige.jpg',
-    soldOut: false
-  },
-  {
-    slug: 'type-iii-jacket',
-    name: 'Type-III Denim Jacket',
-    price: 220,
-    g: 'out',
-    img: 'items/jacket_denim.jpg',
-    soldOut: false
-  },
-  {
-    slug: 'flight-overshirt',
-    name: 'Flight Overshirt',
-    price: 180,
-    g: 'out',
-    img: 'items/jacket_bomber.jpg',
-    soldOut: false
-  },
-  {
-    slug: 'chunky-mockneck',
-    name: 'Chunky Mockneck',
-    price: 165,
-    g: 'out',
-    img: 'items/knit_sweater.jpg',
-    soldOut: false
-  },
-  {
-    slug: 'pleated-trouser',
-    name: 'Wide Pleated Trouser',
-    price: 130,
-    g: 'out',
-    img: 'items/cargo_pants.jpg',
-    soldOut: false
-  }
+// 50 Curated Pieces with varied aspect ratios (3/4, 4/5, 1/1, 4/3)
+const RAW_ITEMS = [
+  { id: 1, f: "item_01.jpg", aspect: "3/4", name: "Christmas Tragedy Tee", price: 50, g: "tees", soldOut: true },
+  { id: 2, f: "item_02.jpg", aspect: "3/4", name: "Quiet Hour Tee", price: 48, g: "tees", soldOut: false },
+  { id: 3, f: "item_03.jpg", aspect: "4/5", name: "Ash Cutoff Tee", price: 52, g: "tees", soldOut: false },
+  { id: 4, f: "item_04.jpg", aspect: "3/4", name: "Winter Ledger Tee", price: 46, g: "tees", soldOut: false },
+  { id: 5, f: "item_05.jpg", aspect: "1/1", name: "Raw Seam Pocket Tee", price: 55, g: "tees", soldOut: false },
+  { id: 6, f: "item_06.jpg", aspect: "4/3", name: "Bleach Treated Tee", price: 54, g: "tees", soldOut: false },
+  { id: 7, f: "item_07.jpg", aspect: "3/4", name: "Solar Dye Boxy Tee", price: 58, g: "tees", soldOut: false },
+  { id: 8, f: "item_08.jpg", aspect: "4/5", name: "Echo Print Cutoff", price: 49, g: "tees", soldOut: false },
+  { id: 9, f: "item_09.jpg", aspect: "3/4", name: "Anti Ballet L/S", price: 80, g: "ls", soldOut: true },
+  { id: 10, f: "item_10.jpg", aspect: "4/5", name: "Blown Elbow L/S", price: 85, g: "ls", soldOut: false },
+  { id: 11, f: "item_11.jpg", aspect: "3/4", name: "Salt Thermal L/S", price: 78, g: "ls", soldOut: false },
+  { id: 12, f: "item_12.jpg", aspect: "1/1", name: "Hollow Cuff L/S", price: 82, g: "ls", soldOut: false },
+  { id: 13, f: "item_13.jpg", aspect: "4/3", name: "Ribbed Base Layer", price: 72, g: "ls", soldOut: false },
+  { id: 14, f: "item_14.jpg", aspect: "3/4", name: "Double Sleeve Raglan", price: 88, g: "ls", soldOut: false },
+  { id: 15, f: "item_15.jpg", aspect: "4/5", name: "Distressed Stripe L/S", price: 76, g: "ls", soldOut: false },
+  { id: 16, f: "item_16.jpg", aspect: "3/4", name: "Cold Room Hoodie", price: 140, g: "hd", soldOut: false },
+  { id: 17, f: "item_17.jpg", aspect: "4/5", name: "Ash Rib Hoodie", price: 135, g: "hd", soldOut: false },
+  { id: 18, f: "item_18.jpg", aspect: "1/1", name: "Bark Heavy Hoodie", price: 145, g: "hd", soldOut: false },
+  { id: 19, f: "item_19.jpg", aspect: "3/4", name: "Static Studio Hoodie", price: 138, g: "hd", soldOut: false },
+  { id: 20, f: "item_20.jpg", aspect: "4/5", name: "Raw Neckline Pullover", price: 128, g: "hd", soldOut: false },
+  { id: 21, f: "item_21.jpg", aspect: "3/4", name: "Cropped Mineral Hoodie", price: 142, g: "hd", soldOut: false },
+  { id: 22, f: "item_22.jpg", aspect: "3/4", name: "Type-III Denim Jacket", price: 220, g: "out", soldOut: false },
+  { id: 23, f: "item_23.jpg", aspect: "4/5", name: "Flight Overshirt", price: 180, g: "out", soldOut: false },
+  { id: 24, f: "item_24.jpg", aspect: "1/1", name: "Waxed Canvas Parka", price: 260, g: "out", soldOut: false },
+  { id: 25, f: "item_25.jpg", aspect: "4/3", name: "Leather Moto Blouson", price: 340, g: "out", soldOut: false },
+  { id: 26, f: "item_26.jpg", aspect: "3/4", name: "Down Studio Vest", price: 175, g: "out", soldOut: false },
+  { id: 27, f: "item_27.jpg", aspect: "4/5", name: "Quilted Liner Jacket", price: 165, g: "out", soldOut: false },
+  { id: 28, f: "item_28.jpg", aspect: "3/4", name: "GLOE Skull Bones Jeans", price: 85, g: "pants", soldOut: false },
+  { id: 29, f: "item_29.jpg", aspect: "4/5", name: "Raw Selvedge Denim", price: 135, g: "pants", soldOut: false },
+  { id: 30, f: "item_30.jpg", aspect: "1/1", name: "Double Knee Workpant", price: 125, g: "pants", soldOut: false },
+  { id: 31, f: "item_31.jpg", aspect: "3/4", name: "Wide Pleated Trouser", price: 130, g: "pants", soldOut: false },
+  { id: 32, f: "item_32.jpg", aspect: "4/5", name: "Mud-Washed Cargo", price: 145, g: "pants", soldOut: false },
+  { id: 33, f: "item_33.jpg", aspect: "3/4", name: "Relaxed Sweatpant", price: 95, g: "pants", soldOut: false },
+  { id: 34, f: "item_34.jpg", aspect: "3/4", name: "Chunky Mockneck", price: 165, g: "out", soldOut: false },
+  { id: 35, f: "item_35.jpg", aspect: "4/5", name: "Open-Weave Cardigan", price: 155, g: "out", soldOut: false },
+  { id: 36, f: "item_36.jpg", aspect: "1/1", name: "Distressed Wool Knit", price: 170, g: "out", soldOut: false },
+  { id: 37, f: "item_37.jpg", aspect: "1/1", name: "Unstructured 6-Panel", price: 45, g: "acc", soldOut: false },
+  { id: 38, f: "item_38.jpg", aspect: "3/4", name: "Heavy Duty Tote", price: 55, g: "acc", soldOut: false },
+  { id: 39, f: "item_39.jpg", aspect: "4/3", name: "Combat Derby Shoe", price: 210, g: "acc", soldOut: false },
+  { id: 40, f: "item_40.jpg", aspect: "1/1", name: "Vibram Sole Runner", price: 190, g: "acc", soldOut: false },
+  { id: 41, f: "item_41.jpg", aspect: "4/3", name: "Studio Leather Mule", price: 160, g: "acc", soldOut: false },
+  { id: 42, f: "item_42.jpg", aspect: "3/4", name: "Silver Link Ring", price: 65, g: "acc", soldOut: false },
+  { id: 43, f: "item_43.jpg", aspect: "3/4", name: "Milan Lookbook 01", price: 95, g: "tees", soldOut: false },
+  { id: 44, f: "item_44.jpg", aspect: "4/5", name: "Street Volume Study", price: 110, g: "ls", soldOut: false },
+  { id: 45, f: "item_45.jpg", aspect: "1/1", name: "Raw Texture Macro", price: 75, g: "tees", soldOut: false },
+  { id: 46, f: "item_46.jpg", aspect: "3/4", name: "Drape & Motion Shirt", price: 85, g: "tees", soldOut: false },
+  { id: 47, f: "item_47.jpg", aspect: "4/3", name: "Architectural Coat", price: 280, g: "out", soldOut: false },
+  { id: 48, f: "item_48.jpg", aspect: "3/4", name: "Silk Blend Overshirt", price: 120, g: "tees", soldOut: false },
+  { id: 49, f: "item_49.jpg", aspect: "4/5", name: "Monochrome Outerwear", price: 195, g: "out", soldOut: false },
+  { id: 50, f: "item_50.jpg", aspect: "1/1", name: "Studio Hardware Bag", price: 90, g: "acc", soldOut: false }
 ];
 
+const I = RAW_ITEMS.map((o, i) => {
+  const slug = o.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  return {
+    ...o,
+    slug,
+    img: `items/${o.f}`,
+    thumb: `items/thumbs/${o.f}`,
+    i
+  };
+});
+
+// Fibonacci 3D Distribution for 50 items
 const N = I.length;
 I.forEach((it, i) => {
   const y = 1 - (i + 0.5) * 2 / N;
@@ -1607,24 +1016,30 @@ I.forEach((it, i) => {
   const f = i * 2.3999632;
   const x = Math.cos(f) * r;
   const z = Math.sin(f) * r;
-  it.i = i;
   it.th = Math.atan2(x, z);
   it.ph = Math.asin(y);
-  it.sc = 0.92 + (i % 3) * 0.08;
+  it.sc = 0.90 + (i % 3) * 0.10;
   it.s = 0.5 + (i % 5) * 0.12;
   it.p = i * 1.9;
   it.h = 0;
   it.hov = 0;
 });
 
+/* ================= 3D Space Setup & Zoom State ================= */
 const world = $('#world'), space = $('#space');
 const cursor = $('#cursor'), cursorLabel = $('#cursorLabel');
+const zoomPercent = $('#zoomPercent');
 
 let W = innerWidth, H = innerHeight;
-let R = 440;
-let CW = 115;
+// Default starting diameter is COMPACT (as requested: smaller starting sphere diameter)
+let baseRadius = 310;
+let userZoom = 1.0; // Interactive zoom factor: 0.5 (far/wide) to 2.2 (macro zoom in)
+let targetZoom = 1.0;
+
+let CW = 95;
 const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
 
+// Create card DOM elements with borderless cuts and diverse aspect ratios
 I.forEach(it => {
   const el = document.createElement('div');
   el.className = 'card';
@@ -1632,12 +1047,21 @@ I.forEach(it => {
   el.setAttribute('role', 'button');
   el.setAttribute('aria-label', it.name);
 
+  // Aspect ratio calculation
+  let ratio = 1.33; // 3/4 default
+  if (it.aspect === '4/5') ratio = 1.25;
+  if (it.aspect === '1/1') ratio = 1.0;
+  if (it.aspect === '4/3') ratio = 0.75;
+  it.ratio = ratio;
+
+  // Full high-resolution crystal clear images
   el.innerHTML = `
     <div class="card-img-wrap">
       <img src="${it.img}" alt="${it.name}" loading="lazy">
     </div>
   `;
 
+  // Gentle hover zoom: comfortable and subtle
   el.addEventListener('mouseenter', () => {
     it.hov = 1;
     cursorLabel.textContent = 'View';
@@ -1656,6 +1080,12 @@ I.forEach(it => {
     }
   });
 
+  // Support direct click / tap on cards
+  el.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openItem(it.i, el.getBoundingClientRect());
+  });
+
   world.appendChild(el);
   it.el = el;
 });
@@ -1663,16 +1093,18 @@ I.forEach(it => {
 function layout() {
   W = innerWidth;
   H = innerHeight;
-  R = clamp(Math.min(W, H) * 0.65, 360, 580);
-  CW = clamp(W * 0.125, 105, 150);
+  // Compact base radius for 50 pieces at start
+  baseRadius = clamp(Math.min(W, H) * 0.48, 260, 420);
+  CW = clamp(W * 0.09, 85, 125);
 
   I.forEach(it => {
     const w = CW * it.sc;
+    const h = w * it.ratio;
     const s = it.el.style;
     s.width = w + 'px';
-    s.height = (w * 1.3) + 'px';
+    s.height = h + 'px';
     s.marginLeft = (-w / 2) + 'px';
-    s.marginTop = (-w * 0.65) + 'px';
+    s.marginTop = (-h / 2) + 'px';
   });
 }
 addEventListener('resize', layout);
@@ -1681,6 +1113,7 @@ layout();
 $('#count').textContent = I.length + ' pieces';
 $('#pills').innerHTML = `<button data-g="all" class="active">All</button>` + Object.keys(G).map(k => `<button data-g="${k}">${G[k].n}</button>`).join('');
 
+/* ================= 3D Space Physics, Orbit & Multi-touch Pinch Zoom ================= */
 let ry = 0.2, rx = -0.15;
 let vy = 0, vx = 0;
 let drag = false, tgt = null, opened = false, last = 0;
@@ -1697,12 +1130,18 @@ const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
 function frame(now) {
   requestAnimationFrame(frame);
 
+  // Smooth custom cursor follower
   curX += (mouseX - curX) * 0.25;
   curY += (mouseY - curY) * 0.25;
   cursor.style.transform = `translate3d(${curX}px, ${curY}px, 0)`;
 
-  if (opened || currentMode !== 'space') return;
+  if (opened) return;
   const t = now / 1000;
+
+  // Smooth zoom interpolation
+  userZoom += (targetZoom - userZoom) * 0.12;
+  const effectiveRadius = baseRadius * userZoom;
+  zoomPercent.textContent = Math.round(userZoom * 100) + '%';
 
   if (!drag) {
     if (tgt) {
@@ -1717,7 +1156,7 @@ function frame(now) {
       vy *= 0.93;
       vx *= 0.93;
       if (!reduce && now - last > 2200) {
-        ry += 0.0012;
+        ry += 0.0012; // slow ambient drift
       }
     }
   }
@@ -1725,32 +1164,98 @@ function frame(now) {
   rx = clamp(rx, -1.05, 1.05);
   world.style.transform = `rotateX(${rx}rad) rotateY(${ry}rad)`;
 
+  // High performance 3D depth computation & Backface Culling for smooth 60fps on mobile
+  const cosRx = Math.cos(rx), sinRx = Math.sin(rx);
+  const cosRy = Math.cos(ry), sinRy = Math.sin(ry);
+
   for (const c of I) {
-    const rFloat = R + (reduce ? 0 : Math.sin(t * c.s + c.p) * 12);
-    c.h += (c.hov - c.h) * 0.14;
-    const hoverZ = c.h * 38;
-    const hoverScale = 1 + 0.15 * c.h;
+    // Spherical position vector
+    const cosPh = Math.cos(c.ph), sinPh = Math.sin(c.ph);
+    const cosTh = Math.cos(c.th), sinTh = Math.sin(c.th);
+    const x0 = sinTh * cosPh;
+    const y0 = sinPh;
+    const z0 = cosTh * cosPh;
+
+    // Transformed Z in camera space (depth towards viewer)
+    // Rotate Y:
+    const x1 = x0 * cosRy + z0 * sinRy;
+    const z1 = -x0 * sinRy + z0 * cosRy;
+    // Rotate X:
+    const y2 = y0 * cosRx - z1 * sinRx;
+    const z2 = y0 * sinRx + z1 * cosRx;
+
+    // Smooth, cinematic atmospheric fog/depth curve instead of abrupt pop-in
+    // z2 goes from +1.0 (nearest to camera) to -1.0 (furthest back)
+    // Front hemisphere: opacity 1.0; Back hemisphere: soft, organic dissolve down to 0.18
+    let depthOpacity = 1.0;
+    if (z2 < 0.1) {
+      // Gentle cosine S-curve transition
+      const norm = clamp((z2 - (-0.9)) / 1.0, 0, 1);
+      depthOpacity = 0.18 + 0.82 * (norm * norm * (3 - 2 * norm));
+    }
+    // If user hovers, it's always crisp and fully visible
+    if (c.hov) depthOpacity = 1.0;
+
+    c.curOpacity = (c.curOpacity === undefined) ? depthOpacity : c.curOpacity + (depthOpacity - c.curOpacity) * 0.15;
+    c.el.style.opacity = c.curOpacity.toFixed(3);
+    c.el.style.pointerEvents = z2 < -0.4 ? 'none' : 'auto';
+
+    // Subtle float
+    const rFloat = effectiveRadius + (reduce ? 0 : Math.sin(t * c.s + c.p) * 10);
+    c.h += (c.hov - c.h) * 0.16;
+
+    // Gentle hover zoom: pulls +34px toward camera & scales +16%
+    const hoverZ = c.h * 34;
+    const hoverScale = 1 + 0.16 * c.h;
 
     c.el.style.transform = `rotateY(${c.th}rad) rotateX(${c.ph}rad) translateZ(${rFloat + hoverZ}px) scale(${hoverScale})`;
-    c.el.style.zIndex = c.hov ? '40' : '10';
+    c.el.style.zIndex = c.hov ? '50' : (z2 > 0 ? '20' : '10');
   }
 }
 requestAnimationFrame(frame);
 
-let sx, sy, lx, ly, moved, hinted = false;
+/* ================= Pointer & Touch Interactions (Orbit & Pinch-Zoom) ================= */
+let sx, sy, lx, ly, moved = 0, hinted = false;
+let activeTouches = new Map();
+let initialPinchDist = null;
+let initialPinchZoom = 1.0;
+
 space.addEventListener('pointerdown', e => {
-  drag = true;
-  tgt = null;
-  moved = 0;
-  sx = lx = e.clientX;
-  sy = ly = e.clientY;
-  vx = vy = 0;
-  last = performance.now();
-  space.setPointerCapture(e.pointerId);
-  space.classList.add('drag');
+  activeTouches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+  if (activeTouches.size === 1) {
+    drag = true;
+    tgt = null;
+    moved = 0;
+    sx = lx = e.clientX;
+    sy = ly = e.clientY;
+    vx = vy = 0;
+    last = performance.now();
+    space.classList.add('drag');
+  } else if (activeTouches.size === 2) {
+    // Multi-touch pinch zoom initiation
+    drag = false;
+    const pts = Array.from(activeTouches.values());
+    initialPinchDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    initialPinchZoom = targetZoom;
+  }
 });
 
 space.addEventListener('pointermove', e => {
+  if (activeTouches.has(e.pointerId)) {
+    activeTouches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  }
+
+  if (activeTouches.size === 2 && initialPinchDist) {
+    // Pinch to zoom on phone
+    const pts = Array.from(activeTouches.values());
+    const currentDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    const scaleFactor = currentDist / initialPinchDist;
+    targetZoom = clamp(initialPinchZoom * scaleFactor, 0.45, 2.4);
+    last = performance.now();
+    return;
+  }
+
   if (!drag) return;
   const dx = e.clientX - lx, dy = e.clientY - ly;
   lx = e.clientX;
@@ -1769,35 +1274,56 @@ space.addEventListener('pointermove', e => {
   }
 });
 
-space.addEventListener('pointerup', e => {
-  if (!drag) return;
-  drag = false;
-  space.classList.remove('drag');
-  last = performance.now();
-
-  if (moved < 8) {
-    const el = document.elementFromPoint(e.clientX, e.clientY);
-    const cd = el && el.closest('.card');
-    if (cd) {
-      const it = I.find(o => o.el === cd);
-      if (it) openItem(it.i, cd.getBoundingClientRect());
-    }
+function endPointer(e) {
+  activeTouches.delete(e.pointerId);
+  if (activeTouches.size < 2) {
+    initialPinchDist = null;
   }
-});
+  if (activeTouches.size === 0) {
+    if (drag && moved < 10) {
+      // Use tap coordinates from sx, sy (e.clientX on touch end in emulation can be off-screen/cancelled)
+      const tapX = (e.clientX && e.clientX > 0) ? e.clientX : sx;
+      const tapY = (e.clientY && e.clientY > 0) ? e.clientY : sy;
+      const el = document.elementFromPoint(tapX, tapY);
+      const cd = el && el.closest('.card');
+      if (cd) {
+        const it = I.find(o => o.el === cd);
+        if (it) openItem(it.i, cd.getBoundingClientRect());
+      }
+    }
+    drag = false;
+    space.classList.remove('drag');
+    last = performance.now();
+  }
+}
 
-space.addEventListener('pointercancel', () => {
-  drag = false;
-  space.classList.remove('drag');
-});
+space.addEventListener('pointerup', endPointer);
+space.addEventListener('pointercancel', endPointer);
 
+// Mouse Wheel: Orbit horizontally, Zoom on vertical wheel (or Pinch gesture on Mac trackpad)
 space.addEventListener('wheel', e => {
-  if (currentMode !== 'space') return;
   e.preventDefault();
-  ry += e.deltaX * 0.003;
-  rx -= e.deltaY * 0.003;
   last = performance.now();
+
+  // If ctrlKey is pressed (Mac trackpad pinch gesture) or standard vertical scroll -> ZOOM!
+  if (e.ctrlKey || Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+    const zoomDelta = -e.deltaY * 0.002;
+    targetZoom = clamp(targetZoom + zoomDelta, 0.45, 2.4);
+  } else {
+    // Horizontal scroll -> orbit
+    ry += e.deltaX * 0.003;
+  }
 }, { passive: false });
 
+// On-screen Zoom Buttons
+$('#btnZoomIn').addEventListener('click', () => {
+  targetZoom = clamp(targetZoom + 0.25, 0.45, 2.4);
+});
+$('#btnZoomOut').addEventListener('click', () => {
+  targetZoom = clamp(targetZoom - 0.25, 0.45, 2.4);
+});
+
+// Category Switcher
 $('#pills').addEventListener('click', e => {
   const b = e.target.closest('button');
   if (!b) return;
@@ -1814,11 +1340,11 @@ $('#pills').addEventListener('click', e => {
   };
 });
 
-/* ================= Space Product Viewer 1 ================= */
+/* ================= PRODUCT PAGE / VIEWER MODAL ================= */
 const V = $('#viewer'), SC = $('#scroll'), TR = $('#track'), FIRST = $('#first');
 let list = [], idx = 0, size = 'XS', opt = null;
 
-const rr = r => `inset(${r.top}px ${W - r.right}px ${H - r.bottom}px ${r.left}px round 4px)`;
+const rr = r => `inset(${r.top}px ${W - r.right}px ${H - r.bottom}px ${r.left}px round 6px)`;
 const cRect = (w, h) => ({
   top: H / 2 - h / 2,
   bottom: H / 2 + h / 2,
@@ -1835,6 +1361,7 @@ function openItem(i, rect) {
   opened = true;
   cursor.classList.remove('visible');
 
+  // Render product slides
   TR.innerHTML = list.map(o => `
     <div class="slide">
       <img src="${o.img}" alt="${o.name}">
@@ -1854,7 +1381,16 @@ function openItem(i, rect) {
   TR.scrollTo({ left: idx * TR.clientWidth, behavior: 'instant' });
   render(true);
 
-  V.offsetWidth;
+  // In file:// protocol Chrome security blocks pushState with full URLs, use safe hash or try/catch
+  try {
+    if (location.protocol !== 'file:') {
+      history.pushState(null, '', '#' + it.slug);
+    } else {
+      location.hash = it.slug;
+    }
+  } catch(e) {}
+
+  V.offsetWidth; // force reflow
   V.style.transition = 'clip-path .38s cubic-bezier(.22, .8, .2, 1)';
   V.style.clipPath = 'inset(0px 0px 0px 0px round 0px)';
   $('#close').focus({ preventScroll: true });
@@ -1864,6 +1400,7 @@ function closeViewer() {
   if (!opened) return;
   const c = list[idx];
   SC.scrollTop = 0;
+
   ry = -c.th;
   rx = -c.ph;
   tgt = null;
@@ -1873,7 +1410,18 @@ function closeViewer() {
 
   V.style.transition = 'clip-path .38s cubic-bezier(.22, .8, .2, 1)';
   V.style.clipPath = rr(cRect(CW * c.sc * 1.3, CW * c.sc * 1.7));
-  setTimeout(() => { if (!opened) V.style.visibility = 'hidden'; }, 400);
+
+  setTimeout(() => {
+    if (!opened) V.style.visibility = 'hidden';
+  }, 400);
+
+  try {
+    if (location.protocol !== 'file:') {
+      if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+    } else {
+      location.hash = '';
+    }
+  } catch(e) {}
 }
 
 const chips = (el, arr, sel) => {
@@ -1893,7 +1441,10 @@ function render(first) {
     <li><span>Shipping</span>Allow 2–3 weeks shipping time</li>
   `;
 
+  // Size chips
   chips($('#sz'), ['XS', 'S', 'M', 'L'], size);
+
+  // Variant chips
   $('#ol').textContent = g.ol;
   if (!g.o.includes(opt)) opt = g.o[0];
   chips($('#op'), g.o, opt);
@@ -1916,8 +1467,19 @@ function render(first) {
       <span>$${o.price.toFixed(2)}</span>
     </button>
   `).join('');
+
+  if (!first) {
+    try {
+      if (location.protocol !== 'file:') {
+        history.replaceState(null, '', '#' + it.slug);
+      } else {
+        location.hash = it.slug;
+      }
+    } catch(e) {}
+  }
 }
 
+// Scroll animation for 2nd screen
 function progress() {
   let p = clamp(SC.scrollTop / (H * 0.75), 0, 1);
   p = p * p * (3 - 2 * p);
@@ -1926,6 +1488,7 @@ function progress() {
 }
 SC.addEventListener('scroll', progress, { passive: true });
 
+// Track swipe sync
 let raf = 0;
 TR.addEventListener('scroll', () => {
   cancelAnimationFrame(raf);
@@ -1972,141 +1535,19 @@ $('#rel').addEventListener('click', e => {
 });
 
 $('#close').addEventListener('click', closeViewer);
-
-/* ================= 2. Option Collage Logic ================= */
-const viewer2 = $('#productViewer2');
-const closeBtn2 = $('#closeBtn2');
-
-const PRODUCTS2 = {
-  jeans: {
-    title: 'Black Faded Wide Leg<br>GLOE Skull Bones Jeans',
-    price: '$85.00',
-    img: 'items/gloe_skull_jeans.jpg',
-    inst: '$21.25',
-    desc: '100% Cotton blend black washed denim with custom fading. Features back pocket skull & crossbones embroidery, stud detailing on pocket seams, and custom woven size/wash tag. Relaxed wide leg silhouette.',
-    care: 'Machine wash cold inside out with like colors. Hang dry recommended to maintain custom fade and avoid shrinkage.'
-  },
-  tee: {
-    title: 'Christmas Tragedy Tee<br>«Рождество» Edition',
-    price: '$50.00',
-    img: 'items/christmas_tragedy_tee.jpg',
-    inst: '$12.50',
-    desc: 'Hand printed, treated, and distressed cotton jersey tee with vintage «Рождество» graphic and cross motifs. Raw edge collar, relaxed boxy cut, custom garment washed.',
-    care: 'Gentle hand wash or delicate cycle cold. Do not iron directly over print.'
-  },
-  ls: {
-    title: 'Anti Ballet L/S<br>«Negligence» Distressed Top',
-    price: '$80.00',
-    img: 'items/anti_ballet_ls.jpg',
-    inst: '$20.00',
-    desc: 'Every long sleeve is distressed by hand, one piece at a time. Features blown out elbows, raw hemline, and tonal typography print across chest.',
-    care: 'Hand wash cold separately. Dry flat in shade to preserve distressed fibers.'
-  },
-  mood1: {
-    title: 'Milan Editorial Lookbook<br>Campaign Capsule 01',
-    price: '$120.00',
-    img: 'items/mood_lookbook_1.jpg',
-    inst: '$30.00',
-    desc: 'Editorial seasonal presentation piece. Architectural cut with structured shoulders and lightweight tailored wool blend.',
-    care: 'Specialist dry clean only.'
-  },
-  mood2: {
-    title: 'Drop 03 Streetwear Archive<br>Volume & Silhouette',
-    price: '$140.00',
-    img: 'items/mood_streetwear.jpg',
-    inst: '$35.00',
-    desc: 'Heavy drop-shoulder silhouette outerwear tailored for winter studio drops. Custom metal hardware and tonal lining.',
-    care: 'Spot clean with damp cloth or professional dry clean.'
-  },
-  mood3: {
-    title: 'Distressed Fabric Study<br>Studio Craftsmanship',
-    price: '$65.00',
-    img: 'items/mood_detail.jpg',
-    inst: '$16.25',
-    desc: 'Detailed exploration of organic slub cotton and manual distressing techniques used across our collections.',
-    care: 'Cold water wash.'
-  },
-  mood4: {
-    title: 'Campaign Archive 2026<br>Capsule Preview',
-    price: '$110.00',
-    img: 'items/mood_lookbook_2.jpg',
-    inst: '$27.50',
-    desc: 'Full studio campaign preview. Relaxed proportions, muted earth palette, and reinforced construction.',
-    care: 'Dry clean recommended.'
-  }
-};
-
-function openProduct2(type) {
-  const data = PRODUCTS2[type] || PRODUCTS2.jeans;
-  $('#mTitle2').innerHTML = data.title;
-  $('#mPrice2').textContent = data.price;
-  $('#mImg2').src = data.img;
-  $('#mImg2').alt = data.title.replace('<br>', ' ');
-  
-  // Update installment text
-  const instElem = $('.installments2');
-  if (instElem) {
-    instElem.innerHTML = `Pay in 4 interest-free installments of <strong>${data.inst}</strong> with <strong>shop</strong><a href="#">Learn more</a>`;
-  }
-  
-  // Update description and care
-  const descElem = document.querySelector('#productViewer2 .accordion-item2:nth-child(1) .accordion-content2');
-  if (descElem) descElem.textContent = data.desc;
-  const careElem = document.querySelector('#productViewer2 .accordion-item2:nth-child(2) .accordion-content2');
-  if (careElem) careElem.textContent = data.care;
-  
-  viewer2.classList.add('open');
-}
-
-function closeProduct2() {
-  viewer2.classList.remove('open');
-}
-
-$$('.collage-item').forEach(el => {
-  el.addEventListener('click', () => {
-    const id = el.dataset.id;
-    openProduct2(id);
-  });
-});
-
-$('#openCatalogBtn').addEventListener('click', () => {
-  openProduct2('jeans');
-});
-
-closeBtn2.addEventListener('click', closeProduct2);
-viewer2.addEventListener('click', e => {
-  if (e.target === viewer2) closeProduct2();
-});
-
-$$('.size-tile2').forEach(btn => {
-  btn.addEventListener('click', () => {
-    $$('.size-tile2').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  });
-});
-
-$$('.accordion-header2').forEach(header => {
-  header.addEventListener('click', () => {
-    const parent = header.closest('.accordion-item2');
-    parent.classList.toggle('active');
-    header.querySelector('.icon').textContent = parent.classList.contains('active') ? '−' : '+';
-  });
-});
-
-$('#addToCartBtn2').addEventListener('click', () => {
-  const btn = $('#addToCartBtn2');
-  const selSize = $('.size-tile2.active')?.dataset.sz || 'Small';
-  btn.textContent = `ADDED (${selSize.toUpperCase()}) TO CART ✓`;
-  setTimeout(() => { btn.textContent = 'ADD TO CART'; }, 1800);
-});
-
-// ESC Handler
 addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    if (opened) closeViewer();
-    if (viewer2.classList.contains('open')) closeProduct2();
-  }
+  if (e.key === 'Escape') closeViewer();
 });
+
+function fromHash() {
+  const h = location.hash.slice(1);
+  const it = I.find(o => o.slug === h);
+  if (it && !opened) openItem(it.i, null);
+  else if (!h && opened) closeViewer();
+}
+addEventListener('hashchange', fromHash);
+addEventListener('popstate', fromHash);
+fromHash();
 </script>
 </body>
 </html>
