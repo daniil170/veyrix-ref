@@ -251,7 +251,7 @@ button, summary {
 #shootModal {
   position: fixed;
   inset: 0;
-  z-index: 80;
+  z-index: 999;
   background: rgba(8, 8, 10, 0.78);
   backdrop-filter: blur(26px);
   -webkit-backdrop-filter: blur(26px);
@@ -1420,10 +1420,31 @@ I.forEach(it => {
     cursor.classList.remove('visible');
   });
 
-  // Tap opens the Shoot Carousel with cinematic spatial expansion (guards against click during drag)
+  // Robust mobile and desktop tap detection
+  let cardPointerDownX = 0, cardPointerDownY = 0, cardPointerDownTime = 0;
+
+  el.addEventListener('pointerdown', (e) => {
+    cardPointerDownX = e.clientX;
+    cardPointerDownY = e.clientY;
+    cardPointerDownTime = performance.now();
+  }, { passive: true });
+
+  el.addEventListener('pointerup', (e) => {
+    const dist = Math.hypot(e.clientX - cardPointerDownX, e.clientY - cardPointerDownY);
+    const duration = performance.now() - cardPointerDownTime;
+    // On touchscreens and mice: if moved under 18px and held under 450ms, it is a deliberate TAP
+    if (dist < 18 && duration < 450) {
+      e.preventDefault();
+      e.stopPropagation();
+      openShootModal(it.i, e);
+    }
+  });
+
+  // Fallback click listener (keyboard Enter key / accessibility / desktop fallback)
   el.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (moved > 6) return;
+    if (shootOpen) return;
+    if (performance.now() - cardPointerDownTime < 500) return; // already handled by pointerup
     openShootModal(it.i, e);
   });
 
@@ -1699,10 +1720,14 @@ function nextShootPhoto() {
 }
 
 function openShootModal(shootIdx, evt) {
+  if (shootOpen && activeShootIndex === shootIdx) return;
   activeShootIndex = shootIdx;
   activePhotoIndex = 0;
   const shoot = I[shootIdx];
   shootOpen = true;
+  drag = false;
+  activeTouches.clear();
+  space.classList.remove('drag');
   cursor.classList.remove('visible');
 
   // Smoothly center the 3D space camera towards the selected piece
@@ -1745,12 +1770,17 @@ function openShootModal(shootIdx, evt) {
   let dx = 0, dy = 0, startScale = 0.38;
   if (shoot.el) {
     const r = shoot.el.getBoundingClientRect();
-    const cx = r.left + r.width / 2;
-    const cy = r.top + r.height / 2;
-    dx = cx - window.innerWidth / 2;
-    dy = cy - window.innerHeight / 2;
-    const cardW = Math.min(Math.max(window.innerWidth * 0.32, 280), 460);
-    startScale = Math.min(Math.max(r.width / cardW, 0.28), 0.55);
+    if (r && r.width > 10 && !isNaN(r.left)) {
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+      dx = cx - window.innerWidth / 2;
+      dy = cy - window.innerHeight / 2;
+      const cardW = window.innerWidth <= 768 ? Math.min(window.innerWidth * 0.78, 340) : Math.min(Math.max(window.innerWidth * 0.32, 280), 460);
+      startScale = Math.min(Math.max(r.width / cardW, 0.25), 0.6);
+    } else {
+      dy = 30;
+      startScale = 0.85;
+    }
   } else if (evt && evt.clientX) {
     dx = evt.clientX - window.innerWidth / 2;
     dy = evt.clientY - window.innerHeight / 2;
@@ -1777,19 +1807,23 @@ function openShootModal(shootIdx, evt) {
   shootModal.classList.add('open');
   void shootModal.offsetWidth;
 
-  // Trigger smooth expansion on next animation frame
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      cards.forEach((card, idx) => {
-        if (idx === 0) {
-          card.style.transition = 'transform 0.62s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease, filter 0.45s ease';
-        } else {
-          card.style.transition = 'transform 0.68s cubic-bezier(0.16, 1, 0.3, 1) 0.08s, opacity 0.48s ease 0.08s, filter 0.48s ease 0.08s';
-        }
-      });
-      renderCoverFlowPositions();
+  // Trigger smooth expansion reliably on both mobile and desktop
+  let animationTriggered = false;
+  const triggerExpand = () => {
+    if (animationTriggered) return;
+    animationTriggered = true;
+    cards.forEach((card, idx) => {
+      if (idx === 0) {
+        card.style.transition = 'transform 0.58s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease, filter 0.45s ease';
+      } else {
+        card.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.06s, opacity 0.48s ease 0.06s, filter 0.48s ease 0.06s';
+      }
     });
-  });
+    renderCoverFlowPositions();
+  };
+
+  requestAnimationFrame(triggerExpand);
+  setTimeout(triggerExpand, 35);
 }
 
 function closeShootModal() {
