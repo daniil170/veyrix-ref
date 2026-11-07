@@ -1,0 +1,2049 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<title>STUDIO — 3D Space Gallery</title>
+<style>
+:root {
+  --bg: #ecebe8;
+  --sheet: #ffffff;
+  --ink: #111111;
+  --mut: #7a7873;
+  --line: #111111;
+  --soft: #c9c7c1;
+  --border-light: rgba(0, 0, 0, 0.08);
+  font: 13px/1.45 "Helvetica Neue", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: var(--bg);
+  color: var(--ink);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+button, input, summary {
+  font: inherit;
+  color: inherit;
+}
+button, summary {
+  cursor: pointer;
+}
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* ================= Top Bar ================= */
+.top {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 24px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  z-index: 25;
+  font-weight: 700;
+  letter-spacing: .04em;
+  font-size: 13px;
+}
+
+.top-brand {
+  pointer-events: auto;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.top-brand b {
+  letter-spacing: .08em;
+}
+
+.top-brand span {
+  font-weight: 400;
+  color: var(--mut);
+  font-size: 11px;
+}
+
+.top-zoom-info {
+  pointer-events: auto;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--mut);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ================= 3D Space & World ================= */
+#space {
+  position: fixed;
+  inset: 0;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow: hidden;
+  perspective: 1100px;
+  perspective-origin: 50% 50%;
+  z-index: 1;
+  transition: filter 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: filter, transform;
+}
+
+#space.blurred {
+  filter: blur(24px) brightness(0.65);
+  transform: scale(0.96);
+  pointer-events: none;
+}
+
+#space.drag {
+  cursor: grabbing;
+}
+
+#world {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+}
+
+/* ================= Space Cards (STRAIGHT RECTANGULAR CORNERS, NO ROUNDING) ================= */
+.card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: transparent;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  border-radius: 0; /* Strictly straight rectangular corners */
+  overflow: visible;
+  border: none;
+  padding: 0;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: auto;
+  pointer-events: auto;
+}
+
+.card:hover {
+  z-index: 99 !important;
+}
+
+.card-img-wrap {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: transparent;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: transform .28s cubic-bezier(.16, 1, .3, 1), box-shadow .28s ease;
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
+.card:hover .card-img-wrap {
+  transform: scale(1.12);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.32), 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  background: #e0ded9;
+  border-radius: 0;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* ================= Zoom Controls ================= */
+.zoom-controls {
+  position: fixed;
+  right: 24px;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.zoom-btn {
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-light);
+  border-radius: 50%;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  transition: all .2s ease;
+  cursor: pointer;
+}
+.zoom-btn:hover { background: #ffffff; transform: scale(1.06); }
+.zoom-btn:active { transform: scale(0.94); }
+
+/* ================= Bottom Hint ================= */
+.hint {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+  color: var(--mut);
+  pointer-events: none;
+  transition: opacity .6s;
+  z-index: 15;
+  font-size: 11px;
+  letter-spacing: .02em;
+}
+
+/* Custom Floating Cursor */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+.cursor-ring { width: 11px; height: 11px; border: 1.5px solid var(--ink); border-radius: 50%; background: transparent; }
+.cursor-label { font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: capitalize; color: var(--ink); white-space: nowrap; }
+.custom-cursor.visible { opacity: 1; }
+
+/* ================= COVER-FLOW EDITORIAL GALLERY MODAL (VEYRIX STUDIO REF) ================= */
+#shootModal {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(8, 8, 10, 0.78);
+  backdrop-filter: blur(26px);
+  -webkit-backdrop-filter: blur(26px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .42s cubic-bezier(.16, 1, .3, 1), visibility .42s;
+  overflow: hidden;
+}
+
+#shootModal.open {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Minimalist Floating Close Button on Dark Background */
+.cf-close-btn {
+  position: absolute;
+  top: calc(24px + env(safe-area-inset-top, 0px));
+  right: calc(28px + env(safe-area-inset-right, 0px));
+  z-index: 50;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+#shootModal.open .cf-close-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.cf-close-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: scale(1.08);
+}
+
+.cf-close-btn:active {
+  transform: scale(0.92);
+}
+
+/* Cover-Flow Stage */
+.cf-stage {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  user-select: none;
+}
+
+.cf-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Individual Cover-Flow Card (Ultra-crisp Retina 2D, NO 3D-perspective blurring) */
+.cf-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(280px, 32vw, 460px);
+  height: clamp(400px, 66vh, 660px);
+  margin-top: calc(-1 * clamp(400px, 66vh, 660px) / 2);
+  margin-left: calc(-1 * clamp(280px, 32vw, 460px) / 2);
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.65), 0 8px 24px rgba(0, 0, 0, 0.3);
+  background: #111111;
+  transition: transform 0.58s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.45s ease,
+              filter 0.45s ease;
+  cursor: pointer;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform-origin: center center;
+}
+
+.cf-card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #111111;
+}
+
+.cf-card-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Gradient Overlay on Active Card */
+.cf-overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 36px 24px 20px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.52) 55%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .35s ease .12s, transform .35s ease .12s;
+  pointer-events: none;
+}
+
+.cf-card.active .cf-overlay {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.cf-tag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.cf-title {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.cf-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.cf-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: .03em;
+}
+
+.cf-inspect-btn {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  padding: 6px 14px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all .2s;
+}
+.cf-inspect-btn:hover {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+/* Nav Buttons on Stage Sides */
+.cf-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: 300;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 30;
+  transition: all .2s;
+}
+.cf-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-50%) scale(1.06);
+}
+.cf-nav-btn.prev { left: 28px; }
+.cf-nav-btn.next { right: 28px; }
+
+/* Bottom Footer Bar with Dashes and TERMINAL Tag */
+.cf-footer {
+  height: 52px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  flex-shrink: 0;
+  padding: 0 28px;
+  z-index: 30;
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.08s, opacity 0.4s ease 0.08s;
+}
+
+#shootModal.open .cf-footer {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.cf-dashes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cf-dash {
+  width: 28px;
+  height: 2.5px;
+  background: rgba(255, 255, 255, 0.22);
+  cursor: pointer;
+  transition: all .3s cubic-bezier(.16, 1, .3, 1);
+}
+.cf-dash:hover {
+  background: rgba(255, 255, 255, 0.55);
+}
+.cf-dash.active {
+  width: 44px;
+  background: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.cf-terminal {
+  position: absolute;
+  right: 28px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+/* ================= PRODUCT PAGE (FULL PAGE WITH DISTRIBUTED EDGE BUTTONS) ================= */
+#viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--sheet);
+  visibility: hidden;
+  clip-path: inset(0 0 0 0 round 0);
+  transition: clip-path .4s cubic-bezier(.22, .8, .2, 1);
+}
+
+.scroll {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.stage {
+  height: calc(100vh + 60vh);
+  height: calc(100svh + 60svh);
+}
+
+.pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.first {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: calc(56px + env(safe-area-inset-top, 0px)) calc(36px + env(safe-area-inset-right, 0px)) 24px calc(36px + env(safe-area-inset-left, 0px));
+  transform-origin: 50% 35%;
+  will-change: transform, opacity;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: 240px 1fr 280px;
+  gap: 40px;
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+  align-items: center;
+  height: 100%;
+}
+
+.mid {
+  grid-column: 2;
+  grid-row: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.track {
+  display: flex;
+  width: 100%;
+  max-width: 820px;
+  height: min(72svh, 720px);
+  height: min(72vh, 720px);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  align-items: center;
+}
+.track::-webkit-scrollbar { display: none; }
+
+.slide {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.slide img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 0;
+  filter: drop-shadow(0 14px 28px rgba(0,0,0,0.09));
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.dots i {
+  width: 16px;
+  height: 2px;
+  background: var(--soft);
+  transition: background .2s;
+}
+.dots i.on { background: var(--ink); }
+
+.left {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+}
+
+.lab {
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  font-size: 11px;
+  margin: 0 0 8px;
+}
+
+.opts {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.opts button {
+  min-width: 42px;
+  min-height: 36px;
+  padding: 0 10px;
+  background: #ffffff;
+  border: 1px solid var(--soft);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--mut);
+  border-radius: 0;
+  transition: border-color .15s, color .15s, box-shadow .15s;
+}
+.opts button:hover { border-color: var(--ink); color: var(--ink); }
+.opts button[aria-checked="true"] { border-color: var(--ink); color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+
+details { font-size: 11px; font-weight: 700; text-transform: uppercase; margin-top: 6px; }
+summary { display: inline-block; padding: 6px 0; border-bottom: 1px solid var(--ink); list-style: none; }
+summary::-webkit-details-marker { display: none; }
+
+table { border-collapse: collapse; margin-top: 10px; font-weight: 400; text-transform: none; font-size: 11px; }
+td, th { border-bottom: 1px solid var(--soft); padding: 5px 12px 5px 0; text-align: left; }
+th { font-weight: 700; }
+
+.right {
+  grid-column: 3;
+  grid-row: 1;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+}
+
+.right h2 {
+  margin: 0 0 6px;
+  font-size: 17px;
+  line-height: 1.25;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+.pr { margin-bottom: 16px; font-size: 14px; font-weight: 600; }
+.buyrow { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 16px; }
+.buyrow input { width: 52px; min-height: 44px; border: 1px solid var(--soft); text-align: center; background: #ffffff; font-weight: 600; border-radius: 0; }
+.buyrow input:hover, .buyrow input:focus { border-color: var(--ink); }
+
+.buy {
+  min-height: 44px;
+  min-width: 100px;
+  padding: 0 18px;
+  background: var(--ink);
+  color: #ffffff;
+  border: 1px solid var(--ink);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: .04em;
+  border-radius: 0;
+  transition: opacity .2s, transform .1s;
+}
+.buy.sold-out { background: #888888; border-color: #888888; color: #ffffff; cursor: pointer; }
+.buy:hover { opacity: .85; }
+.buy:active { transform: scale(.98); }
+
+.right p { margin: 0 0 8px; font-size: 11px; text-transform: uppercase; font-weight: 500; line-height: 1.45; letter-spacing: .02em; }
+.right p.ship { font-weight: 700; }
+
+.x {
+  position: fixed;
+  top: calc(14px + env(safe-area-inset-top, 0px));
+  left: 20px;
+  z-index: 120;
+  background: #ffffff;
+  border: 1px solid var(--ink);
+  min-height: 40px;
+  padding: 0 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  border-radius: 0;
+  transition: background .2s, color .2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.x:hover, .x:active { background: var(--ink); color: #ffffff; }
+
+/* 2nd Screen */
+.detail {
+  position: relative;
+  z-index: 2;
+  margin-top: -60vh;
+  margin-top: -60svh;
+  background: #ffffff;
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -20px 48px rgba(0, 0, 0, .08);
+  padding: 48px 24px calc(64px + env(safe-area-inset-bottom, 0px));
+}
+
+.dw { max-width: 820px; margin: 0 auto; }
+.detail h3 { margin: 0 0 14px; font-size: 15px; text-transform: uppercase; letter-spacing: .04em; font-weight: 700; }
+.detail p { margin: 0 0 18px; max-width: 65ch; line-height: 1.6; color: #333333; }
+.spec { list-style: none; padding: 0; margin: 0 0 48px; border-top: 1px solid var(--ink); }
+.spec li { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--soft); font-size: 12px; }
+.spec span { color: var(--mut); }
+
+.rel { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.rel button { background: #ffffff; border: 1px solid var(--soft); padding: 0 0 10px; text-align: left; border-radius: 0; transition: border-color .15s; }
+.rel button:hover { border-color: var(--ink); }
+.rel .t { aspect-ratio: 4/5; background: #fafafa; display: flex; align-items: center; justify-content: center; padding: 8px; }
+.rel .t img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rel b { display: block; margin: 8px 8px 0; font-size: 11px; text-transform: uppercase; }
+.rel span { margin: 0 8px; color: var(--mut); font-size: 11px; }
+
+@media (max-width: 860px) {
+  .cols { grid-template-columns: 1fr 1fr; gap: 16px; height: auto; }
+  .mid { grid-column: 1 / -1; grid-row: 1; height: auto; }
+  .track { max-width: 100%; height: min(44svh, 380px); }
+  .left { grid-column: 1; grid-row: 2; align-self: start; }
+  .right { grid-column: 2; grid-row: 2; align-self: start; }
+  .first { padding: calc(64px + env(safe-area-inset-top, 0px)) 16px 20px; }
+  .rel { grid-template-columns: 1fr 1fr; }
+
+  .cf-close-btn {
+    top: calc(16px + env(safe-area-inset-top, 0px));
+    right: calc(16px + env(safe-area-inset-right, 0px));
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+  .cf-card {
+    width: clamp(260px, 78vw, 340px);
+    height: clamp(380px, 60vh, 500px);
+    margin-top: calc(-1 * clamp(380px, 60vh, 500px) / 2);
+    margin-left: calc(-1 * clamp(260px, 78vw, 340px) / 2);
+  }
+  .cf-nav-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 20px;
+  }
+  .cf-nav-btn.prev { left: 8px; }
+  .cf-nav-btn.next { right: 8px; }
+  .cf-footer {
+    height: 46px;
+    padding: 0 16px;
+  }
+  .cf-terminal {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .cols { display: flex; flex-direction: column; gap: 18px; }
+  .mid { order: 1; width: 100%; }
+  .track { width: 100%; max-width: 100%; height: 50vh; height: 50svh; }
+  .right { order: 2; width: 100%; }
+  .left { order: 3; width: 100%; }
+  .buyrow { display: flex; width: 100%; }
+  .buyrow input { width: 60px; min-height: 48px; }
+  .buy { flex: 1; min-height: 48px; }
+  .first { padding: calc(56px + env(safe-area-inset-top, 0px)) 16px 24px; }
+  .rel { grid-template-columns: 1fr 1fr; }
+  .zoom-controls { right: 16px; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+  .zoom-btn { width: 34px; height: 34px; font-size: 15px; }
+  .hint { bottom: calc(24px + env(safe-area-inset-bottom, 0px)); font-size: 10px; padding: 4px 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<div class="top">
+  <div class="top-brand">
+    <b>STUDIO</b>
+    <span id="count">18 Shoots</span>
+  </div>
+  <div class="top-zoom-info" id="zoomInfo">
+    <span id="zoomPercent">100%</span>
+    <span style="opacity:0.5;">• Scroll/Pinch to Zoom</span>
+  </div>
+</div>
+
+<!-- 3D Space Canvas -->
+<main id="space" aria-label="Product space">
+  <div id="world"></div>
+</main>
+
+<div class="hint" id="hint">Drag to rotate • Pinch / Wheel to zoom • Tap piece to open shoot gallery</div>
+
+<!-- Zoom Controls -->
+<div class="zoom-controls">
+  <button class="zoom-btn" id="btnZoomIn" title="Zoom in">+</button>
+  <button class="zoom-btn" id="btnZoomOut" title="Zoom out">−</button>
+</div>
+
+<!-- Custom Floating Cursor -->
+<div class="custom-cursor" id="cursor">
+  <div class="cursor-ring"></div>
+  <span class="cursor-label" id="cursorLabel">Explore Shoot</span>
+</div>
+
+<!-- ================= 1. COVER-FLOW EDITORIAL GALLERY MODAL (VEYRIX STUDIO REF) ================= -->
+<div id="shootModal" role="dialog" aria-modal="true" aria-label="Editorial Gallery">
+  <!-- Minimalist Floating Close Button on Dark Cinematic Stage -->
+  <button class="cf-close-btn" id="closeShootBtn" title="Back to Space (Esc)">✕</button>
+
+  <!-- Cover-Flow Stage -->
+  <div class="cf-stage" id="cfStage">
+    <button class="cf-nav-btn prev" id="shootPrev" title="Previous (←)">‹</button>
+    <div class="cf-track" id="cfTrack"></div>
+    <button class="cf-nav-btn next" id="shootNext" title="Next (→)">›</button>
+  </div>
+
+  <!-- Bottom Bar: Dashes Indicator & Terminal Tag -->
+  <footer class="cf-footer">
+    <div class="cf-dashes" id="cfDashes"></div>
+    <div class="cf-terminal">TERMINAL</div>
+  </footer>
+</div>
+
+<!-- ================= 2. FULL PRODUCT DETAIL PAGE (WITH DISTRIBUTED EDGE BUTTONS) ================= -->
+<div id="viewer" role="dialog" aria-modal="true" aria-label="Product Page">
+  <button class="x" id="close">← Back to Shoot</button>
+  <div class="scroll" id="scroll">
+    <div class="stage">
+      <div class="pin">
+        <div class="first" id="first">
+          <div class="cols">
+            <!-- Left Edge (SIZE, SLEEVE LENGTH TYPE, SIZE GUIDE) -->
+            <div class="left">
+              <div class="lab">Size</div>
+              <div class="opts" id="sz" role="radiogroup" aria-label="Size"></div>
+              
+              <div class="lab" id="ol">Sleeve Length Type</div>
+              <div class="opts" id="op" role="radiogroup"></div>
+              
+              <details>
+                <summary>Size guide</summary>
+                <table>
+                  <tr><th>Size</th><th>Chest, cm</th><th>Length, cm</th></tr>
+                  <tr><td>XS</td><td>96</td><td>66</td></tr>
+                  <tr><td>S</td><td>100</td><td>68</td></tr>
+                  <tr><td>M</td><td>104</td><td>70</td></tr>
+                  <tr><td>L</td><td>108</td><td>72</td></tr>
+                </table>
+              </details>
+            </div>
+
+            <!-- Middle (Maximized Product Gallery Track) -->
+            <div class="mid">
+              <div class="track" id="track"></div>
+              <div class="dots" id="dots"></div>
+            </div>
+
+            <!-- Right Edge (Title, Price, Quantity + Button, Description, Shipping) -->
+            <div class="right">
+              <h2 id="nm"></h2>
+              <div class="pr" id="pr"></div>
+              <div class="buyrow">
+                <input id="qty" type="number" min="1" max="9" value="1" aria-label="Quantity">
+                <button class="buy" id="buy">SOLD OUT</button>
+              </div>
+              <p id="ds"></p>
+              <p class="ship">(ALLOW 2–3 WEEKS SHIPPING TIME)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Details Section -->
+    <section class="detail">
+      <div class="dw">
+        <h3>Details</h3>
+        <p id="long"></p>
+        <ul class="spec" id="spec"></ul>
+        <h3>You may also like</h3>
+        <div class="rel" id="rel"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+const G = {
+  tees: {
+    n: 'Tees',
+    ol: 'Sleeve length type',
+    o: ['Cutoff', 'Tee'],
+    d: 'Hand printed, treated, and distressed tee.',
+    l: 'Printed by hand in small runs, then washed and distressed so no two pieces are identical. Raw neck rib, relaxed boxy fit.',
+    m: 'Cotton jersey, 240 gsm'
+  },
+  ls: {
+    n: 'L/S',
+    ol: 'Sleeve length type',
+    o: ['Long', 'Blown elbow'],
+    d: 'Hand printed, treated, and distressed tee. Each long sleeve features blown out elbows.',
+    l: 'Every long sleeve is distressed by hand, one piece at a time. Slightly cropped body, elongated cuffs.',
+    m: 'Cotton jersey, 260 gsm'
+  },
+  hd: {
+    n: 'Hoodies',
+    ol: 'Fit',
+    o: ['Standard', 'Cropped'],
+    d: 'Hand printed, treated, and distressed hoodie.',
+    l: 'Heavy fleece, garment washed for a worn-in hand feel. Kangaroo pocket, raw hem.',
+    m: 'Cotton fleece, 380 gsm'
+  },
+  out: {
+    n: 'Jackets',
+    ol: 'Silhouette',
+    o: ['Relaxed', 'Tailored'],
+    d: 'Studio architectural outerwear tailored with Japanese fabrics.',
+    l: 'Dense twill weave, customized tonal snap buttons and structured shoulder line.',
+    m: 'Technical Cotton & Wool, 320 gsm'
+  },
+  pants: {
+    n: 'Denim',
+    ol: 'Leg Fit',
+    o: ['Wide Leg', 'Straight'],
+    d: '100% Cotton blend washed denim with custom fading.',
+    l: 'Relaxed wide leg silhouette, reinforced double needle seams, custom woven size and wash tag.',
+    m: 'Heavy 14oz Denim / Twill'
+  },
+  acc: {
+    n: 'Items',
+    ol: 'Finish',
+    o: ['Standard', 'Matte'],
+    d: 'Studio hardware, headwear and leather goods.',
+    l: 'Precision crafted accessories designed for everyday utility.',
+    m: 'Chino Twill / Full Grain Leather'
+  }
+};
+
+// 18 Curated Shoots with multi-photo series (100% High-Resolution Portrait Photos, No Low-Res / No Stretched Crops)
+const SHOOTS = [
+  {
+    id: 1,
+    name: "Christmas Tragedy Drop",
+    price: 50,
+    g: "tees",
+    soldOut: true,
+    hero: "tee_black.jpg",
+    aspect: "3/4",
+    photos: ["tee_black.jpg", "item_02.jpg", "item_08.jpg", "item_04.jpg"],
+    desc: "Hand printed, treated, and distressed cotton jersey tee with vintage «Рождество» graphic.",
+    shootTitle: "Shoot 01 — Christmas Tragedy Editorial",
+    shootLocation: "Milan Studio Lab / Drop 01",
+    material: "Cotton jersey, 240 gsm"
+  },
+  {
+    id: 2,
+    name: "Quiet Hour Tee",
+    price: 48,
+    g: "tees",
+    soldOut: false,
+    hero: "item_02.jpg",
+    aspect: "4/5",
+    photos: ["item_02.jpg", "mood_lookbook_1.jpg", "tee_white.jpg", "item_06.jpg"],
+    desc: "Garment washed minimal tee with reinforced ribbing and boxy drop shoulder.",
+    shootTitle: "Shoot 02 — Quiet Hour Series",
+    shootLocation: "Industrial Studio / Daylight",
+    material: "Combed Cotton, 260 gsm"
+  },
+  {
+    id: 3,
+    name: "Anti Ballet L/S",
+    price: 80,
+    g: "ls",
+    soldOut: true,
+    hero: "ls_black.jpg",
+    aspect: "3/4",
+    photos: ["ls_black.jpg", "item_14.jpg", "mood_lookbook_2.jpg", "item_44.jpg"],
+    desc: "Distressed by hand one piece at a time. Blown out elbows and elongated cuffs.",
+    shootTitle: "Shoot 03 — Anti Ballet Movement",
+    shootLocation: "Milan Concrete Warehouse",
+    material: "Cotton jersey, 260 gsm"
+  },
+  {
+    id: 4,
+    name: "Blown Elbow L/S",
+    price: 85,
+    g: "ls",
+    soldOut: false,
+    hero: "item_14.jpg",
+    aspect: "1/1",
+    photos: ["item_14.jpg", "ls_black.jpg", "item_43.jpg", "mood_detail.jpg"],
+    desc: "Extended sleeve rib, heavy wash fade, and artisanal blown elbow distressing.",
+    shootTitle: "Shoot 04 — Deconstructed Knits",
+    shootLocation: "Studio B Lookbook",
+    material: "Cotton jersey, 280 gsm"
+  },
+  {
+    id: 5,
+    name: "GLOE Skull Bones Jeans",
+    price: 85,
+    g: "pants",
+    soldOut: false,
+    hero: "item_29.jpg",
+    aspect: "3/4",
+    photos: ["item_29.jpg", "item_30.jpg", "item_32.jpg", "item_31.jpg"],
+    desc: "Black faded wide leg jeans with custom crossbones embroidery on back pocket.",
+    shootTitle: "Shoot 05 — GLOE Skull Denim Campaign",
+    shootLocation: "Night Rooftop & Studio Archive",
+    material: "14oz Washed Black Denim"
+  },
+  {
+    id: 6,
+    name: "Raw Selvedge Denim",
+    price: 135,
+    g: "pants",
+    soldOut: false,
+    hero: "item_32.jpg",
+    aspect: "4/5",
+    photos: ["item_32.jpg", "item_29.jpg", "item_30.jpg", "item_33.jpg"],
+    desc: "Japanese selvedge denim cut in a modern relaxed wide silhouette.",
+    shootTitle: "Shoot 06 — Raw Selvedge Lookbook",
+    shootLocation: "Artisan Mill / Daylight",
+    material: "14.5oz Japanese Selvedge"
+  },
+  {
+    id: 7,
+    name: "Cold Room Hoodie",
+    price: 140,
+    g: "hd",
+    soldOut: false,
+    hero: "item_18.jpg",
+    aspect: "3/4",
+    photos: ["item_18.jpg", "mood_streetwear.jpg", "item_35.jpg", "item_14.jpg"],
+    desc: "Brushed heavyweight fleece 450gsm with architectural double-wall hood.",
+    shootTitle: "Shoot 07 — Cold Room Heavyweight Drop",
+    shootLocation: "Minimal Grey Studio",
+    material: "Cotton fleece, 450 gsm"
+  },
+  {
+    id: 8,
+    name: "Ash Rib Hoodie",
+    price: 135,
+    g: "hd",
+    soldOut: false,
+    hero: "item_35.jpg",
+    aspect: "1/1",
+    photos: ["item_35.jpg", "item_18.jpg", "item_36.jpg", "mood_lookbook_1.jpg"],
+    desc: "Heather ash tone fleece featuring raw hem and kangaroo pocket.",
+    shootTitle: "Shoot 08 — Ash Capsule",
+    shootLocation: "Daylight Concrete Studio",
+    material: "Cotton fleece, 380 gsm"
+  },
+  {
+    id: 9,
+    name: "Type-III Denim Jacket",
+    price: 220,
+    g: "out",
+    soldOut: false,
+    hero: "item_27.jpg",
+    aspect: "3/4",
+    photos: ["item_27.jpg", "item_23.jpg", "jacket_bomber.jpg", "item_24.jpg"],
+    desc: "Classic studio trucker cut constructed from raw indigo selvedge denim.",
+    shootTitle: "Shoot 09 — Type-III Outerwear",
+    shootLocation: "Studio Lookbook Capsule",
+    material: "14oz Indigo Selvedge"
+  },
+  {
+    id: 10,
+    name: "Flight Overshirt",
+    price: 180,
+    g: "out",
+    soldOut: false,
+    hero: "jacket_bomber.jpg",
+    aspect: "4/3",
+    photos: ["jacket_bomber.jpg", "item_24.jpg", "item_25.jpg", "item_23.jpg"],
+    desc: "Technical compact twill overshirt with hidden snap placket.",
+    shootTitle: "Shoot 10 — Technical Outerwear",
+    shootLocation: "Architectural Studio",
+    material: "Technical Twill, 310 gsm"
+  },
+  {
+    id: 11,
+    name: "Chunky Mockneck",
+    price: 165,
+    g: "out",
+    soldOut: false,
+    hero: "item_36.jpg",
+    aspect: "4/5",
+    photos: ["item_36.jpg", "item_35.jpg", "item_18.jpg", "mood_detail.jpg"],
+    desc: "7-gauge fisherman rib knit in soft extrafine merino wool.",
+    shootTitle: "Shoot 11 — Winter Merino Knitwear",
+    shootLocation: "Milan Winter Lookbook",
+    material: "100% Extrafine Merino"
+  },
+  {
+    id: 12,
+    name: "Raw Seam Pocket Tee",
+    price: 55,
+    g: "tees",
+    soldOut: false,
+    hero: "item_05.jpg",
+    aspect: "1/1",
+    photos: ["item_05.jpg", "item_06.jpg", "item_04.jpg", "mood_streetwear.jpg"],
+    desc: "Boxy pocket tee with external exposed seams and vintage wash fade.",
+    shootTitle: "Shoot 12 — Raw Seam Essentials",
+    shootLocation: "Daylight Studio",
+    material: "Organic Cotton, 250 gsm"
+  },
+  {
+    id: 13,
+    name: "Leather Moto Blouson",
+    price: 340,
+    g: "out",
+    soldOut: false,
+    hero: "item_25.jpg",
+    aspect: "4/3",
+    photos: ["item_25.jpg", "jacket_bomber.jpg", "item_24.jpg", "mood_streetwear.jpg"],
+    desc: "Supple lambskin blouson with custom antiqued silver hardware.",
+    shootTitle: "Shoot 13 — Moto Leather Archive",
+    shootLocation: "Studio B Darkroom",
+    material: "100% Full-Grain Lambskin"
+  },
+  {
+    id: 14,
+    name: "Wide Pleated Trouser",
+    price: 130,
+    g: "pants",
+    soldOut: false,
+    hero: "item_31.jpg",
+    aspect: "3/4",
+    photos: ["item_31.jpg", "cargo_pants.jpg", "item_33.jpg", "item_32.jpg"],
+    desc: "Deep front double pleats with tailored drape and slant pockets.",
+    shootTitle: "Shoot 14 — Tailored Silhouette",
+    shootLocation: "Gallery Interior",
+    material: "Wool & Technical Viscose"
+  },
+  {
+    id: 15,
+    name: "Combat Derby Shoe",
+    price: 210,
+    g: "acc",
+    soldOut: false,
+    hero: "item_40.jpg",
+    aspect: "4/3",
+    photos: ["item_40.jpg", "item_42.jpg", "mood_detail.jpg", "item_33.jpg"],
+    desc: "Commando lug sole leather derby shoe handcrafted in Portugal.",
+    shootTitle: "Shoot 15 — Studio Footwear",
+    shootLocation: "Product Lab",
+    material: "Calf Leather & Vibram Sole"
+  },
+  {
+    id: 16,
+    name: "Unstructured 6-Panel",
+    price: 45,
+    g: "acc",
+    soldOut: false,
+    hero: "cap_charcoal.jpg",
+    aspect: "1/1",
+    photos: ["cap_charcoal.jpg", "item_37.jpg", "item_38.jpg", "tote_canvas.jpg"],
+    desc: "Washed chino twill cap with curved brim and brass hardware buckle.",
+    shootTitle: "Shoot 16 — Everyday Accessories",
+    shootLocation: "Studio Neutral",
+    material: "100% Washed Chino Twill"
+  },
+  {
+    id: 17,
+    name: "Milan Lookbook Capsule",
+    price: 95,
+    g: "tees",
+    soldOut: false,
+    hero: "item_43.jpg",
+    aspect: "3/4",
+    photos: ["item_43.jpg", "item_44.jpg", "mood_lookbook_2.jpg", "mood_streetwear.jpg"],
+    desc: "Seasonal visual study capturing movement and volume across drops.",
+    shootTitle: "Shoot 17 — Milan Runway & Street",
+    shootLocation: "Milan Exterior / Daylight",
+    material: "Editorial Capsule Collection"
+  },
+  {
+    id: 18,
+    name: "Drape & Motion Shirt",
+    price: 85,
+    g: "tees",
+    soldOut: false,
+    hero: "item_45.jpg",
+    aspect: "4/5",
+    photos: ["item_45.jpg", "item_23.jpg", "item_44.jpg", "mood_lookbook_2.jpg"],
+    desc: "Fluid drape studio shirt with raw edging and relaxed boxy cut.",
+    shootTitle: "Shoot 18 — Motion Exploration",
+    shootLocation: "Studio Editorial",
+    material: "Fluid Cotton & Lyocell"
+  }
+];
+
+// Chaotic, organic 3D spatial layout for 18 Shoots
+// Pseudorandom deterministic jitter so each piece sits at varied depth and scattered angle
+function pseudoRand(seed) {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
+const N = SHOOTS.length;
+const I = SHOOTS.map((o, i) => {
+  const slug = o.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  
+  // Base golden spiral
+  const yBase = 1 - (i + 0.5) * 2 / N;
+  const rBase = Math.sqrt(1 - yBase * yBase);
+  const fBase = i * 2.3999632;
+  const xBase = Math.cos(fBase) * rBase;
+  const zBase = Math.sin(fBase) * rBase;
+
+  // Add organic chaotic jitter
+  const jX = (pseudoRand(i * 12.3) - 0.5) * 0.45;
+  const jY = (pseudoRand(i * 34.7) - 0.5) * 0.35;
+  const th = Math.atan2(xBase, zBase) + jX;
+  const ph = clamp(Math.asin(yBase) + jY, -1.05, 1.05);
+
+  // Depth layering: varying radius multiplier so cards float at different distances
+  const rMult = 0.85 + (i % 4) * 0.08 + (pseudoRand(i * 7.1) - 0.5) * 0.1;
+
+  let ratio = 1.33;
+  if (o.aspect === '4/5') ratio = 1.25;
+  if (o.aspect === '1/1') ratio = 1.0;
+  if (o.aspect === '4/3') ratio = 0.75;
+
+  return {
+    ...o,
+    slug,
+    img: `items/${o.hero}`,
+    th,
+    ph,
+    rMult,
+    ratio,
+    sc: 0.95 + (i % 3) * 0.10,
+    s: 0.5 + (i % 5) * 0.12,
+    p: i * 1.9,
+    h: 0,
+    hov: 0,
+    i
+  };
+});
+
+/* ================= 3D Space Setup & Zoom ================= */
+const world = $('#world'), space = $('#space');
+const cursor = $('#cursor'), cursorLabel = $('#cursorLabel');
+const zoomPercent = $('#zoomPercent');
+
+let W = innerWidth, H = innerHeight;
+let baseRadius = 340;
+let userZoom = 1.0;
+let targetZoom = 1.0;
+let CW = 110;
+const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+// Create card DOM elements (STRAIGHT RECTANGULAR EDGES, FULL RESOLUTION, NO BADGES)
+I.forEach(it => {
+  const el = document.createElement('div');
+  el.className = 'card';
+  el.tabIndex = 0;
+  el.setAttribute('role', 'button');
+  el.setAttribute('aria-label', it.name);
+
+  el.innerHTML = `
+    <div class="card-img-wrap">
+      <img src="${it.img}" alt="${it.name}">
+    </div>
+  `;
+
+  // Hover state (crystal clear, rock-solid, no vibration)
+  el.addEventListener('mouseenter', () => {
+    it.hov = 1;
+    cursorLabel.textContent = 'Explore Shoot';
+    cursor.classList.add('visible');
+  });
+
+  el.addEventListener('mouseleave', () => {
+    it.hov = 0;
+    cursor.classList.remove('visible');
+  });
+
+  // Robust mobile and desktop tap detection
+  let cardPointerDownX = 0, cardPointerDownY = 0, cardPointerDownTime = 0;
+
+  el.addEventListener('pointerdown', (e) => {
+    cardPointerDownX = e.clientX;
+    cardPointerDownY = e.clientY;
+    cardPointerDownTime = performance.now();
+  }, { passive: true });
+
+  el.addEventListener('pointerup', (e) => {
+    const dist = Math.hypot(e.clientX - cardPointerDownX, e.clientY - cardPointerDownY);
+    const duration = performance.now() - cardPointerDownTime;
+    // On touchscreens and mice: if moved under 18px and held under 450ms, it is a deliberate TAP
+    if (dist < 18 && duration < 450) {
+      e.preventDefault();
+      e.stopPropagation();
+      openShootModal(it.i, e);
+    }
+  });
+
+  // Fallback click listener (keyboard Enter key / accessibility / desktop fallback)
+  el.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (shootOpen) return;
+    if (performance.now() - cardPointerDownTime < 500) return; // already handled by pointerup
+    openShootModal(it.i, e);
+  });
+
+  world.appendChild(el);
+  it.el = el;
+});
+
+function layout() {
+  W = innerWidth;
+  H = innerHeight;
+  baseRadius = clamp(Math.min(W, H) * 0.52, 280, 480);
+  CW = clamp(W * 0.12, 95, 145);
+
+  I.forEach(it => {
+    const w = CW * it.sc;
+    const h = w * it.ratio;
+    const s = it.el.style;
+    s.width = w + 'px';
+    s.height = h + 'px';
+    s.marginLeft = (-w / 2) + 'px';
+    s.marginTop = (-h / 2) + 'px';
+  });
+}
+addEventListener('resize', layout);
+layout();
+
+$('#count').textContent = I.length + ' Shoots';
+
+/* ================= 3D Space Physics ================= */
+let ry = 0.2, rx = -0.15;
+let vy = 0, vx = 0;
+let drag = false, tgt = null, opened = false, shootOpen = false, last = 0;
+let mouseX = W / 2, mouseY = H / 2;
+let curX = mouseX, curY = mouseY;
+
+window.addEventListener('pointermove', e => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  last = performance.now(); // Reset idle rotation timer on cursor move
+});
+
+const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
+
+function frame(now) {
+  requestAnimationFrame(frame);
+
+  curX += (mouseX - curX) * 0.25;
+  curY += (mouseY - curY) * 0.25;
+  cursor.style.transform = `translate3d(${curX}px, ${curY}px, 0)`;
+
+  if (opened) return;
+  if (shootOpen) {
+    if (tgt) {
+      const dy = wrap(tgt.y - ry);
+      ry += dy * 0.08;
+      rx += (tgt.x - rx) * 0.08;
+      if (Math.abs(dy) + Math.abs(tgt.x - rx) < 0.002) tgt = null;
+      world.style.transform = `rotateX(${rx}rad) rotateY(${ry}rad)`;
+    }
+    return;
+  }
+  const t = now / 1000;
+
+  userZoom += (targetZoom - userZoom) * 0.12;
+  zoomPercent.textContent = Math.round(userZoom * 100) + '%';
+
+  // Check if any card is hovered by the mouse
+  const anyHovered = I.some(c => c.hov > 0.05);
+
+  if (!drag) {
+    if (tgt) {
+      const dy = wrap(tgt.y - ry);
+      ry += dy * 0.08;
+      rx += (tgt.x - rx) * 0.08;
+      vy = vx = 0;
+      if (Math.abs(dy) + Math.abs(tgt.x - rx) < 0.002) tgt = null;
+    } else {
+      ry += vy;
+      rx += vx;
+      vy *= 0.93;
+      vx *= 0.93;
+      // Pause idle rotation completely if user is hovering over a card
+      if (!reduce && now - last > 3000 && !anyHovered) {
+        ry += 0.0009;
+      }
+    }
+  }
+
+  rx = clamp(rx, -1.05, 1.05);
+  world.style.transform = `rotateX(${rx}rad) rotateY(${ry}rad)`;
+
+  for (const c of I) {
+    // Smooth hover interpolation
+    c.h += (c.hov - c.h) * 0.22;
+
+    // Dampen floating oscillation to 0 when hovered so card stays 100% still under mouse pointer
+    const floatDamp = 1 - c.h;
+    const cardRadius = baseRadius * userZoom * c.rMult;
+    const rFloat = cardRadius + (reduce ? 0 : Math.sin(t * c.s + c.p) * 7 * floatDamp);
+
+    // Dynamic zoom-dependent scale so photos physically shrink and grow with zoom
+    const zoomScale = Math.pow(userZoom, 0.88);
+    c.el.style.transform = `rotateY(${c.th}rad) rotateX(${c.ph}rad) translateZ(${rFloat}px) scale(${zoomScale.toFixed(3)})`;
+    c.el.style.zIndex = c.hov ? '99' : String(10 + Math.round((c.ph + 1.2) * 10));
+  }
+}
+requestAnimationFrame(frame);
+
+/* Pointer Orbit & Pinch Zoom */
+let sx, sy, lx, ly, moved = 0, hinted = false;
+let activeTouches = new Map();
+let initialPinchDist = null;
+let initialPinchZoom = 1.0;
+
+space.addEventListener('pointerdown', e => {
+  activeTouches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+  if (activeTouches.size === 1) {
+    drag = true;
+    tgt = null;
+    moved = 0;
+    sx = lx = e.clientX;
+    sy = ly = e.clientY;
+    vx = vy = 0;
+    last = performance.now();
+    space.classList.add('drag');
+  } else if (activeTouches.size === 2) {
+    drag = false;
+    const pts = Array.from(activeTouches.values());
+    initialPinchDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    initialPinchZoom = targetZoom;
+  }
+});
+
+space.addEventListener('pointermove', e => {
+  if (activeTouches.has(e.pointerId)) {
+    activeTouches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  }
+
+  if (activeTouches.size === 2 && initialPinchDist) {
+    const pts = Array.from(activeTouches.values());
+    const currentDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    const scaleFactor = currentDist / initialPinchDist;
+    targetZoom = clamp(initialPinchZoom * scaleFactor, 0.45, 2.4);
+    last = performance.now();
+    return;
+  }
+
+  if (!drag) return;
+  const dx = e.clientX - lx, dy = e.clientY - ly;
+  lx = e.clientX;
+  ly = e.clientY;
+  last = performance.now();
+  moved = Math.max(moved, Math.hypot(e.clientX - sx, e.clientY - sy));
+
+  ry += dx * 0.0055;
+  rx -= dy * 0.0055;
+  vy = dx * 0.0055 * 0.6 + vy * 0.4;
+  vx = -dy * 0.0055 * 0.6 + vx * 0.4;
+
+  if (moved > 8 && !hinted) {
+    hinted = true;
+    $('#hint').style.opacity = '0';
+  }
+});
+
+function endPointer(e) {
+  activeTouches.delete(e.pointerId);
+  if (activeTouches.size < 2) initialPinchDist = null;
+  if (activeTouches.size === 0) {
+    drag = false;
+    space.classList.remove('drag');
+    last = performance.now();
+  }
+}
+
+space.addEventListener('pointerup', endPointer);
+space.addEventListener('pointercancel', endPointer);
+
+space.addEventListener('wheel', e => {
+  e.preventDefault();
+  last = performance.now();
+  if (e.ctrlKey || Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+    const zoomDelta = -e.deltaY * 0.002;
+    targetZoom = clamp(targetZoom + zoomDelta, 0.45, 2.4);
+  } else {
+    ry += e.deltaX * 0.003;
+  }
+}, { passive: false });
+
+$('#btnZoomIn').addEventListener('click', () => { targetZoom = clamp(targetZoom + 0.25, 0.45, 2.4); });
+$('#btnZoomOut').addEventListener('click', () => { targetZoom = clamp(targetZoom - 0.25, 0.45, 2.4); });
+
+/* ================= 1. COVER-FLOW EDITORIAL GALLERY LOGIC ================= */
+const shootModal = $('#shootModal');
+const cfTrack = $('#cfTrack');
+const cfDashes = $('#cfDashes');
+const shootCounter = $('#shootCounter');
+const shootTitle = $('#shootTitle');
+let activeShootIndex = 0;
+let activePhotoIndex = 0;
+
+function renderCoverFlowPositions() {
+  const cards = $$('.cf-card');
+  if (!cards.length) return;
+  const isMobile = window.innerWidth <= 768;
+  const spacingPercent = isMobile ? 86 : 94;
+
+  cards.forEach((card, idx) => {
+    const offset = idx - activePhotoIndex;
+    const absOffset = Math.abs(offset);
+    card.classList.toggle('active', offset === 0);
+
+    if (offset === 0) {
+      // Center Active Card (Elevated, full color, crisp native 2D Retina rendering)
+      card.style.transform = `translate3d(0, 0, 0) scale(1)`;
+      card.style.opacity = '1';
+      card.style.zIndex = '20';
+      card.style.filter = 'none';
+      card.style.pointerEvents = 'auto';
+    } else if (absOffset === 1) {
+      // Immediate Neighbor (Peeking on sides, dimmed)
+      const sign = Math.sign(offset);
+      card.style.transform = `translate3d(${sign * spacingPercent}%, 0, 0) scale(${isMobile ? 0.88 : 0.90})`;
+      card.style.opacity = isMobile ? '0.36' : '0.44';
+      card.style.zIndex = '10';
+      card.style.filter = 'brightness(0.65)';
+      card.style.pointerEvents = 'auto';
+    } else if (absOffset === 2) {
+      // 2nd Neighbor
+      const sign = Math.sign(offset);
+      card.style.transform = `translate3d(${sign * spacingPercent * 1.82}%, 0, 0) scale(${isMobile ? 0.74 : 0.78})`;
+      card.style.opacity = isMobile ? '0.1' : '0.18';
+      card.style.zIndex = '5';
+      card.style.filter = 'brightness(0.4)';
+      card.style.pointerEvents = 'auto';
+    } else {
+      // Offscreen
+      const sign = Math.sign(offset);
+      card.style.transform = `translate3d(${sign * spacingPercent * 2.5}%, 0, 0) scale(0.65)`;
+      card.style.opacity = '0';
+      card.style.zIndex = '1';
+      card.style.pointerEvents = 'none';
+    }
+  });
+
+  // Update counter
+  const shoot = I[activeShootIndex];
+  if (shoot) {
+    const curStr = String(activePhotoIndex + 1).padStart(2, '0');
+    const totStr = String(shoot.photos.length).padStart(2, '0');
+    if (shootCounter) shootCounter.textContent = `${curStr} / ${totStr}`;
+  }
+
+  // Update dashes
+  $$('.cf-dash').forEach((dash, idx) => {
+    dash.classList.toggle('active', idx === activePhotoIndex);
+  });
+}
+
+function prevShootPhoto() {
+  const shoot = I[activeShootIndex];
+  if (!shoot) return;
+  activePhotoIndex = (activePhotoIndex - 1 + shoot.photos.length) % shoot.photos.length;
+  renderCoverFlowPositions();
+}
+
+function nextShootPhoto() {
+  const shoot = I[activeShootIndex];
+  if (!shoot) return;
+  activePhotoIndex = (activePhotoIndex + 1) % shoot.photos.length;
+  renderCoverFlowPositions();
+}
+
+function openShootModal(shootIdx, evt) {
+  if (shootOpen && activeShootIndex === shootIdx) return;
+  activeShootIndex = shootIdx;
+  activePhotoIndex = 0;
+  const shoot = I[shootIdx];
+  shootOpen = true;
+  drag = false;
+  activeTouches.clear();
+  space.classList.remove('drag');
+  cursor.classList.remove('visible');
+
+  // Smoothly center the 3D space camera towards the selected piece
+  tgt = {
+    y: -shoot.th,
+    x: -shoot.ph
+  };
+
+  // Blur background 3D space with cinematic transition
+  $('#space').classList.add('blurred');
+
+  if (shootTitle) shootTitle.textContent = shoot.name.toUpperCase();
+
+  // Render Cover-Flow Cards (Matching user screenshot: look tag, title, price, quick inspect button)
+  cfTrack.innerHTML = shoot.photos.map((f, pIdx) => `
+    <div class="cf-card" data-idx="${pIdx}">
+      <div class="cf-card-inner">
+        <img src="items/${f}" alt="${shoot.name}">
+        <div class="cf-overlay">
+          <div class="cf-tag">LOOK 0${pIdx + 1} // ${shoot.g.toUpperCase()}</div>
+          <h3 class="cf-title">${shoot.name}</h3>
+          <div class="cf-card-bottom">
+            <span class="cf-price">$${shoot.price}</span>
+            <button class="cf-inspect-btn" data-action="inspect">
+              QUICK INSPECT <span class="cf-arrow">→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Render Dashes Indicator (— — — —)
+  cfDashes.innerHTML = shoot.photos.map((_, pIdx) => `
+    <div class="cf-dash ${pIdx === 0 ? 'active' : ''}" data-idx="${pIdx}"></div>
+  `).join('');
+
+  // Cinematic Spatial Opening Animation:
+  // Calculate clicked 3D card's screen coordinates to animate from
+  let dx = 0, dy = 0, startScale = 0.38;
+  if (shoot.el) {
+    const r = shoot.el.getBoundingClientRect();
+    if (r && r.width > 10 && !isNaN(r.left)) {
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+      dx = cx - window.innerWidth / 2;
+      dy = cy - window.innerHeight / 2;
+      const cardW = window.innerWidth <= 768 ? Math.min(window.innerWidth * 0.78, 340) : Math.min(Math.max(window.innerWidth * 0.32, 280), 460);
+      startScale = Math.min(Math.max(r.width / cardW, 0.25), 0.6);
+    } else {
+      dy = 30;
+      startScale = 0.85;
+    }
+  } else if (evt && evt.clientX) {
+    dx = evt.clientX - window.innerWidth / 2;
+    dy = evt.clientY - window.innerHeight / 2;
+  }
+
+  const cards = $$('.cf-card');
+  // Initialize cards at clicked source location before opening
+  cards.forEach((card, idx) => {
+    card.style.transition = 'none';
+    if (idx === 0) {
+      card.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) scale(${startScale.toFixed(3)})`;
+      card.style.opacity = '0.9';
+      card.style.filter = 'blur(4px)';
+      card.style.zIndex = '20';
+    } else {
+      card.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) scale(${(startScale * 0.85).toFixed(3)})`;
+      card.style.opacity = '0';
+      card.style.filter = 'blur(8px)';
+      card.style.zIndex = '10';
+    }
+  });
+
+  // Open modal container
+  shootModal.classList.add('open');
+  void shootModal.offsetWidth;
+
+  // Trigger smooth expansion reliably on both mobile and desktop
+  let animationTriggered = false;
+  const triggerExpand = () => {
+    if (animationTriggered) return;
+    animationTriggered = true;
+    cards.forEach((card, idx) => {
+      if (idx === 0) {
+        card.style.transition = 'transform 0.58s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease, filter 0.45s ease';
+      } else {
+        card.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.06s, opacity 0.48s ease 0.06s, filter 0.48s ease 0.06s';
+      }
+    });
+    renderCoverFlowPositions();
+  };
+
+  requestAnimationFrame(triggerExpand);
+  setTimeout(triggerExpand, 35);
+}
+
+function closeShootModal() {
+  shootOpen = false;
+  const cards = $$('.cf-card');
+  cards.forEach((card, idx) => {
+    card.style.transition = 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, filter 0.3s ease';
+    if (idx === activePhotoIndex) {
+      card.style.transform = 'translate3d(0, 30px, 0) scale(0.88)';
+      card.style.opacity = '0';
+      card.style.filter = 'blur(6px)';
+    } else {
+      card.style.transform = 'translate3d(0, 0, 0) scale(0.7)';
+      card.style.opacity = '0';
+    }
+  });
+
+  $('#space').classList.remove('blurred');
+  setTimeout(() => {
+    if (!shootOpen) {
+      shootModal.classList.remove('open');
+    }
+  }, 380);
+  last = performance.now();
+}
+
+// Close handlers
+$('#closeShootBtn').addEventListener('click', closeShootModal);
+const cfCloseIcon = $('#cfCloseIcon');
+if (cfCloseIcon) cfCloseIcon.addEventListener('click', closeShootModal);
+
+// Close on stage click outside cards
+$('#cfStage').addEventListener('click', e => {
+  if (e.target === $('#cfStage') || e.target === cfTrack) {
+    closeShootModal();
+  }
+});
+
+// Cover-Flow Navigation Buttons
+$('#shootPrev').addEventListener('click', e => {
+  e.stopPropagation();
+  prevShootPhoto();
+});
+
+$('#shootNext').addEventListener('click', e => {
+  e.stopPropagation();
+  nextShootPhoto();
+});
+
+// Card Click: clicking active inspect button opens product, clicking side card slides to it!
+cfTrack.addEventListener('click', e => {
+  const card = e.target.closest('.cf-card');
+  if (!card) return;
+  const idx = parseInt(card.dataset.idx, 10);
+  
+  const inspectBtn = e.target.closest('[data-action="inspect"]');
+  if (inspectBtn || (idx === activePhotoIndex && e.target.closest('.cf-overlay'))) {
+    closeShootModal();
+    openItem(activeShootIndex);
+    return;
+  }
+
+  if (idx !== activePhotoIndex) {
+    activePhotoIndex = idx;
+    renderCoverFlowPositions();
+  }
+});
+
+// Dashes Click
+cfDashes.addEventListener('click', e => {
+  const dash = e.target.closest('.cf-dash');
+  if (!dash) return;
+  activePhotoIndex = parseInt(dash.dataset.idx, 10);
+  renderCoverFlowPositions();
+});
+
+// Touch swipe support for Cover-Flow
+let touchStartX = 0, touchStartY = 0;
+cfTrack.addEventListener('touchstart', e => {
+  if (e.touches.length === 1) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }
+}, { passive: true });
+
+cfTrack.addEventListener('touchend', e => {
+  if (e.changedTouches.length === 1) {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) nextShootPhoto();
+      else prevShootPhoto();
+    }
+  }
+}, { passive: true });
+
+// Keyboard navigation (Escape, ArrowLeft, ArrowRight)
+window.addEventListener('keydown', e => {
+  if (shootOpen) {
+    if (e.key === 'Escape') closeShootModal();
+    if (e.key === 'ArrowLeft') prevShootPhoto();
+    if (e.key === 'ArrowRight') nextShootPhoto();
+  }
+});
+
+/* ================= 2. FULL PRODUCT DETAIL PAGE ================= */
+const V = $('#viewer'), SC = $('#scroll'), TR = $('#track'), FIRST = $('#first');
+let list = [], idx = 0, size = 'XS', opt = null;
+
+const rr = r => `inset(${r.top}px ${W - r.right}px ${H - r.bottom}px ${r.left}px round 0px)`;
+const cRect = (w, h) => ({
+  top: H / 2 - h / 2,
+  bottom: H / 2 + h / 2,
+  left: W / 2 - w / 2,
+  right: W / 2 + w / 2
+});
+
+function openItem(i, rect) {
+  const it = I[i];
+  list = I.filter(o => o.g === it.g);
+  if (!list.length) list = [it];
+  idx = list.indexOf(it);
+  if (idx === -1) { list = I; idx = i; }
+  opened = true;
+  cursor.classList.remove('visible');
+
+  // Render product slides using this shoot's photos
+  TR.innerHTML = it.photos.map(f => `
+    <div class="slide">
+      <img src="items/${f}" alt="${it.name}">
+    </div>
+  `).join('');
+
+  $('#dots').innerHTML = it.photos.map(() => '<i></i>').join('');
+
+  V.style.transition = 'none';
+  V.style.clipPath = rr(rect || cRect(140, 180));
+  V.style.visibility = 'visible';
+
+  SC.scrollTop = 0;
+  progress();
+  opt = null;
+
+  TR.scrollTo({ left: 0, behavior: 'instant' });
+  render(true);
+
+  try {
+    if (location.protocol !== 'file:') history.pushState(null, '', '#' + it.slug);
+    else location.hash = it.slug;
+  } catch(e) {}
+
+  V.offsetWidth;
+  V.style.transition = 'clip-path .38s cubic-bezier(.22, .8, .2, 1)';
+  V.style.clipPath = 'inset(0px 0px 0px 0px round 0px)';
+  $('#close').focus({ preventScroll: true });
+}
+
+function closeViewer() {
+  if (!opened) return;
+  const c = list[idx] || I[activeShootIndex];
+  SC.scrollTop = 0;
+
+  ry = -c.th;
+  rx = -c.ph;
+  tgt = null;
+  vx = vy = 0;
+  opened = false;
+  last = performance.now();
+
+  V.style.transition = 'clip-path .38s cubic-bezier(.22, .8, .2, 1)';
+  V.style.clipPath = rr(cRect(CW * c.sc * 1.3, CW * c.sc * 1.7));
+
+  setTimeout(() => {
+    if (!opened) V.style.visibility = 'hidden';
+  }, 400);
+
+  try {
+    if (location.protocol !== 'file:') {
+      if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+    } else {
+      location.hash = '';
+    }
+  } catch(e) {}
+}
+
+const chips = (el, arr, sel) => {
+  el.innerHTML = arr.map(s => `<button role="radio" aria-checked="${s === sel}">${s}</button>`).join('');
+};
+
+function render(first) {
+  const it = list[idx] || I[activeShootIndex], g = G[it.g] || G.tees;
+  $('#nm').textContent = it.name;
+  $('#pr').textContent = '$' + it.price.toFixed(2);
+  $('#ds').textContent = g.d;
+  $('#long').textContent = g.l;
+
+  $('#spec').innerHTML = `
+    <li><span>Material</span>${g.m}</li>
+    <li><span>Print</span>Hand printed, treated, and distressed</li>
+    <li><span>Shipping</span>Allow 2–3 weeks shipping time</li>
+  `;
+
+  chips($('#sz'), ['XS', 'S', 'M', 'L'], size);
+  $('#ol').textContent = g.ol;
+  if (!g.o.includes(opt)) opt = g.o[0];
+  chips($('#op'), g.o, opt);
+
+  const buyBtn = $('#buy');
+  if (it.soldOut) {
+    buyBtn.textContent = 'SOLD OUT';
+    buyBtn.classList.add('sold-out');
+  } else {
+    buyBtn.textContent = 'ADD TO CART';
+    buyBtn.classList.remove('sold-out');
+  }
+
+  [...$('#dots').children].forEach((d, k) => d.classList.toggle('on', k === 0));
+
+  $('#rel').innerHTML = list.map((o, k) => k === idx ? '' : `
+    <button data-k="${k}" aria-label="${o.name}">
+      <div class="t"><img src="${o.img}" alt="${o.name}"></div>
+      <b>${o.name}</b>
+      <span>$${o.price.toFixed(2)}</span>
+    </button>
+  `).join('');
+}
+
+function progress() {
+  let p = clamp(SC.scrollTop / (H * 0.75), 0, 1);
+  p = p * p * (3 - 2 * p);
+  FIRST.style.opacity = 1 - p * 0.88;
+  FIRST.style.transform = `scale(${1 - 0.08 * p}) translateY(${-p * 4}%)`;
+}
+SC.addEventListener('scroll', progress, { passive: true });
+
+let raf = 0;
+TR.addEventListener('scroll', () => {
+  cancelAnimationFrame(raf);
+  raf = requestAnimationFrame(() => {
+    const it = list[idx] || I[activeShootIndex];
+    const k = clamp(Math.round(TR.scrollLeft / TR.clientWidth), 0, it.photos.length - 1);
+    [...$('#dots').children].forEach((d, dotIdx) => d.classList.toggle('on', dotIdx === k));
+  });
+}, { passive: true });
+
+function pick(box, set) {
+  box.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    set(b.textContent);
+    [...box.children].forEach(x => x.setAttribute('aria-checked', x === b));
+  });
+}
+pick($('#sz'), v => size = v);
+pick($('#op'), v => opt = v);
+
+let bt;
+$('#buy').addEventListener('click', () => {
+  const b = $('#buy');
+  const it = list[idx] || I[activeShootIndex];
+  if (it.soldOut) {
+    b.textContent = 'NOTIFY ME';
+    clearTimeout(bt);
+    bt = setTimeout(() => b.textContent = 'SOLD OUT', 1600);
+  } else {
+    b.textContent = 'ADDED: ' + size + ', ' + opt;
+    clearTimeout(bt);
+    bt = setTimeout(() => b.textContent = 'ADD TO CART', 1800);
+  }
+});
+
+$('#rel').addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  const targetShoot = list[+b.dataset.k];
+  if (targetShoot) {
+    openShootModal(targetShoot.i);
+  }
+});
+
+$('#close').addEventListener('click', closeViewer);
+addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (opened) closeViewer();
+    else if (shootOpen) closeShootModal();
+  }
+});
+</script>
+</body>
+</html>
