@@ -188,6 +188,25 @@ button, summary {
 }
 
 /* ================= Zoom Controls ================= */
+
+.studio-info-badge {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  z-index: 50;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 6px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
 .zoom-controls {
   position: fixed;
   right: 24px;
@@ -845,6 +864,26 @@ button, summary {
   justify-content: center;
   background: #000000;
 }
+
+.hero-video-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+.hero-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.hero-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
 .hero-inner {
   position: relative;
   z-index: 10;
@@ -1483,7 +1522,26 @@ th { font-weight: 700; }
   .buy { flex: 1; min-height: 48px; }
   .first { padding: calc(56px + env(safe-area-inset-top, 0px)) 16px 24px; }
   .rel { grid-template-columns: 1fr 1fr; }
-  .zoom-controls { right: 16px; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+  
+.studio-info-badge {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  z-index: 50;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 6px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+.zoom-controls { right: 16px; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
   .zoom-btn { width: 34px; height: 34px; font-size: 15px; }
   .hint { bottom: calc(24px + env(safe-area-inset-bottom, 0px)); font-size: 10px; padding: 4px 10px; }
 }
@@ -1582,8 +1640,22 @@ th { font-weight: 700; }
   </div>
 </aside>
 
-<!-- ================= 3. HERO SECTION ================= -->
+<!-- ================= 3. HERO SECTION WITH BACKGROUND VIDEO ================= -->
 <section id="hero">
+  <div class="hero-video-wrap">
+    <video
+      autoplay
+      loop
+      muted
+      playsinline
+      poster="https://res.cloudinary.com/dhzkb1t97/video/upload/q_auto,f_auto,w_1080/v1780518216/rlwhmn005xn5lt6d3mbr.jpg"
+      class="hero-video"
+    >
+      <source src="https://res.cloudinary.com/dhzkb1t97/video/upload/q_auto,f_auto,w_1080/v1780518216/rlwhmn005xn5lt6d3mbr.mp4" type="video/mp4">
+    </video>
+    <div class="hero-video-overlay"></div>
+  </div>
+
   <div class="hero-inner">
     <img src="logo.png" alt="VEYRIX" class="hero-logo">
     <button class="hero-cta-btn" id="heroCtaBtn">
@@ -1607,6 +1679,7 @@ th { font-weight: 700; }
 <div class="hint" id="hint">Drag to rotate • Pinch / Wheel to zoom • Tap piece to open shoot gallery</div>
 
 <!-- Zoom Controls -->
+<div class="studio-info-badge"><span id="count">18 Shoots</span> • <span id="zoomPercent">100%</span></div>
 <div class="zoom-controls">
   <button class="zoom-btn" id="btnZoomIn" title="Zoom in">+</button>
   <button class="zoom-btn" id="btnZoomOut" title="Zoom out">−</button>
@@ -2705,7 +2778,7 @@ function layout() {
 addEventListener('resize', layout);
 layout();
 
-$('#count').textContent = I.length + ' Shoots';
+const _cnt = $('#count'); if (_cnt) _cnt.textContent = I.length + ' Shoots';
 
 /* ================= 3D Space Physics ================= */
 let ry = 0.2, rx = -0.15;
@@ -2743,7 +2816,7 @@ function frame(now) {
   const t = now / 1000;
 
   userZoom += (targetZoom - userZoom) * 0.12;
-  zoomPercent.textContent = Math.round(userZoom * 100) + '%';
+  if (zoomPercent) zoomPercent.textContent = Math.round(userZoom * 100) + '%';
 
   // Check if any card is hovered by the mouse
   const anyHovered = I.some(c => c.hov > 0.05);
@@ -3205,8 +3278,9 @@ function openItem(i, rect) {
   render(true);
 
   try {
-    if (location.protocol !== 'file:') history.pushState(null, '', '#' + it.slug);
-    else location.hash = it.slug;
+    if (location.protocol.startsWith('http')) {
+      history.pushState(null, '', '#' + it.slug);
+    }
   } catch(e) {}
 
   V.offsetWidth;
@@ -3235,10 +3309,8 @@ function closeViewer() {
   }, 400);
 
   try {
-    if (location.protocol !== 'file:') {
+    if (location.protocol.startsWith('http')) {
       if (location.hash) history.replaceState(null, '', location.pathname + location.search);
-    } else {
-      location.hash = '';
     }
   } catch(e) {}
 }
