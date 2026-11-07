@@ -281,7 +281,15 @@ button, summary {
   padding: 0 28px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
-  z-index: 20;
+  z-index: 30;
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+#shootModal.open .cf-header {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 .cf-btn {
@@ -345,7 +353,6 @@ button, summary {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  perspective: 1400px;
   user-select: none;
 }
 
@@ -356,10 +363,9 @@ button, summary {
   display: flex;
   align-items: center;
   justify-content: center;
-  transform-style: preserve-3d;
 }
 
-/* Individual Cover-Flow Card */
+/* Individual Cover-Flow Card (Ultra-crisp Retina 2D, NO 3D-perspective blurring) */
 .cf-card {
   position: absolute;
   top: 50%;
@@ -372,11 +378,13 @@ button, summary {
   overflow: hidden;
   box-shadow: 0 32px 80px rgba(0, 0, 0, 0.65), 0 8px 24px rgba(0, 0, 0, 0.3);
   background: #111111;
-  transition: transform 0.48s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.42s ease,
-              filter 0.42s ease;
-  will-change: transform, opacity;
+  transition: transform 0.58s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.45s ease,
+              filter 0.45s ease;
   cursor: pointer;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform-origin: center center;
 }
 
 .cf-card-inner {
@@ -384,6 +392,7 @@ button, summary {
   height: 100%;
   position: relative;
   overflow: hidden;
+  background: #111111;
 }
 
 .cf-card-inner img {
@@ -392,6 +401,11 @@ button, summary {
   object-fit: cover;
   display: block;
   pointer-events: none;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 /* Gradient Overlay on Active Card */
@@ -508,6 +522,15 @@ button, summary {
   position: relative;
   flex-shrink: 0;
   padding: 0 28px;
+  z-index: 30;
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.08s, opacity 0.4s ease 0.08s;
+}
+
+#shootModal.open .cf-footer {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 .cf-dashes {
@@ -1054,7 +1077,7 @@ const G = {
   }
 };
 
-// 18 Curated Shoots with multi-photo series
+// 18 Curated Shoots with multi-photo series (100% High-Resolution Portrait Photos, No Low-Res / No Stretched Crops)
 const SHOOTS = [
   {
     id: 1,
@@ -1062,9 +1085,9 @@ const SHOOTS = [
     price: 50,
     g: "tees",
     soldOut: true,
-    hero: "item_01.jpg",
+    hero: "tee_black.jpg",
     aspect: "3/4",
-    photos: ["item_01.jpg", "item_02.jpg", "item_08.jpg", "item_43.jpg"],
+    photos: ["tee_black.jpg", "item_02.jpg", "item_08.jpg", "item_04.jpg"],
     desc: "Hand printed, treated, and distressed cotton jersey tee with vintage «Рождество» graphic.",
     shootTitle: "Shoot 01 — Christmas Tragedy Editorial",
     shootLocation: "Milan Studio Lab / Drop 01",
@@ -1078,7 +1101,7 @@ const SHOOTS = [
     soldOut: false,
     hero: "item_02.jpg",
     aspect: "4/5",
-    photos: ["item_02.jpg", "item_03.jpg", "item_07.jpg"],
+    photos: ["item_02.jpg", "mood_lookbook_1.jpg", "tee_white.jpg", "item_06.jpg"],
     desc: "Garment washed minimal tee with reinforced ribbing and boxy drop shoulder.",
     shootTitle: "Shoot 02 — Quiet Hour Series",
     shootLocation: "Industrial Studio / Daylight",
@@ -1090,9 +1113,9 @@ const SHOOTS = [
     price: 80,
     g: "ls",
     soldOut: true,
-    hero: "item_09.jpg",
+    hero: "ls_black.jpg",
     aspect: "3/4",
-    photos: ["item_09.jpg", "item_10.jpg", "item_15.jpg", "item_44.jpg"],
+    photos: ["ls_black.jpg", "item_14.jpg", "mood_lookbook_2.jpg", "item_44.jpg"],
     desc: "Distressed by hand one piece at a time. Blown out elbows and elongated cuffs.",
     shootTitle: "Shoot 03 — Anti Ballet Movement",
     shootLocation: "Milan Concrete Warehouse",
@@ -1104,9 +1127,9 @@ const SHOOTS = [
     price: 85,
     g: "ls",
     soldOut: false,
-    hero: "item_10.jpg",
+    hero: "item_14.jpg",
     aspect: "1/1",
-    photos: ["item_10.jpg", "item_11.jpg", "item_14.jpg"],
+    photos: ["item_14.jpg", "ls_black.jpg", "item_43.jpg", "mood_detail.jpg"],
     desc: "Extended sleeve rib, heavy wash fade, and artisanal blown elbow distressing.",
     shootTitle: "Shoot 04 — Deconstructed Knits",
     shootLocation: "Studio B Lookbook",
@@ -1118,9 +1141,9 @@ const SHOOTS = [
     price: 85,
     g: "pants",
     soldOut: false,
-    hero: "item_28.jpg",
+    hero: "item_29.jpg",
     aspect: "3/4",
-    photos: ["item_28.jpg", "item_29.jpg", "item_30.jpg", "item_32.jpg"],
+    photos: ["item_29.jpg", "item_30.jpg", "item_32.jpg", "item_31.jpg"],
     desc: "Black faded wide leg jeans with custom crossbones embroidery on back pocket.",
     shootTitle: "Shoot 05 — GLOE Skull Denim Campaign",
     shootLocation: "Night Rooftop & Studio Archive",
@@ -1132,9 +1155,9 @@ const SHOOTS = [
     price: 135,
     g: "pants",
     soldOut: false,
-    hero: "item_29.jpg",
+    hero: "item_32.jpg",
     aspect: "4/5",
-    photos: ["item_29.jpg", "item_31.jpg", "item_33.jpg"],
+    photos: ["item_32.jpg", "item_29.jpg", "item_30.jpg", "item_33.jpg"],
     desc: "Japanese selvedge denim cut in a modern relaxed wide silhouette.",
     shootTitle: "Shoot 06 — Raw Selvedge Lookbook",
     shootLocation: "Artisan Mill / Daylight",
@@ -1146,9 +1169,9 @@ const SHOOTS = [
     price: 140,
     g: "hd",
     soldOut: false,
-    hero: "item_16.jpg",
+    hero: "item_18.jpg",
     aspect: "3/4",
-    photos: ["item_16.jpg", "item_17.jpg", "item_19.jpg", "item_20.jpg"],
+    photos: ["item_18.jpg", "mood_streetwear.jpg", "item_35.jpg", "item_14.jpg"],
     desc: "Brushed heavyweight fleece 450gsm with architectural double-wall hood.",
     shootTitle: "Shoot 07 — Cold Room Heavyweight Drop",
     shootLocation: "Minimal Grey Studio",
@@ -1160,9 +1183,9 @@ const SHOOTS = [
     price: 135,
     g: "hd",
     soldOut: false,
-    hero: "item_17.jpg",
+    hero: "item_35.jpg",
     aspect: "1/1",
-    photos: ["item_17.jpg", "item_18.jpg", "item_21.jpg"],
+    photos: ["item_35.jpg", "item_18.jpg", "item_36.jpg", "mood_lookbook_1.jpg"],
     desc: "Heather ash tone fleece featuring raw hem and kangaroo pocket.",
     shootTitle: "Shoot 08 — Ash Capsule",
     shootLocation: "Daylight Concrete Studio",
@@ -1174,9 +1197,9 @@ const SHOOTS = [
     price: 220,
     g: "out",
     soldOut: false,
-    hero: "item_22.jpg",
+    hero: "item_27.jpg",
     aspect: "3/4",
-    photos: ["item_22.jpg", "item_23.jpg", "item_26.jpg", "item_27.jpg"],
+    photos: ["item_27.jpg", "item_23.jpg", "jacket_bomber.jpg", "item_24.jpg"],
     desc: "Classic studio trucker cut constructed from raw indigo selvedge denim.",
     shootTitle: "Shoot 09 — Type-III Outerwear",
     shootLocation: "Studio Lookbook Capsule",
@@ -1188,9 +1211,9 @@ const SHOOTS = [
     price: 180,
     g: "out",
     soldOut: false,
-    hero: "item_23.jpg",
+    hero: "jacket_bomber.jpg",
     aspect: "4/3",
-    photos: ["item_23.jpg", "item_24.jpg", "item_25.jpg"],
+    photos: ["jacket_bomber.jpg", "item_24.jpg", "item_25.jpg", "item_23.jpg"],
     desc: "Technical compact twill overshirt with hidden snap placket.",
     shootTitle: "Shoot 10 — Technical Outerwear",
     shootLocation: "Architectural Studio",
@@ -1202,9 +1225,9 @@ const SHOOTS = [
     price: 165,
     g: "out",
     soldOut: false,
-    hero: "item_34.jpg",
+    hero: "item_36.jpg",
     aspect: "4/5",
-    photos: ["item_34.jpg", "item_35.jpg", "item_36.jpg"],
+    photos: ["item_36.jpg", "item_35.jpg", "item_18.jpg", "mood_detail.jpg"],
     desc: "7-gauge fisherman rib knit in soft extrafine merino wool.",
     shootTitle: "Shoot 11 — Winter Merino Knitwear",
     shootLocation: "Milan Winter Lookbook",
@@ -1218,7 +1241,7 @@ const SHOOTS = [
     soldOut: false,
     hero: "item_05.jpg",
     aspect: "1/1",
-    photos: ["item_05.jpg", "item_06.jpg", "item_04.jpg"],
+    photos: ["item_05.jpg", "item_06.jpg", "item_04.jpg", "mood_streetwear.jpg"],
     desc: "Boxy pocket tee with external exposed seams and vintage wash fade.",
     shootTitle: "Shoot 12 — Raw Seam Essentials",
     shootLocation: "Daylight Studio",
@@ -1232,7 +1255,7 @@ const SHOOTS = [
     soldOut: false,
     hero: "item_25.jpg",
     aspect: "4/3",
-    photos: ["item_25.jpg", "item_24.jpg", "item_47.jpg"],
+    photos: ["item_25.jpg", "jacket_bomber.jpg", "item_24.jpg", "mood_streetwear.jpg"],
     desc: "Supple lambskin blouson with custom antiqued silver hardware.",
     shootTitle: "Shoot 13 — Moto Leather Archive",
     shootLocation: "Studio B Darkroom",
@@ -1246,7 +1269,7 @@ const SHOOTS = [
     soldOut: false,
     hero: "item_31.jpg",
     aspect: "3/4",
-    photos: ["item_31.jpg", "item_32.jpg", "item_33.jpg"],
+    photos: ["item_31.jpg", "cargo_pants.jpg", "item_33.jpg", "item_32.jpg"],
     desc: "Deep front double pleats with tailored drape and slant pockets.",
     shootTitle: "Shoot 14 — Tailored Silhouette",
     shootLocation: "Gallery Interior",
@@ -1258,9 +1281,9 @@ const SHOOTS = [
     price: 210,
     g: "acc",
     soldOut: false,
-    hero: "item_39.jpg",
+    hero: "item_40.jpg",
     aspect: "4/3",
-    photos: ["item_39.jpg", "item_40.jpg", "item_41.jpg"],
+    photos: ["item_40.jpg", "item_42.jpg", "mood_detail.jpg", "item_33.jpg"],
     desc: "Commando lug sole leather derby shoe handcrafted in Portugal.",
     shootTitle: "Shoot 15 — Studio Footwear",
     shootLocation: "Product Lab",
@@ -1272,9 +1295,9 @@ const SHOOTS = [
     price: 45,
     g: "acc",
     soldOut: false,
-    hero: "item_37.jpg",
+    hero: "cap_charcoal.jpg",
     aspect: "1/1",
-    photos: ["item_37.jpg", "item_38.jpg", "item_50.jpg"],
+    photos: ["cap_charcoal.jpg", "item_37.jpg", "item_38.jpg", "tote_canvas.jpg"],
     desc: "Washed chino twill cap with curved brim and brass hardware buckle.",
     shootTitle: "Shoot 16 — Everyday Accessories",
     shootLocation: "Studio Neutral",
@@ -1288,7 +1311,7 @@ const SHOOTS = [
     soldOut: false,
     hero: "item_43.jpg",
     aspect: "3/4",
-    photos: ["item_43.jpg", "item_44.jpg", "item_46.jpg", "item_48.jpg"],
+    photos: ["item_43.jpg", "item_44.jpg", "mood_lookbook_2.jpg", "mood_streetwear.jpg"],
     desc: "Seasonal visual study capturing movement and volume across drops.",
     shootTitle: "Shoot 17 — Milan Runway & Street",
     shootLocation: "Milan Exterior / Daylight",
@@ -1300,9 +1323,9 @@ const SHOOTS = [
     price: 85,
     g: "tees",
     soldOut: false,
-    hero: "item_46.jpg",
+    hero: "item_45.jpg",
     aspect: "4/5",
-    photos: ["item_46.jpg", "item_45.jpg", "item_49.jpg"],
+    photos: ["item_45.jpg", "item_23.jpg", "item_44.jpg", "mood_lookbook_2.jpg"],
     desc: "Fluid drape studio shirt with raw edging and relaxed boxy cut.",
     shootTitle: "Shoot 18 — Motion Exploration",
     shootLocation: "Studio Editorial",
@@ -1615,8 +1638,8 @@ function renderCoverFlowPositions() {
     card.classList.toggle('active', offset === 0);
 
     if (offset === 0) {
-      // Center Active Card (Elevated, full color, interactive overlay)
-      card.style.transform = `translate3d(0, 0, 50px) scale(1)`;
+      // Center Active Card (Elevated, full color, crisp native 2D Retina rendering)
+      card.style.transform = `translate3d(0, 0, 0) scale(1)`;
       card.style.opacity = '1';
       card.style.zIndex = '20';
       card.style.filter = 'none';
@@ -1632,7 +1655,7 @@ function renderCoverFlowPositions() {
     } else if (absOffset === 2) {
       // 2nd Neighbor
       const sign = Math.sign(offset);
-      card.style.transform = `translate3d(${sign * spacingPercent * 1.82}%, 0, -60px) scale(${isMobile ? 0.74 : 0.78})`;
+      card.style.transform = `translate3d(${sign * spacingPercent * 1.82}%, 0, 0) scale(${isMobile ? 0.74 : 0.78})`;
       card.style.opacity = isMobile ? '0.1' : '0.18';
       card.style.zIndex = '5';
       card.style.filter = 'brightness(0.4)';
@@ -1640,7 +1663,7 @@ function renderCoverFlowPositions() {
     } else {
       // Offscreen
       const sign = Math.sign(offset);
-      card.style.transform = `translate3d(${sign * spacingPercent * 2.5}%, 0, -120px) scale(0.65)`;
+      card.style.transform = `translate3d(${sign * spacingPercent * 2.5}%, 0, 0) scale(0.65)`;
       card.style.opacity = '0';
       card.style.zIndex = '1';
       card.style.pointerEvents = 'none';
@@ -1717,17 +1740,79 @@ function openShootModal(shootIdx, evt) {
     <div class="cf-dash ${pIdx === 0 ? 'active' : ''}" data-idx="${pIdx}"></div>
   `).join('');
 
-  renderCoverFlowPositions();
+  // Cinematic Spatial Opening Animation:
+  // Calculate clicked 3D card's screen coordinates to animate from
+  let dx = 0, dy = 0, startScale = 0.38;
+  if (shoot.el) {
+    const r = shoot.el.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+    dx = cx - window.innerWidth / 2;
+    dy = cy - window.innerHeight / 2;
+    const cardW = Math.min(Math.max(window.innerWidth * 0.32, 280), 460);
+    startScale = Math.min(Math.max(r.width / cardW, 0.28), 0.55);
+  } else if (evt && evt.clientX) {
+    dx = evt.clientX - window.innerWidth / 2;
+    dy = evt.clientY - window.innerHeight / 2;
+  }
 
-  // Force layout reflow before triggering CSS expansion
-  void shootModal.offsetWidth;
+  const cards = $$('.cf-card');
+  // Initialize cards at clicked source location before opening
+  cards.forEach((card, idx) => {
+    card.style.transition = 'none';
+    if (idx === 0) {
+      card.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) scale(${startScale.toFixed(3)})`;
+      card.style.opacity = '0.9';
+      card.style.filter = 'blur(4px)';
+      card.style.zIndex = '20';
+    } else {
+      card.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) scale(${(startScale * 0.85).toFixed(3)})`;
+      card.style.opacity = '0';
+      card.style.filter = 'blur(8px)';
+      card.style.zIndex = '10';
+    }
+  });
+
+  // Open modal container
   shootModal.classList.add('open');
+  void shootModal.offsetWidth;
+
+  // Trigger smooth expansion on next animation frame
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      cards.forEach((card, idx) => {
+        if (idx === 0) {
+          card.style.transition = 'transform 0.62s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease, filter 0.45s ease';
+        } else {
+          card.style.transition = 'transform 0.68s cubic-bezier(0.16, 1, 0.3, 1) 0.08s, opacity 0.48s ease 0.08s, filter 0.48s ease 0.08s';
+        }
+      });
+      renderCoverFlowPositions();
+    });
+  });
 }
 
 function closeShootModal() {
   shootOpen = false;
-  shootModal.classList.remove('open');
+  const cards = $$('.cf-card');
+  cards.forEach((card, idx) => {
+    card.style.transition = 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, filter 0.3s ease';
+    if (idx === activePhotoIndex) {
+      card.style.transform = 'translate3d(0, 30px, 0) scale(0.88)';
+      card.style.opacity = '0';
+      card.style.filter = 'blur(6px)';
+    } else {
+      card.style.transform = 'translate3d(0, 0, 0) scale(0.7)';
+      card.style.opacity = '0';
+    }
+  });
+
   $('#space').classList.remove('blurred');
+  setTimeout(() => {
+    if (!shootOpen) {
+      shootModal.classList.remove('open');
+    }
+  }, 380);
   last = performance.now();
 }
 
