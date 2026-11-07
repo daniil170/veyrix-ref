@@ -1,16 +1,21 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>VEYRIX STUDIO | Official Store</title>
+<title>VEYRIX STUDIO | Official Store & 3D Spatial Gallery</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+
 :root {
   --bg: #ecebe8;
   --sheet: #ffffff;
-  --ink: #000000;
-  --mut: #6e6d68;
+  --ink: #111111;
+  --mut: #7a7873;
+  --line: #111111;
   --soft: #c9c7c1;
   --border-light: rgba(0, 0, 0, 0.08);
   font: 13px/1.45 "Helvetica Neue", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -24,21 +29,18 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-body {
+html, body {
   width: 100%;
-  min-height: 100%;
-  overflow-x: hidden;
-  background: #ffffff;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: var(--bg);
   color: var(--ink);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-button, input, select, summary {
+button, input, summary {
   font: inherit;
   color: inherit;
 }
@@ -50,401 +52,49 @@ button, summary {
   outline-offset: 3px;
 }
 
-/* ================= HEADER ================= */
-#siteHeader {
+/* ================= Top Bar ================= */
+.top {
   position: fixed;
-  top: 0;
   left: 0;
-  width: 100%;
-  z-index: 500;
-  background: #ffffff;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s;
-}
-
-.header-inner {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 0 28px;
-  height: 68px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-/* 2-line Hamburger Menu */
-.menu-trigger {
-  background: transparent;
-  border: none;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  cursor: pointer;
-  padding: 12px 6px;
-  width: 48px;
-  z-index: 20;
-}
-.menu-line {
-  height: 1.5px;
-  background: #000000;
-  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.line-top { width: 24px; }
-.line-bot { width: 16px; }
-.menu-trigger:hover .line-top { width: 34px; }
-.menu-trigger:hover .line-bot { width: 44px; }
-
-/* Centered Veyrix Logo */
-.header-logo-wrap {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
-}
-.header-logo {
-  height: 22px;
-  width: auto;
-  display: block;
-  transition: transform 0.3s ease;
-}
-.header-logo:hover {
-  transform: scale(1.06);
-}
-
-/* Search bar */
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  z-index: 20;
-}
-.search-container {
-  display: flex;
-  align-items: center;
-  background: transparent;
-  position: relative;
-}
-.search-input {
-  width: 0;
-  opacity: 0;
-  border: none;
-  border-bottom: 1px solid #000000;
-  background: transparent;
-  padding: 4px 6px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  outline: none;
-  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
-}
-.search-container.active .search-input {
-  width: 180px;
-  opacity: 1;
-}
-.search-toggle-btn {
-  background: transparent;
-  border: none;
-  padding: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s;
-}
-.search-toggle-btn:hover {
-  transform: scale(1.12);
-}
-
-/* Header Ticker Marquee */
-.ticker-bar {
-  width: 100%;
-  background: #000000;
-  color: #ffffff;
-  padding: 6px 0;
-  overflow: hidden;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  display: flex;
-  white-space: nowrap;
-  user-select: none;
-}
-.ticker-track {
-  display: flex;
-  gap: 36px;
-  animation: tickerScroll 24s linear infinite;
-  flex-shrink: 0;
-  min-width: 100%;
-  justify-content: space-around;
-}
-@keyframes tickerScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
-}
-
-/* ================= SLIDE-OUT DRAWER MENU ================= */
-.drawer-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.4s ease, visibility 0.4s;
-}
-.drawer-backdrop.open {
-  opacity: 1;
-  visibility: visible;
-}
-
-.drawer-menu {
-  position: fixed;
+  right: 0;
   top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  max-width: 400px;
-  z-index: 1001;
-  background: #000000;
-  color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  transform: translateX(-100%);
-  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 10px 0 40px rgba(0, 0, 0, 0.4);
-}
-.drawer-menu.open {
-  transform: translateX(0);
-}
-
-.drawer-header {
-  padding: 32px 36px;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 24px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-.drawer-logo {
-  height: 20px;
-  width: auto;
-  filter: invert(1) brightness(2);
-}
-.drawer-close-btn {
-  background: transparent;
-  border: none;
-  color: #ffffff;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 6px;
-  transition: transform 0.3s;
-}
-.drawer-close-btn:hover {
-  transform: rotate(90deg);
-}
-
-.drawer-nav {
-  flex: 1;
-  padding: 44px 36px;
-  overflow-y: auto;
-}
-.drawer-nav ul {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 26px;
-}
-.drawer-link {
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.55);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 12px;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  transition: color 0.25s, transform 0.25s;
-}
-.drawer-link:hover, .drawer-link.active {
-  color: #ffffff;
-  transform: translateX(8px);
-}
-.drawer-link .idx {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.3);
-}
-
-.drawer-footer {
-  padding: 32px 36px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 9.5px;
-  letter-spacing: 0.18em;
-  color: rgba(255, 255, 255, 0.45);
-}
-.drawer-socials {
-  display: flex;
-  gap: 16px;
-  margin-top: 4px;
-}
-.drawer-socials a {
-  color: #ffffff;
-  text-decoration: none;
-  transition: opacity 0.2s;
-}
-.drawer-socials a:hover { opacity: 0.6; }
-
-/* ================= HERO SECTION ================= */
-.hero-section {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  min-height: 600px;
-  background: #08080a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  padding: 0 24px;
-}
-.hero-bg-lights {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
   pointer-events: none;
-}
-.hero-content {
-  position: relative;
-  z-index: 10;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 28px;
-}
-.hero-brand-logo {
-  width: clamp(260px, 45vw, 480px);
-  height: auto;
-  object-contain: contain;
-  filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.6));
-}
-.hero-tagline {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
-}
-.hero-btn {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid #ffffff;
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: #ffffff;
-  padding: 14px 34px;
-  cursor: pointer;
-  transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  margin-top: 8px;
-}
-.hero-btn span {
-  position: relative;
-  z-index: 2;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-}
-.hero-btn-bg {
-  position: absolute;
-  inset: 0;
-  background: #ffffff;
-  transform: translateY(100%);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 1;
-}
-.hero-btn:hover {
-  color: #000000;
-}
-.hero-btn:hover .hero-btn-bg {
-  transform: translateY(0);
-}
-
-/* ================= 3D STUDIO SECTION ================= */
-.studio-section {
-  position: relative;
-  width: 100%;
-  height: 92vh;
-  min-height: 680px;
-  background: var(--bg);
-  overflow: hidden;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.studio-topbar {
-  position: absolute;
-  top: 18px;
-  left: 28px;
-  right: 28px;
   z-index: 25;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  pointer-events: none;
-}
-.studio-title-badge {
-  pointer-events: auto;
-  font-size: 11px;
   font-weight: 700;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--ink);
+  letter-spacing: .04em;
+  font-size: 13px;
+}
+
+.top-brand {
+  pointer-events: auto;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  padding: 6px 14px;
-  border-radius: 20px;
-  border: 1px solid var(--border-light);
+  align-items: baseline;
+  gap: 12px;
 }
-.dot-pulse {
-  width: 7px;
-  height: 7px;
-  background: #10b981;
-  border-radius: 50%;
-  display: inline-block;
-  animation: pulseGreen 2s infinite;
+
+.top-brand b {
+  letter-spacing: .08em;
 }
-@keyframes pulseGreen {
-  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-  70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+
+.top-brand span {
+  font-weight: 400;
+  color: var(--mut);
+  font-size: 11px;
 }
-.studio-zoom-info {
+
+.top-zoom-info {
   pointer-events: auto;
   font-size: 11px;
   font-weight: 500;
   color: var(--mut);
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  padding: 6px 14px;
+  padding: 4px 10px;
   border-radius: 20px;
   border: 1px solid var(--border-light);
   display: flex;
@@ -452,9 +102,9 @@ button, summary {
   gap: 6px;
 }
 
-/* 3D Canvas Container */
+/* ================= 3D Space & World ================= */
 #space {
-  position: absolute;
+  position: fixed;
   inset: 0;
   touch-action: none;
   cursor: grab;
@@ -467,11 +117,13 @@ button, summary {
   transition: filter 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: filter, transform;
 }
+
 #space.blurred {
-  filter: blur(28px) brightness(0.55);
-  transform: scale(0.95);
+  filter: blur(24px) brightness(0.65);
+  transform: scale(0.96);
   pointer-events: none;
 }
+
 #space.drag {
   cursor: grabbing;
 }
@@ -485,7 +137,7 @@ button, summary {
   transform-style: preserve-3d;
 }
 
-/* Space Cards (Straight corners, high res) */
+/* ================= Space Cards (STRAIGHT RECTANGULAR CORNERS, NO ROUNDING) ================= */
 .card {
   position: absolute;
   left: 0;
@@ -493,15 +145,19 @@ button, summary {
   background: transparent;
   cursor: pointer;
   transform-style: preserve-3d;
-  border-radius: 0;
+  border-radius: 0; /* Strictly straight rectangular corners */
   overflow: visible;
   border: none;
   padding: 0;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: auto;
   pointer-events: auto;
 }
+
 .card:hover {
   z-index: 99 !important;
 }
+
 .card-img-wrap {
   width: 100%;
   height: 100%;
@@ -514,10 +170,12 @@ button, summary {
   pointer-events: none;
   transform: translateZ(0);
 }
+
 .card:hover .card-img-wrap {
   transform: scale(1.12);
   box-shadow: 0 24px 56px rgba(0, 0, 0, 0.32), 0 6px 18px rgba(0, 0, 0, 0.15);
 }
+
 .card-img-wrap img {
   width: 100%;
   height: 100%;
@@ -527,19 +185,19 @@ button, summary {
   background: #e0ded9;
   border-radius: 0;
   image-rendering: -webkit-optimize-contrast;
-  image-rendering: high-quality;
 }
 
-/* Zoom controls */
+/* ================= Zoom Controls ================= */
 .zoom-controls {
-  position: absolute;
+  position: fixed;
   right: 24px;
-  bottom: 24px;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
   z-index: 20;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
+
 .zoom-btn {
   width: 38px;
   height: 38px;
@@ -558,54 +216,50 @@ button, summary {
   transition: all .2s ease;
   cursor: pointer;
 }
-.zoom-btn:hover { background: #ffffff; transform: scale(1.08); }
-.zoom-btn:active { transform: scale(0.92); }
+.zoom-btn:hover { background: #ffffff; transform: scale(1.06); }
+.zoom-btn:active { transform: scale(0.94); }
 
-/* Space Hint */
+/* ================= Bottom Hint ================= */
 .hint {
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
-  bottom: 26px;
+  bottom: calc(28px + env(safe-area-inset-bottom, 0px));
   text-align: center;
   color: var(--mut);
   pointer-events: none;
+  transition: opacity .6s;
+  z-index: 15;
   font-size: 11px;
-  font-weight: 500;
-  transition: opacity .4s ease;
   letter-spacing: .02em;
-  z-index: 10;
 }
 
 /* Custom Floating Cursor */
 .custom-cursor {
   position: fixed;
+  top: 0;
+  left: 0;
   pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
+  z-index: 30;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
+  transform: translate(-50%, -50%);
   opacity: 0;
-  transition: opacity .2s ease, transform .08s linear;
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  padding: 6px 14px;
-  border-radius: 20px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transition: opacity .2s ease;
 }
-.cursor-ring { width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
+.cursor-ring { width: 11px; height: 11px; border: 1.5px solid var(--ink); border-radius: 50%; background: transparent; }
 .cursor-label { font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: capitalize; color: var(--ink); white-space: nowrap; }
 .custom-cursor.visible { opacity: 1; }
 
-/* ================= COVER-FLOW EDITORIAL GALLERY MODAL ================= */
+/* ================= COVER-FLOW EDITORIAL GALLERY MODAL (VEYRIX STUDIO REF) ================= */
 #shootModal {
   position: fixed;
   inset: 0;
   z-index: 999;
-  background: rgba(8, 8, 10, 0.82);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
+  background: rgba(8, 8, 10, 0.78);
+  backdrop-filter: blur(26px);
+  -webkit-backdrop-filter: blur(26px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -615,13 +269,14 @@ button, summary {
   transition: opacity .42s cubic-bezier(.16, 1, .3, 1), visibility .42s;
   overflow: hidden;
 }
+
 #shootModal.open {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
 }
 
-/* Floating Close Button */
+/* Minimalist Floating Close Button on Dark Background */
 .cf-close-btn {
   position: absolute;
   top: calc(24px + env(safe-area-inset-top, 0px));
@@ -644,15 +299,18 @@ button, summary {
   opacity: 0;
   transform: scale(0.8);
 }
+
 #shootModal.open .cf-close-btn {
   opacity: 1;
   transform: scale(1);
 }
+
 .cf-close-btn:hover {
   background: rgba(255, 255, 255, 0.28);
   border-color: rgba(255, 255, 255, 0.45);
   transform: scale(1.08);
 }
+
 .cf-close-btn:active {
   transform: scale(0.92);
 }
@@ -668,6 +326,7 @@ button, summary {
   overflow: hidden;
   user-select: none;
 }
+
 .cf-track {
   position: relative;
   width: 100%;
@@ -677,7 +336,7 @@ button, summary {
   justify-content: center;
 }
 
-/* Individual Cover-Flow Card */
+/* Individual Cover-Flow Card (Ultra-crisp Retina 2D, NO 3D-perspective blurring) */
 .cf-card {
   position: absolute;
   top: 50%;
@@ -698,6 +357,7 @@ button, summary {
   backface-visibility: hidden;
   transform-origin: center center;
 }
+
 .cf-card-inner {
   width: 100%;
   height: 100%;
@@ -705,6 +365,7 @@ button, summary {
   overflow: hidden;
   background: #111111;
 }
+
 .cf-card-inner img {
   width: 100%;
   height: 100%;
@@ -723,29 +384,30 @@ button, summary {
   position: absolute;
   inset: auto 0 0 0;
   padding: 36px 24px 20px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.52) 55%, transparent 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.52) 55%, transparent 100%);
   display: flex;
   flex-direction: column;
   gap: 4px;
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.18s,
-              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.18s;
+  transform: translateY(10px);
+  transition: opacity .35s ease .12s, transform .35s ease .12s;
   pointer-events: none;
 }
+
 .cf-card.active .cf-overlay {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
 }
+
 .cf-tag {
   font-size: 10px;
   font-weight: 600;
   letter-spacing: .12em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.7);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
+
 .cf-title {
   font-size: 15px;
   font-weight: 800;
@@ -755,6 +417,7 @@ button, summary {
   margin: 0;
   line-height: 1.25;
 }
+
 .cf-card-bottom {
   display: flex;
   justify-content: space-between;
@@ -763,13 +426,14 @@ button, summary {
   padding-top: 10px;
   border-top: 1px solid rgba(255, 255, 255, 0.16);
 }
+
 .cf-price {
   font-size: 13px;
   font-weight: 700;
   color: #ffffff;
   letter-spacing: .03em;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
+
 .cf-inspect-btn {
   background: transparent;
   color: #ffffff;
@@ -784,7 +448,6 @@ button, summary {
   align-items: center;
   gap: 6px;
   transition: all .2s;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 .cf-inspect-btn:hover {
   background: #ffffff;
@@ -835,15 +498,18 @@ button, summary {
   opacity: 0;
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.08s, opacity 0.4s ease 0.08s;
 }
+
 #shootModal.open .cf-footer {
   transform: translateY(0);
   opacity: 1;
 }
+
 .cf-dashes {
   display: flex;
   align-items: center;
   gap: 8px;
 }
+
 .cf-dash {
   width: 28px;
   height: 2.5px;
@@ -859,6 +525,7 @@ button, summary {
   background: #ffffff;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
+
 .cf-terminal {
   position: absolute;
   right: 28px;
@@ -866,493 +533,916 @@ button, summary {
   font-weight: 700;
   letter-spacing: .18em;
   color: rgba(255, 255, 255, 0.38);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-/* ================= PRODUCT DETAIL PAGE (#viewer) ================= */
-#viewer {
+
+/* ================= STORE HEADER ================= */
+#siteHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 500;
+  background: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
+  transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s ease;
+}
+
+.header-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .header-inner {
+    padding: 32px 36px;
+  }
+}
+
+/* 2-line Hamburger Menu Trigger */
+.menu-trigger {
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  padding: 10px 4px;
+  width: 44px;
+  z-index: 20;
+}
+.menu-line {
+  height: 1px;
+  background: #000000;
+  transition: width 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.line-top { width: 24px; }
+.line-bot { width: 16px; }
+.menu-trigger:hover .line-top { width: 32px; }
+.menu-trigger:hover .line-bot { width: 40px; }
+
+/* Centered Veyrix Logo */
+.header-logo-wrap {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+.header-logo {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.3s ease;
+}
+@media (min-width: 768px) {
+  .header-logo {
+    height: 62px;
+  }
+}
+@media (min-width: 1024px) {
+  .header-logo {
+    height: 74px;
+  }
+}
+.header-logo:hover {
+  transform: scale(1.05);
+}
+
+/* Search Box */
+.header-right {
+  display: flex;
+  align-items: center;
+  z-index: 20;
+}
+.search-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.search-input {
+  width: 0;
+  opacity: 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #000000;
+  outline: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  padding: 4px 8px;
+  color: #000000;
+  transition: width 0.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s ease;
+}
+.search-container.active .search-input {
+  width: 160px;
+  opacity: 1;
+}
+@media (min-width: 768px) {
+  .search-container.active .search-input {
+    width: 240px;
+  }
+}
+.search-toggle-btn {
+  background: transparent;
+  border: none;
+  color: #000000;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+  margin-left: 6px;
+}
+.search-toggle-btn:hover {
+  transform: scale(1.1);
+}
+
+/* ================= SLIDE-OUT DRAWER MENU (EXACT STORE REPLICA) ================= */
+.drawer-backdrop {
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: #ffffff;
-  display: flex;
-  flex-direction: column;
-  visibility: hidden;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   opacity: 0;
-  pointer-events: none;
-  clip-path: inset(0 0 0 0 round 0px);
-  will-change: clip-path, opacity;
-  overflow: hidden;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s;
 }
-#viewer.open {
-  visibility: visible;
+.drawer-backdrop.open {
   opacity: 1;
-  pointer-events: auto;
+  visibility: visible;
 }
 
-.viewer-top-nav {
-  height: 60px;
-  border-bottom: 1px solid var(--border-light);
+.drawer-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  max-width: 400px;
+  z-index: 1001;
+  background: #000000;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+  box-shadow: 20px 0 60px rgba(0, 0, 0, 0.6);
+}
+.drawer-menu.open {
+  transform: translateX(0);
+}
+
+.drawer-header {
+  padding: 40px 40px 24px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 0 28px;
-  background: #ffffff;
-  flex-shrink: 0;
-  z-index: 10;
+  align-items: flex-start;
 }
-.viewer-back-btn {
+.drawer-logo {
+  height: 48px;
+  width: auto;
+  filter: invert(1) brightness(2);
+  object-fit: contain;
+}
+.drawer-close-btn {
   background: transparent;
   border: none;
-  display: inline-flex;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 8px;
+  transition: transform 0.3s ease;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink);
-  transition: opacity 0.2s;
+  justify-content: center;
 }
-.viewer-back-btn:hover { opacity: 0.6; }
+.drawer-close-btn:hover {
+  transform: rotate(90deg);
+}
 
-.viewer-body {
-  flex: 1;
-  min-height: 0;
+.drawer-nav {
+  padding: 32px 48px;
+  font-family: 'JetBrains Mono', monospace;
+  flex-grow: 1;
   overflow-y: auto;
-  padding: 40px 28px;
-  background: #ffffff;
 }
-.viewer-container {
-  max-width: 1400px;
-  margin: 0 auto;
+.drawer-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
-
-.cols {
-  display: grid;
-  grid-template-columns: minmax(260px, 340px) 1fr minmax(280px, 360px);
-  gap: 36px;
-  align-items: start;
-}
-
-/* Left Column: Specs, Sizing */
-.left h1 {
-  font-size: 18px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  margin-bottom: 14px;
-}
-.left p.desc {
+.drawer-link {
   font-size: 12px;
-  color: var(--mut);
-  line-height: 1.6;
-  margin-bottom: 24px;
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+  font-weight: 300;
+  display: block;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  transition: transform 0.25s ease, color 0.25s ease;
 }
-.spec-block {
-  margin-bottom: 24px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--border-light);
+.drawer-link:hover, .drawer-link.active {
+  color: #ffffff;
+  transform: translateX(8px);
 }
-.spec-label {
+.sold-out-tag {
+  margin-left: 8px;
+  font-size: 8px;
+  opacity: 0.5;
+}
+.drawer-group-title {
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.3);
   text-transform: uppercase;
-  color: var(--mut);
-  margin-bottom: 8px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-}
-.spec-val {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ink);
+  letter-spacing: 0.5em;
+  margin-top: 24px;
+  margin-bottom: -10px;
+  list-style: none;
 }
 
-/* Center Column: Big High-Res Gallery */
-.mid {
+.drawer-footer {
+  padding: 44px 48px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.drawer-instagram {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.drawer-instagram:hover {
+  color: #ffffff;
+}
+.drawer-instagram span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+}
+.drawer-bottom-info {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+.drawer-copy {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  line-height: 1.6;
+  margin: 0;
+}
+.drawer-dev {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-family: 'JetBrains Mono', monospace;
+}
+.drawer-dev span {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+}
+.drawer-dev b {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-weight: normal;
+}
+
+/* ================= HERO SECTION (CLEAN & MINIMALIST) ================= */
+#hero {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
+}
+.hero-inner {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
-.track {
-  width: 100%;
-  max-width: 520px;
-  height: clamp(420px, 60vh, 620px);
-  background: #f6f5f2;
+.hero-logo {
+  width: clamp(280px, 48vw, 500px);
+  margin-bottom: clamp(48px, 9vh, 80px);
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.8));
+}
+.hero-cta-btn {
   position: relative;
   overflow: hidden;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
-}
-.track img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.thumb-strip {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  max-width: 520px;
-  padding: 4px 0;
-}
-.thumb-item {
-  width: 60px;
-  height: 80px;
-  border: 1px solid var(--border-light);
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid #ffffff;
+  padding: 14px 34px;
   cursor: pointer;
-  flex-shrink: 0;
-  opacity: 0.55;
-  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: all 0.5s ease;
 }
-.thumb-item.active, .thumb-item:hover {
-  opacity: 1;
-  border-color: #000000;
-}
-.thumb-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* Right Column: Size & Purchase */
-.right {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-.price-tag {
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-}
-.size-picker {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.size-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
-}
-.size-btn {
-  padding: 10px 0;
-  background: #ffffff;
-  border: 1px solid var(--border-light);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 11px;
-  font-weight: 700;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.size-btn:hover {
-  border-color: #000000;
-}
-.size-btn.active {
-  background: #000000;
-  color: #ffffff;
-  border-color: #000000;
-}
-.buy-btn {
-  width: 100%;
-  padding: 16px;
-  background: #000000;
-  color: #ffffff;
-  border: 1px solid #000000;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+.hero-cta-btn .btn-text {
+  position: relative;
+  z-index: 10;
+  font-family: 'Space Grotesk', -apple-system, sans-serif;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
-}
-.buy-btn:hover { background: #262626; }
-.buy-btn:active { transform: scale(0.98); }
-
-/* Related Shoots Strip */
-.related-section {
-  margin-top: 60px;
-  padding-top: 40px;
-  border-top: 1px solid var(--border-light);
-}
-.related-title {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  margin-bottom: 20px;
-}
-.related-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 16px;
-}
-.rel-card {
-  border: 1px solid var(--border-light);
-  cursor: pointer;
-  transition: transform 0.2s, border-color 0.2s;
-}
-.rel-card:hover {
-  transform: translateY(-4px);
-  border-color: #000000;
-}
-.rel-card img {
-  width: 100%;
-  aspect-ratio: 3/4;
-  object-fit: cover;
+  color: #ffffff;
+  transition: color 0.5s ease;
   display: block;
-}
-.rel-card-meta {
-  padding: 10px 12px;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-/* ================= CATALOGUE SECTION (Moved below 3D Space) ================= */
-.catalog-section {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 90px 28px 120px;
-}
-.catalog-header {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-bottom: 48px;
-  border-bottom: 1px solid var(--border-light);
-  padding-bottom: 24px;
 }
 @media (min-width: 768px) {
-  .catalog-header {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+  .hero-cta-btn .btn-text {
+    font-size: 12px;
   }
 }
+.hero-cta-btn .btn-bg {
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  transform: translateY(100%);
+  transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  z-index: 1;
+}
+.hero-cta-btn:hover .btn-bg {
+  transform: translateY(0);
+}
+.hero-cta-btn:hover .btn-text {
+  color: #000000;
+}
+
+/* ================= 3D STUDIO SECTION ================= */
+#studioSection {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  width: 100%;
+  background: #000000;
+  overflow: hidden;
+}
+#studioSection #space {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ================= CATALOGUE OVERLAY (OPENED VIA MENU LINKS) ================= */
+#catalogView {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  background: #ffffff;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+#catalogView.open {
+  display: block;
+  opacity: 1;
+}
+
+.catalog-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid #f0f0f0;
+  padding: 20px 24px;
+}
+.catalog-header-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.catalog-title-group {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
 .catalog-title {
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: 0.4em;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin: 0;
 }
 .catalog-count {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 10px;
-  color: var(--mut);
-  letter-spacing: 0.15em;
-  margin-left: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #888888;
 }
 
 .catalog-filters {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0;
+  scrollbar-width: none;
 }
-.filter-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+.catalog-filters::-webkit-scrollbar {
+  display: none;
 }
-.filter-pill {
-  padding: 6px 14px;
+.cat-pill {
   background: transparent;
-  border: 1px solid var(--border-light);
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  color: var(--mut);
+  border: 1px solid #e5e5e5;
+  color: #000000;
+  padding: 6px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
   cursor: pointer;
+  white-space: nowrap;
   transition: all 0.2s;
+  border-radius: 9999px;
 }
-.filter-pill:hover {
-  color: var(--ink);
-  border-color: var(--ink);
-}
-.filter-pill.active {
+.cat-pill:hover, .cat-pill.active {
   background: #000000;
   color: #ffffff;
   border-color: #000000;
 }
 
-.sort-select {
-  padding: 6px 12px;
-  border: 1px solid var(--border-light);
-  border-radius: 20px;
-  font-size: 11px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  background: #ffffff;
-  outline: none;
+.catalog-close-btn {
+  background: transparent;
+  border: 1px solid #000000;
+  color: #000000;
+  padding: 8px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
   cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.catalog-close-btn:hover {
+  background: #000000;
+  color: #ffffff;
 }
 
-/* Products Grid (Matching ProductCard.jsx) */
-.product-grid {
+.catalog-body {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+.catalog-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 28px 16px;
+  gap: 16px 12px;
 }
 @media (min-width: 768px) {
-  .product-grid {
+  .catalog-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 48px 24px;
+    gap: 36px 24px;
   }
 }
 @media (min-width: 1024px) {
-  .product-grid {
+  .catalog-grid {
     grid-template-columns: repeat(4, 1fr);
-    gap: 60px 32px;
+    gap: 48px 32px;
   }
 }
 
-.prod-card {
+.store-card {
   cursor: pointer;
   display: flex;
   flex-direction: column;
-}
-.prod-img-box {
-  width: 100%;
-  aspect-ratio: 3/4;
-  background: #f5f4f0;
-  overflow: hidden;
-  margin-bottom: 14px;
   position: relative;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s ease;
 }
-.prod-img-box img {
+.store-card:hover {
+  transform: translateY(-4px);
+}
+.store-card-img-wrap {
+  aspect-ratio: 3/4;
+  background: #f7f7f7;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 14px;
+}
+.store-card-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   display: block;
-  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.prod-card:hover .prod-img-box img {
-  transform: scale(1.06);
+.store-card:hover .store-card-img {
+  transform: scale(1.05);
 }
-.prod-badge {
+.store-card-badge {
   position: absolute;
   top: 10px;
-  left: 10px;
+  right: 10px;
   background: #000000;
   color: #ffffff;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
   text-transform: uppercase;
-  padding: 3px 8px;
+  letter-spacing: 0.15em;
+  padding: 4px 8px;
+  font-weight: 700;
 }
-.prod-title {
+.store-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.store-card-name {
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-weight: 600;
   text-transform: uppercase;
-  margin-bottom: 4px;
+  letter-spacing: 0.08em;
+  color: #000000;
+  margin: 0;
 }
-.prod-price {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--mut);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+.store-card-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #666666;
 }
 
-/* ================= FOOTER ================= */
-.site-footer {
+/* ================= SITE FOOTER ================= */
+#siteFooter {
   background: #000000;
   color: #ffffff;
-  padding: 80px 28px 40px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 60px 24px 40px;
+  font-family: 'JetBrains Mono', monospace;
 }
 .footer-inner {
   max-width: 1440px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
 .footer-top {
   display: flex;
+  flex-direction: column;
+  gap: 20px;
   justify-content: space-between;
-  align-items: center;
-  padding-bottom: 40px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  margin-bottom: 48px;
+}
+@media (min-width: 768px) {
+  .footer-top {
+    flex-direction: row;
+    align-items: flex-start;
+  }
 }
 .footer-logo {
-  height: 22px;
+  height: 38px;
   width: auto;
   filter: invert(1) brightness(2);
 }
-.footer-studio-tag {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 10px;
-  letter-spacing: 0.3em;
-  color: rgba(255, 255, 255, 0.45);
+.footer-links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
-.footer-links-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 36px;
-  margin-bottom: 60px;
-}
-.footer-col h4 {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 10px;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  margin-bottom: 16px;
-}
-.footer-col a {
-  display: block;
-  color: rgba(255, 255, 255, 0.8);
+.footer-links a {
+  color: rgba(255, 255, 255, 0.6);
   text-decoration: none;
   font-size: 11px;
-  letter-spacing: 0.05em;
-  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
   transition: color 0.2s;
 }
-.footer-col a:hover {
+.footer-links a:hover {
   color: #ffffff;
 }
 .footer-bottom {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding-top: 24px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  padding-top: 24px;
   font-size: 9px;
-  letter-spacing: 0.18em;
   color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
 }
 @media (min-width: 768px) {
   .footer-bottom {
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
   }
 }
+/* ================= PRODUCT PAGE (FULL PAGE WITH DISTRIBUTED EDGE BUTTONS) ================= */
+#viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--sheet);
+  visibility: hidden;
+  clip-path: inset(0 0 0 0 round 0);
+  transition: clip-path .4s cubic-bezier(.22, .8, .2, 1);
+}
 
-/* Responsive rules */
+.scroll {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.stage {
+  height: calc(100vh + 60vh);
+  height: calc(100svh + 60svh);
+}
+
+.pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.first {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: calc(56px + env(safe-area-inset-top, 0px)) calc(36px + env(safe-area-inset-right, 0px)) 24px calc(36px + env(safe-area-inset-left, 0px));
+  transform-origin: 50% 35%;
+  will-change: transform, opacity;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: 240px 1fr 280px;
+  gap: 40px;
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+  align-items: center;
+  height: 100%;
+}
+
+.mid {
+  grid-column: 2;
+  grid-row: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.track {
+  display: flex;
+  width: 100%;
+  max-width: 820px;
+  height: min(72svh, 720px);
+  height: min(72vh, 720px);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  align-items: center;
+}
+.track::-webkit-scrollbar { display: none; }
+
+.slide {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.slide img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 0;
+  filter: drop-shadow(0 14px 28px rgba(0,0,0,0.09));
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.dots i {
+  width: 16px;
+  height: 2px;
+  background: var(--soft);
+  transition: background .2s;
+}
+.dots i.on { background: var(--ink); }
+
+.left {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+}
+
+.lab {
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  font-size: 11px;
+  margin: 0 0 8px;
+}
+
+.opts {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.opts button {
+  min-width: 42px;
+  min-height: 36px;
+  padding: 0 10px;
+  background: #ffffff;
+  border: 1px solid var(--soft);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--mut);
+  border-radius: 0;
+  transition: border-color .15s, color .15s, box-shadow .15s;
+}
+.opts button:hover { border-color: var(--ink); color: var(--ink); }
+.opts button[aria-checked="true"] { border-color: var(--ink); color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+
+details { font-size: 11px; font-weight: 700; text-transform: uppercase; margin-top: 6px; }
+summary { display: inline-block; padding: 6px 0; border-bottom: 1px solid var(--ink); list-style: none; }
+summary::-webkit-details-marker { display: none; }
+
+table { border-collapse: collapse; margin-top: 10px; font-weight: 400; text-transform: none; font-size: 11px; }
+td, th { border-bottom: 1px solid var(--soft); padding: 5px 12px 5px 0; text-align: left; }
+th { font-weight: 700; }
+
+.right {
+  grid-column: 3;
+  grid-row: 1;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+}
+
+.right h2 {
+  margin: 0 0 6px;
+  font-size: 17px;
+  line-height: 1.25;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+.pr { margin-bottom: 16px; font-size: 14px; font-weight: 600; }
+.buyrow { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 16px; }
+.buyrow input { width: 52px; min-height: 44px; border: 1px solid var(--soft); text-align: center; background: #ffffff; font-weight: 600; border-radius: 0; }
+.buyrow input:hover, .buyrow input:focus { border-color: var(--ink); }
+
+.buy {
+  min-height: 44px;
+  min-width: 100px;
+  padding: 0 18px;
+  background: var(--ink);
+  color: #ffffff;
+  border: 1px solid var(--ink);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: .04em;
+  border-radius: 0;
+  transition: opacity .2s, transform .1s;
+}
+.buy.sold-out { background: #888888; border-color: #888888; color: #ffffff; cursor: pointer; }
+.buy:hover { opacity: .85; }
+.buy:active { transform: scale(.98); }
+
+.right p { margin: 0 0 8px; font-size: 11px; text-transform: uppercase; font-weight: 500; line-height: 1.45; letter-spacing: .02em; }
+.right p.ship { font-weight: 700; }
+
+.x {
+  position: fixed;
+  top: calc(14px + env(safe-area-inset-top, 0px));
+  left: 20px;
+  z-index: 120;
+  background: #ffffff;
+  border: 1px solid var(--ink);
+  min-height: 40px;
+  padding: 0 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  border-radius: 0;
+  transition: background .2s, color .2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.x:hover, .x:active { background: var(--ink); color: #ffffff; }
+
+/* 2nd Screen */
+.detail {
+  position: relative;
+  z-index: 2;
+  margin-top: -60vh;
+  margin-top: -60svh;
+  background: #ffffff;
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -20px 48px rgba(0, 0, 0, .08);
+  padding: 48px 24px calc(64px + env(safe-area-inset-bottom, 0px));
+}
+
+.dw { max-width: 820px; margin: 0 auto; }
+.detail h3 { margin: 0 0 14px; font-size: 15px; text-transform: uppercase; letter-spacing: .04em; font-weight: 700; }
+.detail p { margin: 0 0 18px; max-width: 65ch; line-height: 1.6; color: #333333; }
+.spec { list-style: none; padding: 0; margin: 0 0 48px; border-top: 1px solid var(--ink); }
+.spec li { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--soft); font-size: 12px; }
+.spec span { color: var(--mut); }
+
+.rel { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.rel button { background: #ffffff; border: 1px solid var(--soft); padding: 0 0 10px; text-align: left; border-radius: 0; transition: border-color .15s; }
+.rel button:hover { border-color: var(--ink); }
+.rel .t { aspect-ratio: 4/5; background: #fafafa; display: flex; align-items: center; justify-content: center; padding: 8px; }
+.rel .t img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rel b { display: block; margin: 8px 8px 0; font-size: 11px; text-transform: uppercase; }
+.rel span { margin: 0 8px; color: var(--mut); font-size: 11px; }
+
 @media (max-width: 860px) {
-  .header-inner { padding: 0 16px; height: 60px; }
-  .studio-section { height: 85vh; }
-  .studio-topbar { top: 12px; left: 16px; right: 16px; }
-  .cols { grid-template-columns: 1fr; }
-  .cf-card {
-    width: clamp(260px, 78vw, 340px);
-    height: clamp(380px, 60vh, 500px);
-    margin-top: calc(-1 * clamp(380px, 60vh, 500px) / 2);
-    margin-left: calc(-1 * clamp(260px, 78vw, 340px) / 2);
-  }
+  .cols { grid-template-columns: 1fr 1fr; gap: 16px; height: auto; }
+  .mid { grid-column: 1 / -1; grid-row: 1; height: auto; }
+  .track { max-width: 100%; height: min(44svh, 380px); }
+  .left { grid-column: 1; grid-row: 2; align-self: start; }
+  .right { grid-column: 2; grid-row: 2; align-self: start; }
+  .first { padding: calc(64px + env(safe-area-inset-top, 0px)) 16px 20px; }
+  .rel { grid-template-columns: 1fr 1fr; }
+
   .cf-close-btn {
     top: calc(16px + env(safe-area-inset-top, 0px));
     right: calc(16px + env(safe-area-inset-right, 0px));
@@ -1360,12 +1450,44 @@ button, summary {
     height: 38px;
     font-size: 16px;
   }
-  .cf-nav-btn { width: 38px; height: 38px; font-size: 20px; }
+  .cf-card {
+    width: clamp(260px, 78vw, 340px);
+    height: clamp(380px, 60vh, 500px);
+    margin-top: calc(-1 * clamp(380px, 60vh, 500px) / 2);
+    margin-left: calc(-1 * clamp(260px, 78vw, 340px) / 2);
+  }
+  .cf-nav-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 20px;
+  }
   .cf-nav-btn.prev { left: 8px; }
   .cf-nav-btn.next { right: 8px; }
-  .cf-footer { height: 46px; padding: 0 16px; }
-  .cf-terminal { display: none; }
+  .cf-footer {
+    height: 46px;
+    padding: 0 16px;
+  }
+  .cf-terminal {
+    display: none;
+  }
 }
+
+@media (max-width: 600px) {
+  .cols { display: flex; flex-direction: column; gap: 18px; }
+  .mid { order: 1; width: 100%; }
+  .track { width: 100%; max-width: 100%; height: 50vh; height: 50svh; }
+  .right { order: 2; width: 100%; }
+  .left { order: 3; width: 100%; }
+  .buyrow { display: flex; width: 100%; }
+  .buyrow input { width: 60px; min-height: 48px; }
+  .buy { flex: 1; min-height: 48px; }
+  .first { padding: calc(56px + env(safe-area-inset-top, 0px)) 16px 24px; }
+  .rel { grid-template-columns: 1fr 1fr; }
+  .zoom-controls { right: 16px; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+  .zoom-btn { width: 34px; height: 34px; font-size: 15px; }
+  .hint { bottom: calc(24px + env(safe-area-inset-bottom, 0px)); font-size: 10px; padding: 4px 10px; }
+}
+
 </style>
 </head>
 <body>
@@ -1373,153 +1495,130 @@ button, summary {
 <!-- ================= 1. STORE HEADER ================= -->
 <header id="siteHeader">
   <div class="header-inner">
+    <!-- 2-line Hamburger Menu -->
     <button class="menu-trigger" id="menuBtn" aria-label="Open menu">
       <div class="menu-line line-top"></div>
       <div class="menu-line line-bot"></div>
     </button>
 
+    <!-- Centered Veyrix Logo -->
     <div class="header-logo-wrap" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
       <img src="black-logo.svg" alt="VEYRIX" class="header-logo">
     </div>
 
+    <!-- Search Button & Input -->
     <div class="header-right">
       <div class="search-container" id="searchBox">
         <input type="text" id="searchInput" placeholder="SEARCH PIECE..." class="search-input" aria-label="Search piece">
         <button class="search-toggle-btn" id="searchToggle" aria-label="Toggle search">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <circle cx="11" cy="11" r="7"/>
-            <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </button>
       </div>
     </div>
   </div>
-
-  <!-- Ticker Marquee -->
-  <div class="ticker-bar" aria-hidden="true">
-    <div class="ticker-track">
-      <span>WORLDWIDE SHIPPING AVAILABLE</span>
-      <span>•</span>
-      <span>AUTONOMOUS 3D SPATIAL ARCHIVE // DROP 01</span>
-      <span>•</span>
-      <span>MILAN STUDIO EDITORIAL</span>
-      <span>•</span>
-      <span>VEYRIX ARCHIVE PIECES ONLINE</span>
-      <span>•</span>
-    </div>
-    <div class="ticker-track">
-      <span>WORLDWIDE SHIPPING AVAILABLE</span>
-      <span>•</span>
-      <span>AUTONOMOUS 3D SPATIAL ARCHIVE // DROP 01</span>
-      <span>•</span>
-      <span>MILAN STUDIO EDITORIAL</span>
-      <span>•</span>
-      <span>VEYRIX ARCHIVE PIECES ONLINE</span>
-      <span>•</span>
-    </div>
-  </div>
 </header>
 
-<!-- ================= 2. SLIDE-OUT DRAWER MENU ================= -->
+<!-- ================= 2. SLIDE-OUT DRAWER MENU (EXACT VEYRIX STORE REPLICA) ================= -->
 <div class="drawer-backdrop" id="drawerBackdrop"></div>
 <aside class="drawer-menu" id="drawerMenu" role="dialog" aria-modal="true" aria-label="Navigation Menu">
   <div class="drawer-header">
     <img src="black-logo.svg" alt="VEYRIX" class="drawer-logo">
-    <button class="drawer-close-btn" id="drawerClose" aria-label="Close menu">✕</button>
+    <button class="drawer-close-btn" id="drawerClose" aria-label="Close menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
   </div>
+
   <nav class="drawer-nav">
     <ul>
       <li>
-        <a href="#studioSection" class="drawer-link active" data-action="studio">
-          <span class="idx">01</span>
-          <span>3D Spatial Studio</span>
-        </a>
+        <a href="#all" class="drawer-link" id="navAllPieces">All Pieces</a>
       </li>
       <li>
-        <a href="#catalogSection" class="drawer-link" data-action="catalog">
-          <span class="idx">02</span>
-          <span>Catalogue (All Pieces)</span>
+        <a href="#archive" class="drawer-link" id="navArchive">
+          Archive <span class="sold-out-tag">(Sold Out)</span>
         </a>
       </li>
+
+      <li class="drawer-group-title">Collections</li>
       <li>
-        <a href="#catalogSection" class="drawer-link" data-action="collections">
-          <span class="idx">03</span>
-          <span>Collections</span>
-        </a>
+        <a href="#drop01" class="drawer-link collection-link" data-coll="Drop 01">Drop 01</a>
       </li>
       <li>
-        <a href="#catalogSection" class="drawer-link" data-action="archive">
-          <span class="idx">04</span>
-          <span>Archive</span>
-        </a>
+        <a href="#editorial" class="drawer-link collection-link" data-coll="Editorial">Editorial</a>
       </li>
+
+      <li class="drawer-group-title">Spatial Studio</li>
       <li>
-        <a href="#siteFooter" class="drawer-link" data-action="about">
-          <span class="idx">05</span>
-          <span>Studio Info & Terminal</span>
-        </a>
+        <a href="#studio" class="drawer-link" id="navStudio">3D Spatial Studio</a>
       </li>
     </ul>
   </nav>
+
   <div class="drawer-footer">
-    <div>MILAN STUDIO LAB // WORLDWIDE</div>
-    <div>AUTONOMOUS 3D SPATIAL STORE</div>
-    <div class="drawer-socials">
-      <a href="https://instagram.com" target="_blank" rel="noopener">INSTAGRAM</a>
-      <a href="https://t.me" target="_blank" rel="noopener">TELEGRAM</a>
+    <a href="https://www.instagram.com/veyrix.co" target="_blank" rel="noopener noreferrer" class="drawer-instagram">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+      </svg>
+      <span>Instagram</span>
+    </a>
+    <div class="drawer-bottom-info">
+      <p class="drawer-copy">
+        © 2026 VEYRIX STUDIO.<br>
+        All rights reserved.
+      </p>
+      <div class="drawer-dev">
+        <span>Developed by</span>
+        <b>Ivakin Daniil</b>
+      </div>
     </div>
   </div>
 </aside>
 
 <!-- ================= 3. HERO SECTION ================= -->
-<section id="hero" class="hero-section">
-  <div class="hero-bg-lights"></div>
-  <div class="hero-content">
-    <img src="logo.png" alt="VEYRIX STUDIO" class="hero-brand-logo">
-    <div class="hero-tagline">AUTONOMOUS 3D SPATIAL ARCHIVE // DROP 01</div>
-    <button class="hero-btn" onclick="document.getElementById('studioSection').scrollIntoView({ behavior: 'smooth' })">
-      <span>EXPLORE 3D STUDIO ↓</span>
-      <div class="hero-btn-bg"></div>
+<section id="hero">
+  <div class="hero-inner">
+    <img src="logo.png" alt="VEYRIX" class="hero-logo">
+    <button class="hero-cta-btn" id="heroCtaBtn">
+      <span class="btn-text">EXPLORE GALLERY</span>
+      <div class="btn-bg"></div>
     </button>
   </div>
 </section>
 
-<!-- ================= 4. 3D STUDIO SECTION (Where catalogue was!) ================= -->
-<section id="studioSection" class="studio-section">
-  <div class="studio-topbar">
-    <div class="studio-title-badge">
-      <span class="dot-pulse"></span>
-      <span>3D SPATIAL STUDIO // 18 ARCHIVE SHOOTS</span>
-    </div>
-    <div class="studio-zoom-info">
-      <span id="zoomPercent">100%</span>
-      <span>•</span>
-      <span>Scroll / Pinch to Zoom</span>
-    </div>
-  </div>
+<!-- ================= 4. 3D SPATIAL STUDIO SECTION ================= -->
+<section id="studioSection">
 
-  <!-- 3D Space Canvas -->
-  <div id="space" aria-label="3D Product Space">
-    <div id="world"></div>
-  </div>
 
-  <!-- Space Hint -->
-  <div class="hint" id="hint">Drag to rotate • Pinch / Wheel to zoom • Tap piece to open shoot gallery</div>
 
-  <!-- Zoom Controls -->
-  <div class="zoom-controls">
-    <button class="zoom-btn" id="btnZoomIn" title="Zoom in">+</button>
-    <button class="zoom-btn" id="btnZoomOut" title="Zoom out">−</button>
-  </div>
 
-  <!-- Custom Floating Cursor -->
-  <div class="custom-cursor" id="cursor">
-    <div class="cursor-ring"></div>
-    <span class="cursor-label" id="cursorLabel">Explore Shoot</span>
-  </div>
-</section>
+<!-- 3D Space Canvas -->
+<main id="space" aria-label="Product space">
+  <div id="world"></div>
+</main>
 
-<!-- ================= 5. COVER-FLOW EDITORIAL GALLERY MODAL ================= -->
+<div class="hint" id="hint">Drag to rotate • Pinch / Wheel to zoom • Tap piece to open shoot gallery</div>
+
+<!-- Zoom Controls -->
+<div class="zoom-controls">
+  <button class="zoom-btn" id="btnZoomIn" title="Zoom in">+</button>
+  <button class="zoom-btn" id="btnZoomOut" title="Zoom out">−</button>
+</div>
+
+<!-- Custom Floating Cursor -->
+<div class="custom-cursor" id="cursor">
+  <div class="cursor-ring"></div>
+  <span class="cursor-label" id="cursorLabel">Explore Shoot</span>
+</div>
+
+<!-- ================= 1. COVER-FLOW EDITORIAL GALLERY MODAL (VEYRIX STUDIO REF) ================= -->
 <div id="shootModal" role="dialog" aria-modal="true" aria-label="Editorial Gallery">
   <!-- Minimalist Floating Close Button on Dark Cinematic Stage -->
   <button class="cf-close-btn" id="closeShootBtn" title="Back to Space (Esc)">✕</button>
@@ -1538,158 +1637,681 @@ button, summary {
   </footer>
 </div>
 
-<!-- ================= 6. FULL PRODUCT DETAIL PAGE (#viewer) ================= -->
-<div id="viewer" role="dialog" aria-modal="true" aria-label="Product Details">
-  <nav class="viewer-top-nav">
-    <button class="viewer-back-btn" id="closeViewerBtn" title="Back (Esc)">
-      <span>←</span>
-      <span>BACK</span>
-    </button>
-    <div class="header-logo-wrap" style="position:static; transform:none;">
-      <img src="black-logo.svg" alt="VEYRIX" class="header-logo" style="height:18px;">
-    </div>
-    <div style="font-family:ui-monospace, monospace; font-size:11px; font-weight:700;" id="viewerPriceTop">$0</div>
-  </nav>
 
-  <div class="viewer-body">
-    <div class="viewer-container">
-      <div class="cols">
-        <!-- Left: Details & Specs -->
-        <div class="left">
-          <h1 id="vTitle">Product Title</h1>
-          <p class="desc" id="vDesc">Product description text.</p>
+</section>
 
-          <div class="spec-block">
-            <div class="spec-label">COLLECTION / DROP</div>
-            <div class="spec-val" id="vDrop">Drop 01 — Milan Studio</div>
-          </div>
-          <div class="spec-block">
-            <div class="spec-label">FABRIC COMPOSITION</div>
-            <div class="spec-val" id="vMat">Cotton Jersey, 240 gsm</div>
-          </div>
-          <div class="spec-block">
-            <div class="spec-label">FIT & DETAILS</div>
-            <div class="spec-val" id="vFit">Boxy silhouette with relaxed shoulders and reinforced ribbing.</div>
-          </div>
-        </div>
+<!-- ================= 5. FULL PRODUCT DETAIL VIEWER (EXACT 3-COLUMN VERSION) ================= -->
+<!-- ================= 2. FULL PRODUCT DETAIL PAGE (WITH DISTRIBUTED EDGE BUTTONS) ================= -->
+<div id="viewer" role="dialog" aria-modal="true" aria-label="Product Page">
+  <button class="x" id="close">← Back to Shoot</button>
+  <div class="scroll" id="scroll">
+    <div class="stage">
+      <div class="pin">
+        <div class="first" id="first">
+          <div class="cols">
+            <!-- Left Edge (SIZE, SLEEVE LENGTH TYPE, SIZE GUIDE) -->
+            <div class="left">
+              <div class="lab">Size</div>
+              <div class="opts" id="sz" role="radiogroup" aria-label="Size"></div>
+              
+              <div class="lab" id="ol">Sleeve Length Type</div>
+              <div class="opts" id="op" role="radiogroup"></div>
+              
+              <details>
+                <summary>Size guide</summary>
+                <table>
+                  <tr><th>Size</th><th>Chest, cm</th><th>Length, cm</th></tr>
+                  <tr><td>XS</td><td>96</td><td>66</td></tr>
+                  <tr><td>S</td><td>100</td><td>68</td></tr>
+                  <tr><td>M</td><td>104</td><td>70</td></tr>
+                  <tr><td>L</td><td>108</td><td>72</td></tr>
+                </table>
+              </details>
+            </div>
 
-        <!-- Center: Big Photo Gallery -->
-        <div class="mid">
-          <div class="track">
-            <img id="vMainImg" src="" alt="Product View">
-          </div>
-          <div class="thumb-strip" id="vThumbs"></div>
-        </div>
+            <!-- Middle (Maximized Product Gallery Track) -->
+            <div class="mid">
+              <div class="track" id="track"></div>
+              <div class="dots" id="dots"></div>
+            </div>
 
-        <!-- Right: Size Selection & Bag -->
-        <div class="right">
-          <div class="price-tag" id="vPrice">$0</div>
-
-          <div class="size-picker">
-            <div class="spec-label">SELECT SIZE</div>
-            <div class="size-grid" id="vSizes">
-              <button class="size-btn active" data-size="XS">XS</button>
-              <button class="size-btn" data-size="S">S</button>
-              <button class="size-btn" data-size="M">M</button>
-              <button class="size-btn" data-size="L">L</button>
-              <button class="size-btn" data-size="XL">XL</button>
+            <!-- Right Edge (Title, Price, Quantity + Button, Description, Shipping) -->
+            <div class="right">
+              <h2 id="nm"></h2>
+              <div class="pr" id="pr"></div>
+              <div class="buyrow">
+                <input id="qty" type="number" min="1" max="9" value="1" aria-label="Quantity">
+                <button class="buy" id="buy">SOLD OUT</button>
+              </div>
+              <p id="ds"></p>
+              <p class="ship">(ALLOW 2–3 WEEKS SHIPPING TIME)</p>
             </div>
           </div>
-
-          <button class="buy-btn" id="addToBagBtn">ADD TO BAG — PRE-ORDER</button>
-
-          <div style="font-family:ui-monospace, monospace; font-size:10px; color:var(--mut); line-height:1.7; border-top:1px solid var(--border-light); padding-top:16px;">
-            <div>• FREE WORLDWIDE EXPRESS SHIPPING</div>
-            <div>• DISPATCH WITHIN 48 HOURS FROM MILAN</div>
-            <div>• 14-DAY COMPLIMENTARY RETURNS</div>
-          </div>
         </div>
       </div>
-
-      <!-- Related Shoots -->
-      <div class="related-section">
-        <div class="related-title">RELATED EDITORIAL SHOOTS</div>
-        <div class="related-grid" id="vRelated"></div>
-      </div>
     </div>
+
+    <!-- Scroll Details Section -->
+    <section class="detail">
+      <div class="dw">
+        <h3>Details</h3>
+        <p id="long"></p>
+        <ul class="spec" id="spec"></ul>
+        <h3>You may also like</h3>
+        <div class="rel" id="rel"></div>
+      </div>
+    </section>
   </div>
 </div>
 
-<!-- ================= 7. CATALOGUE SECTION (Moved below 3D Space) ================= -->
-<section id="catalogSection" class="catalog-section">
+
+
+<!-- ================= 6. FULL-SCREEN CATALOGUE OVERLAY (OPENED FROM DRAWER LINKS) ================= -->
+<div id="catalogView" role="dialog" aria-modal="true" aria-label="Catalogue">
   <div class="catalog-header">
-    <div>
-      <h2 class="catalog-title" id="catalogTitle">CATALOGUE</h2>
-      <span class="catalog-count" id="catalogCount">18 PIECES</span>
-    </div>
-
-    <div class="catalog-filters">
-      <div class="filter-pills" id="categoryPills">
-        <button class="filter-pill active" data-cat="all">All</button>
-        <button class="filter-pill" data-cat="tees">Tees</button>
-        <button class="filter-pill" data-cat="ls">L/S</button>
-        <button class="filter-pill" data-cat="hd">Hoodies</button>
-        <button class="filter-pill" data-cat="out">Jackets</button>
-        <button class="filter-pill" data-cat="pants">Denim</button>
-        <button class="filter-pill" data-cat="acc">Items</button>
+    <div class="catalog-header-inner">
+      <div class="catalog-title-group">
+        <h2 class="catalog-title" id="catTitle">All Pieces</h2>
+        <span class="catalog-count" id="catCount">50 Pieces</span>
       </div>
-
-      <select id="sortSelect" class="sort-select" aria-label="Sort pieces">
-        <option value="newest">Newest First</option>
-        <option value="price_asc">Price: Low-High</option>
-        <option value="price_desc">Price: High-Low</option>
-      </select>
+      <div class="catalog-filters" id="catFilters">
+        <button class="cat-pill active" data-g="all">All</button>
+        <button class="cat-pill" data-g="tees">Tees</button>
+        <button class="cat-pill" data-g="ls">L/S</button>
+        <button class="cat-pill" data-g="hoodie">Hoodies</button>
+        <button class="cat-pill" data-g="jacket">Jackets</button>
+        <button class="cat-pill" data-g="denim">Denim</button>
+        <button class="cat-pill" data-g="acc">Items</button>
+      </div>
+      <button class="catalog-close-btn" id="closeCatBtn">✕ Close</button>
     </div>
   </div>
-
-  <div class="product-grid" id="productGrid">
-    <!-- Populated dynamically -->
+  <div class="catalog-body">
+    <div class="catalog-grid" id="catGrid"></div>
   </div>
-</section>
+</div>
 
-<!-- ================= 8. FOOTER ================= -->
-<footer id="siteFooter" class="site-footer">
+<!-- ================= 7. SITE FOOTER ================= -->
+<footer id="siteFooter">
   <div class="footer-inner">
     <div class="footer-top">
       <img src="black-logo.svg" alt="VEYRIX" class="footer-logo">
-      <div class="footer-studio-tag">MILAN / DIGITAL / GLOBAL ARCHIVE</div>
-    </div>
-    <div class="footer-links-grid">
-      <div class="footer-col">
-        <h4>NAVIGATION</h4>
-        <a href="#hero">Top</a>
-        <a href="#studioSection">3D Spatial Studio</a>
-        <a href="#catalogSection">Catalogue</a>
-        <a href="#catalogSection">Archive</a>
-      </div>
-      <div class="footer-col">
-        <h4>CLIENT SERVICE</h4>
-        <a href="mailto:orders@veyrix.com">Orders & Delivery</a>
-        <a href="#">Size & Silhouette Guide</a>
-        <a href="#">Complimentary Care</a>
-        <a href="#">Terms & Conditions</a>
-      </div>
-      <div class="footer-col">
-        <h4>COMMUNITY</h4>
-        <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
-        <a href="https://t.me" target="_blank" rel="noopener">Telegram Channel</a>
-        <a href="#">Studio Journal</a>
-      </div>
+      <ul class="footer-links">
+        <li><a href="#hero" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">Home</a></li>
+        <li><a href="#studio" onclick="document.getElementById('studioSection')?.scrollIntoView({ behavior: 'smooth' })">3D Studio</a></li>
+        <li><a href="#all" onclick="openCatalogView('all')">Catalogue</a></li>
+        <li><a href="https://www.instagram.com/veyrix.co" target="_blank" rel="noopener">Instagram</a></li>
+      </ul>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 VEYRIX STUDIO. ALL RIGHTS RESERVED. AUTONOMOUS 3D SPATIAL ARCHIVE.</p>
-      <div>MILAN LAB // TERMINAL ACTIVE</div>
+      <div>© 2026 VEYRIX STUDIO. ALL RIGHTS RESERVED.</div>
+      <div>AUTONOMOUS 3D SPATIAL ARCHIVE // DEVELOPED BY IVAKIN DANIIL</div>
     </div>
   </div>
 </footer>
 
 <script>
+// ================= CATALOG DATA =================
+const CATALOG_50 = [
+  {
+    "id": 1,
+    "f": "item_01.jpg",
+    "url": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Christmas Tragedy Tee",
+    "price": 50,
+    "g": "tees",
+    "soldOut": true
+  },
+  {
+    "id": 2,
+    "f": "item_02.jpg",
+    "url": "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Quiet Hour Tee",
+    "price": 48,
+    "g": "tees",
+    "soldOut": false
+  },
+  {
+    "id": 3,
+    "f": "item_03.jpg",
+    "url": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/5",
+    "name": "Ash Cutoff Tee",
+    "price": 52,
+    "g": "tees",
+    "soldOut": false
+  },
+  {
+    "id": 4,
+    "f": "item_04.jpg",
+    "url": "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Winter Ledger Tee",
+    "price": 46,
+    "g": "tees",
+    "soldOut": false
+  },
+  {
+    "id": 5,
+    "f": "item_05.jpg",
+    "url": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80",
+    "aspect": "1/1",
+    "name": "Raw Seam Pocket Tee",
+    "price": 55,
+    "g": "tees",
+    "soldOut": false
+  },
+  {
+    "id": 6,
+    "f": "item_06.jpg",
+    "url": "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/3",
+    "name": "Bleach Treated Tee",
+    "price": 54,
+    "g": "tees",
+    "soldOut": false
+  },
+  {
+    "id": 7,
+    "f": "item_07.jpg",
+    "url": "https://images.unsplash.com/photo-1622445268045-328fbbf68870?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Solar Dye Boxy Tee",
+    "price": 58,
+    "g": "tees",
+    "soldOut": false
+  },
+  {
+    "id": 8,
+    "f": "item_08.jpg",
+    "url": "https://images.unsplash.com/photo-1527719327859-c6ce80353573?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/5",
+    "name": "Echo Print Cutoff",
+    "price": 49,
+    "g": "tees",
+    "soldOut": false
+  },
+  {
+    "id": 9,
+    "f": "item_09.jpg",
+    "url": "https://images.unsplash.com/photo-1618354691792-d1d42acfd860?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Anti Ballet L/S",
+    "price": 80,
+    "g": "ls",
+    "soldOut": true
+  },
+  {
+    "id": 10,
+    "f": "item_10.jpg",
+    "url": "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/5",
+    "name": "Blown Elbow L/S",
+    "price": 85,
+    "g": "ls",
+    "soldOut": false
+  },
+  {
+    "id": 11,
+    "f": "item_11.jpg",
+    "url": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Salt Thermal L/S",
+    "price": 78,
+    "g": "ls",
+    "soldOut": false
+  },
+  {
+    "id": 12,
+    "f": "item_12.jpg",
+    "url": "https://images.unsplash.com/photo-1620799139834-6b8f844fbe61?w=800&auto=format&fit=crop&q=80",
+    "aspect": "1/1",
+    "name": "Hollow Cuff L/S",
+    "price": 82,
+    "g": "ls",
+    "soldOut": false
+  },
+  {
+    "id": 13,
+    "f": "item_13.jpg",
+    "url": "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/3",
+    "name": "Ribbed Base Layer",
+    "price": 72,
+    "g": "ls",
+    "soldOut": false
+  },
+  {
+    "id": 14,
+    "f": "item_14.jpg",
+    "url": "https://images.unsplash.com/photo-1516257984-b1b4d707412e?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Double Sleeve Raglan",
+    "price": 88,
+    "g": "ls",
+    "soldOut": false
+  },
+  {
+    "id": 15,
+    "f": "item_15.jpg",
+    "url": "https://images.unsplash.com/photo-1523381294911-8d3cead13475?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/5",
+    "name": "Distressed Stripe L/S",
+    "price": 76,
+    "g": "ls",
+    "soldOut": false
+  },
+  {
+    "id": 16,
+    "f": "item_16.jpg",
+    "url": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Cold Room Hoodie",
+    "price": 140,
+    "g": "hd",
+    "soldOut": false
+  },
+  {
+    "id": 17,
+    "f": "item_17.jpg",
+    "url": "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/5",
+    "name": "Ash Rib Hoodie",
+    "price": 135,
+    "g": "hd",
+    "soldOut": false
+  },
+  {
+    "id": 18,
+    "f": "item_18.jpg",
+    "url": "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=800&auto=format&fit=crop&q=80",
+    "aspect": "1/1",
+    "name": "Bark Heavy Hoodie",
+    "price": 145,
+    "g": "hd",
+    "soldOut": false
+  },
+  {
+    "id": 19,
+    "f": "item_19.jpg",
+    "url": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Static Studio Hoodie",
+    "price": 138,
+    "g": "hd",
+    "soldOut": false
+  },
+  {
+    "id": 20,
+    "f": "item_20.jpg",
+    "url": "https://images.unsplash.com/photo-1543087903-1ac2ec7aa8c5?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/5",
+    "name": "Raw Neckline Pullover",
+    "price": 128,
+    "g": "hd",
+    "soldOut": false
+  },
+  {
+    "id": 21,
+    "f": "item_21.jpg",
+    "url": "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Cropped Mineral Hoodie",
+    "price": 142,
+    "g": "hd",
+    "soldOut": false
+  },
+  {
+    "id": 22,
+    "f": "item_22.jpg",
+    "url": "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Type-III Denim Jacket",
+    "price": 220,
+    "g": "out",
+    "soldOut": false
+  },
+  {
+    "id": 23,
+    "f": "item_23.jpg",
+    "url": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/5",
+    "name": "Flight Overshirt",
+    "price": 180,
+    "g": "out",
+    "soldOut": false
+  },
+  {
+    "id": 24,
+    "f": "item_24.jpg",
+    "url": "https://images.unsplash.com/photo-1548883354-7622d03aca27?w=800&auto=format&fit=crop&q=80",
+    "aspect": "1/1",
+    "name": "Waxed Canvas Parka",
+    "price": 260,
+    "g": "out",
+    "soldOut": false
+  },
+  {
+    "id": 25,
+    "f": "item_25.jpg",
+    "url": "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/3",
+    "name": "Leather Moto Blouson",
+    "price": 340,
+    "g": "out",
+    "soldOut": false
+  },
+  {
+    "id": 26,
+    "f": "item_26.jpg",
+    "url": "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Down Studio Vest",
+    "price": 175,
+    "g": "out",
+    "soldOut": false
+  },
+  {
+    "id": 27,
+    "f": "item_27.jpg",
+    "url": "https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/5",
+    "name": "Quilted Liner Jacket",
+    "price": 165,
+    "g": "out",
+    "soldOut": false
+  },
+  {
+    "id": 28,
+    "f": "item_28.jpg",
+    "url": "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "GLOE Skull Bones Jeans",
+    "price": 85,
+    "g": "pants",
+    "soldOut": false
+  },
+  {
+    "id": 29,
+    "f": "item_29.jpg",
+    "url": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/5",
+    "name": "Raw Selvedge Denim",
+    "price": 135,
+    "g": "pants",
+    "soldOut": false
+  },
+  {
+    "id": 30,
+    "f": "item_30.jpg",
+    "url": "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&auto=format&fit=crop&q=80",
+    "aspect": "1/1",
+    "name": "Double Knee Workpant",
+    "price": 125,
+    "g": "pants",
+    "soldOut": false
+  },
+  {
+    "id": 31,
+    "f": "item_31.jpg",
+    "url": "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Wide Pleated Trouser",
+    "price": 130,
+    "g": "pants",
+    "soldOut": false
+  },
+  {
+    "id": 32,
+    "f": "item_32.jpg",
+    "url": "https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/5",
+    "name": "Mud-Washed Cargo",
+    "price": 145,
+    "g": "pants",
+    "soldOut": false
+  },
+  {
+    "id": 33,
+    "f": "item_33.jpg",
+    "url": "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Relaxed Sweatpant",
+    "price": 95,
+    "g": "pants",
+    "soldOut": false
+  },
+  {
+    "id": 34,
+    "f": "item_34.jpg",
+    "url": "https://images.unsplash.com/photo-1620799139834-6b8f844fbe61?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Chunky Mockneck",
+    "price": 165,
+    "g": "out",
+    "soldOut": false
+  },
+  {
+    "id": 35,
+    "f": "item_35.jpg",
+    "url": "https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/5",
+    "name": "Open-Weave Cardigan",
+    "price": 155,
+    "g": "out",
+    "soldOut": false
+  },
+  {
+    "id": 36,
+    "f": "item_36.jpg",
+    "url": "https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?w=800&auto=format&fit=crop&q=80",
+    "aspect": "1/1",
+    "name": "Distressed Wool Knit",
+    "price": 170,
+    "g": "out",
+    "soldOut": false
+  },
+  {
+    "id": 37,
+    "f": "item_37.jpg",
+    "url": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&auto=format&fit=crop&q=80",
+    "aspect": "1/1",
+    "name": "Unstructured 6-Panel",
+    "price": 45,
+    "g": "acc",
+    "soldOut": false
+  },
+  {
+    "id": 38,
+    "f": "item_38.jpg",
+    "url": "https://images.unsplash.com/photo-1544816155-12df9643f363?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Heavy Duty Tote",
+    "price": 55,
+    "g": "acc",
+    "soldOut": false
+  },
+  {
+    "id": 39,
+    "f": "item_39.jpg",
+    "url": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/3",
+    "name": "Combat Derby Shoe",
+    "price": 210,
+    "g": "acc",
+    "soldOut": false
+  },
+  {
+    "id": 40,
+    "f": "item_40.jpg",
+    "url": "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&auto=format&fit=crop&q=80",
+    "aspect": "1/1",
+    "name": "Vibram Sole Runner",
+    "price": 190,
+    "g": "acc",
+    "soldOut": false
+  },
+  {
+    "id": 41,
+    "f": "item_41.jpg",
+    "url": "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/3",
+    "name": "Studio Leather Mule",
+    "price": 160,
+    "g": "acc",
+    "soldOut": false
+  },
+  {
+    "id": 42,
+    "f": "item_42.jpg",
+    "url": "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Silver Link Ring",
+    "price": 65,
+    "g": "acc",
+    "soldOut": false
+  },
+  {
+    "id": 43,
+    "f": "item_43.jpg",
+    "url": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Milan Lookbook 01",
+    "price": 95,
+    "g": "tees",
+    "soldOut": false
+  },
+  {
+    "id": 44,
+    "f": "item_44.jpg",
+    "url": "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/5",
+    "name": "Street Volume Study",
+    "price": 110,
+    "g": "ls",
+    "soldOut": false
+  },
+  {
+    "id": 45,
+    "f": "item_45.jpg",
+    "url": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=800&auto=format&fit=crop&q=80",
+    "aspect": "1/1",
+    "name": "Raw Texture Macro",
+    "price": 75,
+    "g": "tees",
+    "soldOut": false
+  },
+  {
+    "id": 46,
+    "f": "item_46.jpg",
+    "url": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Drape & Motion Shirt",
+    "price": 85,
+    "g": "tees",
+    "soldOut": false
+  },
+  {
+    "id": 47,
+    "f": "item_47.jpg",
+    "url": "https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/3",
+    "name": "Architectural Coat",
+    "price": 280,
+    "g": "out",
+    "soldOut": false
+  },
+  {
+    "id": 48,
+    "f": "item_48.jpg",
+    "url": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&auto=format&fit=crop&q=80",
+    "aspect": "3/4",
+    "name": "Silk Blend Overshirt",
+    "price": 120,
+    "g": "tees",
+    "soldOut": false
+  },
+  {
+    "id": 49,
+    "f": "item_49.jpg",
+    "url": "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&auto=format&fit=crop&q=80",
+    "aspect": "4/5",
+    "name": "Monochrome Outerwear",
+    "price": 195,
+    "g": "out",
+    "soldOut": false
+  },
+  {
+    "id": 50,
+    "f": "item_50.jpg",
+    "url": "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=800&auto=format&fit=crop&q=80",
+    "aspect": "1/1",
+    "name": "Studio Hardware Bag",
+    "price": 90,
+    "g": "acc",
+    "soldOut": false
+  }
+];
+
+
 const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
-const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
+const G = {
+  tees: {
+    n: 'Tees',
+    ol: 'Sleeve length type',
+    o: ['Cutoff', 'Tee'],
+    d: 'Hand printed, treated, and distressed tee.',
+    l: 'Printed by hand in small runs, then washed and distressed so no two pieces are identical. Raw neck rib, relaxed boxy fit.',
+    m: 'Cotton jersey, 240 gsm'
+  },
+  ls: {
+    n: 'L/S',
+    ol: 'Sleeve length type',
+    o: ['Long', 'Blown elbow'],
+    d: 'Hand printed, treated, and distressed tee. Each long sleeve features blown out elbows.',
+    l: 'Every long sleeve is distressed by hand, one piece at a time. Slightly cropped body, elongated cuffs.',
+    m: 'Cotton jersey, 260 gsm'
+  },
+  hd: {
+    n: 'Hoodies',
+    ol: 'Fit',
+    o: ['Standard', 'Cropped'],
+    d: 'Hand printed, treated, and distressed hoodie.',
+    l: 'Heavy fleece, garment washed for a worn-in hand feel. Kangaroo pocket, raw hem.',
+    m: 'Cotton fleece, 380 gsm'
+  },
+  out: {
+    n: 'Jackets',
+    ol: 'Silhouette',
+    o: ['Relaxed', 'Tailored'],
+    d: 'Studio architectural outerwear tailored with Japanese fabrics.',
+    l: 'Dense twill weave, customized tonal snap buttons and structured shoulder line.',
+    m: 'Technical Cotton & Wool, 320 gsm'
+  },
+  pants: {
+    n: 'Denim',
+    ol: 'Leg Fit',
+    o: ['Wide Leg', 'Straight'],
+    d: '100% Cotton blend washed denim with custom fading.',
+    l: 'Relaxed wide leg silhouette, reinforced double needle seams, custom woven size and wash tag.',
+    m: 'Heavy 14oz Denim / Twill'
+  },
+  acc: {
+    n: 'Items',
+    ol: 'Finish',
+    o: ['Standard', 'Matte'],
+    d: 'Studio hardware, headwear and leather goods.',
+    l: 'Precision crafted accessories designed for everyday utility.',
+    m: 'Chino Twill / Full Grain Leather'
+  }
+};
 
-
+// 18 Curated Shoots with multi-photo series (100% High-Resolution Portrait Photos, No Low-Res / No Stretched Crops)
 const SHOOTS = [
   {
     id: 1,
@@ -1946,6 +2568,7 @@ const SHOOTS = [
 ];
 
 // Chaotic, organic 3D spatial layout for 18 Shoots
+// Pseudorandom deterministic jitter so each piece sits at varied depth and scattered angle
 function pseudoRand(seed) {
   const x = Math.sin(seed) * 10000;
   return x - Math.floor(x);
@@ -1955,6 +2578,7 @@ const N = SHOOTS.length;
 const I = SHOOTS.map((o, i) => {
   const slug = o.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
   
+  // Base golden spiral
   const yBase = 1 - (i + 0.5) * 2 / N;
   const rBase = Math.sqrt(1 - yBase * yBase);
   const fBase = i * 2.3999632;
@@ -1967,50 +2591,44 @@ const I = SHOOTS.map((o, i) => {
   const th = Math.atan2(xBase, zBase) + jX;
   const ph = clamp(Math.asin(yBase) + jY, -1.05, 1.05);
 
+  // Depth layering: varying radius multiplier so cards float at different distances
   const rMult = 0.85 + (i % 4) * 0.08 + (pseudoRand(i * 7.1) - 0.5) * 0.1;
 
   let ratio = 1.33;
-  if (o.aspect === '3/4') ratio = 4 / 3;
-  else if (o.aspect === '4/5') ratio = 5 / 4;
-  else if (o.aspect === '1/1') ratio = 1;
-  else if (o.aspect === '4/3') ratio = 3 / 4;
-
-  const sc = 0.88 + (pseudoRand(i * 19.3) - 0.5) * 0.32;
-  const p = pseudoRand(i * 5.7) * Math.PI * 2;
-  const s = 0.45 + pseudoRand(i * 8.9) * 0.55;
+  if (o.aspect === '4/5') ratio = 1.25;
+  if (o.aspect === '1/1') ratio = 1.0;
+  if (o.aspect === '4/3') ratio = 0.75;
 
   return {
     ...o,
-    i,
     slug,
-    img: 'items/' + o.hero,
+    img: `items/${o.hero}`,
     th,
     ph,
     rMult,
     ratio,
-    sc,
-    p,
-    s,
-    hov: 0,
+    sc: 0.95 + (i % 3) * 0.10,
+    s: 0.5 + (i % 5) * 0.12,
+    p: i * 1.9,
     h: 0,
-    el: null
+    hov: 0,
+    i
   };
 });
 
-/* ================= 3D SPACE ENGINE ================= */
-const space = $('#space'), world = $('#world');
+/* ================= 3D Space Setup & Zoom ================= */
+const world = $('#world'), space = $('#space');
 const cursor = $('#cursor'), cursorLabel = $('#cursorLabel');
 const zoomPercent = $('#zoomPercent');
 
-let W = space.clientWidth || innerWidth;
-let H = space.clientHeight || innerHeight;
+let W = innerWidth, H = innerHeight;
 let baseRadius = 340;
 let userZoom = 1.0;
 let targetZoom = 1.0;
 let CW = 110;
 const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
 
-// Create 3D cards
+// Create card DOM elements (STRAIGHT RECTANGULAR EDGES, FULL RESOLUTION, NO BADGES)
 I.forEach(it => {
   const el = document.createElement('div');
   el.className = 'card';
@@ -2024,6 +2642,7 @@ I.forEach(it => {
     </div>
   `;
 
+  // Hover state (crystal clear, rock-solid, no vibration)
   el.addEventListener('mouseenter', () => {
     it.hov = 1;
     cursorLabel.textContent = 'Explore Shoot';
@@ -2047,6 +2666,7 @@ I.forEach(it => {
   el.addEventListener('pointerup', (e) => {
     const dist = Math.hypot(e.clientX - cardPointerDownX, e.clientY - cardPointerDownY);
     const duration = performance.now() - cardPointerDownTime;
+    // On touchscreens and mice: if moved under 18px and held under 450ms, it is a deliberate TAP
     if (dist < 18 && duration < 450) {
       e.preventDefault();
       e.stopPropagation();
@@ -2054,10 +2674,11 @@ I.forEach(it => {
     }
   });
 
+  // Fallback click listener (keyboard Enter key / accessibility / desktop fallback)
   el.addEventListener('click', (e) => {
     e.stopPropagation();
     if (shootOpen) return;
-    if (performance.now() - cardPointerDownTime < 500) return;
+    if (performance.now() - cardPointerDownTime < 500) return; // already handled by pointerup
     openShootModal(it.i, e);
   });
 
@@ -2066,8 +2687,8 @@ I.forEach(it => {
 });
 
 function layout() {
-  W = space.clientWidth || innerWidth;
-  H = space.clientHeight || innerHeight;
+  W = innerWidth;
+  H = innerHeight;
   baseRadius = clamp(Math.min(W, H) * 0.52, 280, 480);
   CW = clamp(W * 0.12, 95, 145);
 
@@ -2077,33 +2698,44 @@ function layout() {
     const s = it.el.style;
     s.width = w + 'px';
     s.height = h + 'px';
-    s.marginLeft = -w / 2 + 'px';
-    s.marginTop = -h / 2 + 'px';
+    s.marginLeft = (-w / 2) + 'px';
+    s.marginTop = (-h / 2) + 'px';
   });
 }
+addEventListener('resize', layout);
 layout();
-window.addEventListener('resize', layout);
 
-// Track cursor movement for floating badge
+$('#count').textContent = I.length + ' Shoots';
+
+/* ================= 3D Space Physics ================= */
+let ry = 0.2, rx = -0.15;
+let vy = 0, vx = 0;
+let drag = false, tgt = null, opened = false, shootOpen = false, last = 0;
+let mouseX = W / 2, mouseY = H / 2;
+let curX = mouseX, curY = mouseY;
+
 window.addEventListener('pointermove', e => {
-  cursor.style.left = e.clientX + 'px';
-  cursor.style.top = e.clientY + 'px';
-}, { passive: true });
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  last = performance.now(); // Reset idle rotation timer on cursor move
+});
 
-// 3D Orbit Physics
-let rx = -0.15, ry = 0.25;
-let vx = 0, vy = 0.0012;
-let drag = false;
-let last = performance.now();
-let tgt = null;
-let shootOpen = false;
+const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
 
 function frame(now) {
   requestAnimationFrame(frame);
+
+  curX += (mouseX - curX) * 0.25;
+  curY += (mouseY - curY) * 0.25;
+  cursor.style.transform = `translate3d(${curX}px, ${curY}px, 0)`;
+
+  if (opened) return;
   if (shootOpen) {
     if (tgt) {
-      ry += (tgt.y - ry) * 0.08;
+      const dy = wrap(tgt.y - ry);
+      ry += dy * 0.08;
       rx += (tgt.x - rx) * 0.08;
+      if (Math.abs(dy) + Math.abs(tgt.x - rx) < 0.002) tgt = null;
       world.style.transform = `rotateX(${rx}rad) rotateY(${ry}rad)`;
     }
     return;
@@ -2113,19 +2745,25 @@ function frame(now) {
   userZoom += (targetZoom - userZoom) * 0.12;
   zoomPercent.textContent = Math.round(userZoom * 100) + '%';
 
+  // Check if any card is hovered by the mouse
   const anyHovered = I.some(c => c.hov > 0.05);
 
   if (!drag) {
     if (tgt) {
-      ry += (tgt.y - ry) * 0.08;
+      const dy = wrap(tgt.y - ry);
+      ry += dy * 0.08;
       rx += (tgt.x - rx) * 0.08;
-      if (Math.hypot(tgt.y - ry, tgt.x - rx) < 0.001) tgt = null;
-    } else if (!reduce) {
-      const idleSpeed = anyHovered ? 0.00015 : 0.0009;
-      ry += vy + idleSpeed;
+      vy = vx = 0;
+      if (Math.abs(dy) + Math.abs(tgt.x - rx) < 0.002) tgt = null;
+    } else {
+      ry += vy;
       rx += vx;
-      vx *= 0.94;
-      vy *= 0.94;
+      vy *= 0.93;
+      vx *= 0.93;
+      // Pause idle rotation completely if user is hovering over a card
+      if (!reduce && now - last > 3000 && !anyHovered) {
+        ry += 0.0009;
+      }
     }
   }
 
@@ -2133,11 +2771,15 @@ function frame(now) {
   world.style.transform = `rotateX(${rx}rad) rotateY(${ry}rad)`;
 
   for (const c of I) {
+    // Smooth hover interpolation
     c.h += (c.hov - c.h) * 0.22;
+
+    // Dampen floating oscillation to 0 when hovered so card stays 100% still under mouse pointer
     const floatDamp = 1 - c.h;
     const cardRadius = baseRadius * userZoom * c.rMult;
     const rFloat = cardRadius + (reduce ? 0 : Math.sin(t * c.s + c.p) * 7 * floatDamp);
 
+    // Dynamic zoom-dependent scale so photos physically shrink and grow with zoom
     const zoomScale = Math.pow(userZoom, 0.88);
     c.el.style.transform = `rotateY(${c.th}rad) rotateX(${c.ph}rad) translateZ(${rFloat}px) scale(${zoomScale.toFixed(3)})`;
     c.el.style.zIndex = c.hov ? '99' : String(10 + Math.round((c.ph + 1.2) * 10));
@@ -2145,7 +2787,7 @@ function frame(now) {
 }
 requestAnimationFrame(frame);
 
-/* Space Pointer & Pinch */
+/* Pointer Orbit & Pinch Zoom */
 let sx, sy, lx, ly, moved = 0, hinted = false;
 let activeTouches = new Map();
 let initialPinchDist = null;
@@ -2216,23 +2858,26 @@ function endPointer(e) {
 space.addEventListener('pointerup', endPointer);
 space.addEventListener('pointercancel', endPointer);
 
-// Wheel zoom: if Ctrl/Cmd is held, zoom 3D space, otherwise allow normal page scrolling
 space.addEventListener('wheel', e => {
-  if (e.ctrlKey || e.metaKey) {
-    e.preventDefault();
+  e.preventDefault();
+  last = performance.now();
+  if (e.ctrlKey || Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
     const zoomDelta = -e.deltaY * 0.002;
     targetZoom = clamp(targetZoom + zoomDelta, 0.45, 2.4);
-    last = performance.now();
+  } else {
+    ry += e.deltaX * 0.003;
   }
 }, { passive: false });
 
 $('#btnZoomIn').addEventListener('click', () => { targetZoom = clamp(targetZoom + 0.25, 0.45, 2.4); });
 $('#btnZoomOut').addEventListener('click', () => { targetZoom = clamp(targetZoom - 0.25, 0.45, 2.4); });
 
-/* ================= COVER-FLOW MODAL ENGINE ================= */
+/* ================= 1. COVER-FLOW EDITORIAL GALLERY LOGIC ================= */
 const shootModal = $('#shootModal');
 const cfTrack = $('#cfTrack');
 const cfDashes = $('#cfDashes');
+const shootCounter = $('#shootCounter');
+const shootTitle = $('#shootTitle');
 let activeShootIndex = 0;
 let activePhotoIndex = 0;
 
@@ -2248,12 +2893,14 @@ function renderCoverFlowPositions() {
     card.classList.toggle('active', offset === 0);
 
     if (offset === 0) {
+      // Center Active Card (Elevated, full color, crisp native 2D Retina rendering)
       card.style.transform = `translate3d(0, 0, 0) scale(1)`;
       card.style.opacity = '1';
       card.style.zIndex = '20';
       card.style.filter = 'none';
       card.style.pointerEvents = 'auto';
     } else if (absOffset === 1) {
+      // Immediate Neighbor (Peeking on sides, dimmed)
       const sign = Math.sign(offset);
       card.style.transform = `translate3d(${sign * spacingPercent}%, 0, 0) scale(${isMobile ? 0.88 : 0.90})`;
       card.style.opacity = isMobile ? '0.36' : '0.44';
@@ -2261,6 +2908,7 @@ function renderCoverFlowPositions() {
       card.style.filter = 'brightness(0.65)';
       card.style.pointerEvents = 'auto';
     } else if (absOffset === 2) {
+      // 2nd Neighbor
       const sign = Math.sign(offset);
       card.style.transform = `translate3d(${sign * spacingPercent * 1.82}%, 0, 0) scale(${isMobile ? 0.74 : 0.78})`;
       card.style.opacity = isMobile ? '0.1' : '0.18';
@@ -2268,6 +2916,7 @@ function renderCoverFlowPositions() {
       card.style.filter = 'brightness(0.4)';
       card.style.pointerEvents = 'auto';
     } else {
+      // Offscreen
       const sign = Math.sign(offset);
       card.style.transform = `translate3d(${sign * spacingPercent * 2.5}%, 0, 0) scale(0.65)`;
       card.style.opacity = '0';
@@ -2276,6 +2925,15 @@ function renderCoverFlowPositions() {
     }
   });
 
+  // Update counter
+  const shoot = I[activeShootIndex];
+  if (shoot) {
+    const curStr = String(activePhotoIndex + 1).padStart(2, '0');
+    const totStr = String(shoot.photos.length).padStart(2, '0');
+    if (shootCounter) shootCounter.textContent = `${curStr} / ${totStr}`;
+  }
+
+  // Update dashes
   $$('.cf-dash').forEach((dash, idx) => {
     dash.classList.toggle('active', idx === activePhotoIndex);
   });
@@ -2306,13 +2964,18 @@ function openShootModal(shootIdx, evt) {
   space.classList.remove('drag');
   cursor.classList.remove('visible');
 
+  // Smoothly center the 3D space camera towards the selected piece
   tgt = {
     y: -shoot.th,
     x: -shoot.ph
   };
 
+  // Blur background 3D space with cinematic transition
   $('#space').classList.add('blurred');
 
+  if (shootTitle) shootTitle.textContent = shoot.name.toUpperCase();
+
+  // Render Cover-Flow Cards (Matching user screenshot: look tag, title, price, quick inspect button)
   cfTrack.innerHTML = shoot.photos.map((f, pIdx) => `
     <div class="cf-card" data-idx="${pIdx}">
       <div class="cf-card-inner">
@@ -2331,10 +2994,13 @@ function openShootModal(shootIdx, evt) {
     </div>
   `).join('');
 
+  // Render Dashes Indicator (— — — —)
   cfDashes.innerHTML = shoot.photos.map((_, pIdx) => `
     <div class="cf-dash ${pIdx === 0 ? 'active' : ''}" data-idx="${pIdx}"></div>
   `).join('');
 
+  // Cinematic Spatial Opening Animation:
+  // Calculate clicked 3D card's screen coordinates to animate from
   let dx = 0, dy = 0, startScale = 0.38;
   if (shoot.el) {
     const r = shoot.el.getBoundingClientRect();
@@ -2343,8 +3009,8 @@ function openShootModal(shootIdx, evt) {
       const cy = r.top + r.height / 2;
       dx = cx - window.innerWidth / 2;
       dy = cy - window.innerHeight / 2;
-      const targetCardW = window.innerWidth <= 768 ? Math.min(window.innerWidth * 0.78, 340) : Math.min(Math.max(window.innerWidth * 0.32, 280), 460);
-      startScale = Math.min(Math.max(r.width / targetCardW, 0.25), 0.6);
+      const cardW = window.innerWidth <= 768 ? Math.min(window.innerWidth * 0.78, 340) : Math.min(Math.max(window.innerWidth * 0.32, 280), 460);
+      startScale = Math.min(Math.max(r.width / cardW, 0.25), 0.6);
     } else {
       dy = 30;
       startScale = 0.85;
@@ -2355,6 +3021,7 @@ function openShootModal(shootIdx, evt) {
   }
 
   const cards = $$('.cf-card');
+  // Initialize cards at clicked source location before opening
   cards.forEach((card, idx) => {
     card.style.transition = 'none';
     if (idx === 0) {
@@ -2370,9 +3037,11 @@ function openShootModal(shootIdx, evt) {
     }
   });
 
+  // Open modal container
   shootModal.classList.add('open');
   void shootModal.offsetWidth;
 
+  // Trigger smooth expansion reliably on both mobile and desktop
   let animationTriggered = false;
   const triggerExpand = () => {
     if (animationTriggered) return;
@@ -2415,17 +3084,30 @@ function closeShootModal() {
   last = performance.now();
 }
 
+// Close handlers
 $('#closeShootBtn').addEventListener('click', closeShootModal);
+const cfCloseIcon = $('#cfCloseIcon');
+if (cfCloseIcon) cfCloseIcon.addEventListener('click', closeShootModal);
 
+// Close on stage click outside cards
 $('#cfStage').addEventListener('click', e => {
   if (e.target === $('#cfStage') || e.target === cfTrack) {
     closeShootModal();
   }
 });
 
-$('#shootPrev').addEventListener('click', e => { e.stopPropagation(); prevShootPhoto(); });
-$('#shootNext').addEventListener('click', e => { e.stopPropagation(); nextShootPhoto(); });
+// Cover-Flow Navigation Buttons
+$('#shootPrev').addEventListener('click', e => {
+  e.stopPropagation();
+  prevShootPhoto();
+});
 
+$('#shootNext').addEventListener('click', e => {
+  e.stopPropagation();
+  nextShootPhoto();
+});
+
+// Card Click: clicking active inspect button opens product, clicking side card slides to it!
 cfTrack.addEventListener('click', e => {
   const card = e.target.closest('.cf-card');
   if (!card) return;
@@ -2444,6 +3126,7 @@ cfTrack.addEventListener('click', e => {
   }
 });
 
+// Dashes Click
 cfDashes.addEventListener('click', e => {
   const dash = e.target.closest('.cf-dash');
   if (!dash) return;
@@ -2451,7 +3134,7 @@ cfDashes.addEventListener('click', e => {
   renderCoverFlowPositions();
 });
 
-// Touch swipe support
+// Touch swipe support for Cover-Flow
 let touchStartX = 0, touchStartY = 0;
 cfTrack.addEventListener('touchstart', e => {
   if (e.touches.length === 1) {
@@ -2471,224 +3154,412 @@ cfTrack.addEventListener('touchend', e => {
   }
 }, { passive: true });
 
-/* ================= FULL PRODUCT DETAIL PAGE (#viewer) ================= */
-const viewer = $('#viewer');
-let openedProductIdx = 0;
+// Keyboard navigation (Escape, ArrowLeft, ArrowRight)
+window.addEventListener('keydown', e => {
+  if (shootOpen) {
+    if (e.key === 'Escape') closeShootModal();
+    if (e.key === 'ArrowLeft') prevShootPhoto();
+    if (e.key === 'ArrowRight') nextShootPhoto();
+  }
+});
 
-function openItem(shootIdx) {
-  openedProductIdx = shootIdx;
-  const it = I[shootIdx];
-  if (!it) return;
+/* ================= 2. FULL PRODUCT DETAIL PAGE ================= */
+const V = $('#viewer'), SC = $('#scroll'), TR = $('#track'), FIRST = $('#first');
+let list = [], idx = 0, size = 'XS', opt = null;
 
-  $('#vTitle').textContent = it.name;
-  $('#vDesc').textContent = it.desc;
-  $('#vDrop').textContent = it.shootTitle;
-  $('#vMat').textContent = it.material || 'Organic cotton / Technical blend';
-  $('#vPrice').textContent = '$' + it.price;
-  $('#viewerPriceTop').textContent = '$' + it.price;
+const rr = r => `inset(${r.top}px ${W - r.right}px ${H - r.bottom}px ${r.left}px round 0px)`;
+const cRect = (w, h) => ({
+  top: H / 2 - h / 2,
+  bottom: H / 2 + h / 2,
+  left: W / 2 - w / 2,
+  right: W / 2 + w / 2
+});
 
-  // Main Image
-  const mainImg = $('#vMainImg');
-  mainImg.src = 'items/' + it.photos[0];
+function openItem(i, rect) {
+  const it = I[i];
+  list = I.filter(o => o.g === it.g);
+  if (!list.length) list = [it];
+  idx = list.indexOf(it);
+  if (idx === -1) { list = I; idx = i; }
+  opened = true;
+  cursor.classList.remove('visible');
 
-  // Thumbs
-  const thumbsContainer = $('#vThumbs');
-  thumbsContainer.innerHTML = it.photos.map((f, pIdx) => `
-    <div class="thumb-item ${pIdx === 0 ? 'active' : ''}" data-idx="${pIdx}">
-      <img src="items/${f}" alt="${it.name} thumb">
+  // Render product slides using this shoot's photos
+  TR.innerHTML = it.photos.map(f => `
+    <div class="slide">
+      <img src="items/${f}" alt="${it.name}">
     </div>
   `).join('');
 
-  // Related shoots
-  const relContainer = $('#vRelated');
-  const relatedShoots = I.filter(s => s.i !== shootIdx).slice(0, 4);
-  relContainer.innerHTML = relatedShoots.map(rel => `
-    <div class="rel-card" data-idx="${rel.i}">
-      <img src="${rel.img}" alt="${rel.name}">
-      <div class="rel-card-meta">
-        <div>${rel.name}</div>
-        <div style="color:var(--mut); font-family:ui-monospace, monospace; margin-top:2px;">$${rel.price}</div>
-      </div>
-    </div>
-  `).join('');
+  $('#dots').innerHTML = it.photos.map(() => '<i></i>').join('');
 
-  viewer.classList.add('open');
+  V.style.transition = 'none';
+  V.style.clipPath = rr(rect || cRect(140, 180));
+  V.style.visibility = 'visible';
+
+  SC.scrollTop = 0;
+  progress();
+  opt = null;
+
+  TR.scrollTo({ left: 0, behavior: 'instant' });
+  render(true);
+
+  try {
+    if (location.protocol !== 'file:') history.pushState(null, '', '#' + it.slug);
+    else location.hash = it.slug;
+  } catch(e) {}
+
+  V.offsetWidth;
+  V.style.transition = 'clip-path .38s cubic-bezier(.22, .8, .2, 1)';
+  V.style.clipPath = 'inset(0px 0px 0px 0px round 0px)';
+  $('#close').focus({ preventScroll: true });
 }
 
 function closeViewer() {
-  viewer.classList.remove('open');
+  if (!opened) return;
+  const c = list[idx] || I[activeShootIndex];
+  SC.scrollTop = 0;
+
+  ry = -c.th;
+  rx = -c.ph;
+  tgt = null;
+  vx = vy = 0;
+  opened = false;
+  last = performance.now();
+
+  V.style.transition = 'clip-path .38s cubic-bezier(.22, .8, .2, 1)';
+  V.style.clipPath = rr(cRect(CW * c.sc * 1.3, CW * c.sc * 1.7));
+
+  setTimeout(() => {
+    if (!opened) V.style.visibility = 'hidden';
+  }, 400);
+
+  try {
+    if (location.protocol !== 'file:') {
+      if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+    } else {
+      location.hash = '';
+    }
+  } catch(e) {}
 }
 
-$('#closeViewerBtn').addEventListener('click', closeViewer);
+const chips = (el, arr, sel) => {
+  el.innerHTML = arr.map(s => `<button role="radio" aria-checked="${s === sel}">${s}</button>`).join('');
+};
 
-$('#vThumbs').addEventListener('click', e => {
-  const thumb = e.target.closest('.thumb-item');
-  if (!thumb) return;
-  const pIdx = parseInt(thumb.dataset.idx, 10);
-  const it = I[openedProductIdx];
-  if (!it || !it.photos[pIdx]) return;
-  $('#vMainImg').src = 'items/' + it.photos[pIdx];
-  $$('.thumb-item').forEach((t, i) => t.classList.toggle('active', i === pIdx));
-});
+function render(first) {
+  const it = list[idx] || I[activeShootIndex], g = G[it.g] || G.tees;
+  $('#nm').textContent = it.name;
+  $('#pr').textContent = '$' + it.price.toFixed(2);
+  $('#ds').textContent = g.d;
+  $('#long').textContent = g.l;
 
-$('#vSizes').addEventListener('click', e => {
-  const btn = e.target.closest('.size-btn');
-  if (!btn) return;
-  $$('.size-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-});
+  $('#spec').innerHTML = `
+    <li><span>Material</span>${g.m}</li>
+    <li><span>Print</span>Hand printed, treated, and distressed</li>
+    <li><span>Shipping</span>Allow 2–3 weeks shipping time</li>
+  `;
 
-$('#addToBagBtn').addEventListener('click', () => {
-  const activeSize = $('.size-btn.active')?.dataset.size || 'M';
-  const it = I[openedProductIdx];
-  alert(`Added to Bag: ${it.name} (Size ${activeSize}) - $${it.price}`);
-});
+  chips($('#sz'), ['XS', 'S', 'M', 'L'], size);
+  $('#ol').textContent = g.ol;
+  if (!g.o.includes(opt)) opt = g.o[0];
+  chips($('#op'), g.o, opt);
 
-$('#vRelated').addEventListener('click', e => {
-  const card = e.target.closest('.rel-card');
-  if (!card) return;
-  const idx = parseInt(card.dataset.idx, 10);
-  openItem(idx);
-});
-
-/* ================= CATALOGUE SECTION LOGIC ================= */
-const productGrid = $('#productGrid');
-const categoryPills = $('#categoryPills');
-const sortSelect = $('#sortSelect');
-let currentCat = 'all';
-let currentSort = 'newest';
-
-function renderCatalog() {
-  let list = [...I];
-
-  if (currentCat !== 'all') {
-    list = list.filter(item => item.g === currentCat);
-  }
-
-  if (currentSort === 'price_asc') {
-    list.sort((a, b) => a.price - b.price);
-  } else if (currentSort === 'price_desc') {
-    list.sort((a, b) => b.price - a.price);
-  }
-
-  $('#catalogCount').textContent = `${list.length} PIECES`;
-
-  productGrid.innerHTML = list.map(item => `
-    <div class="prod-card" data-idx="${item.i}">
-      <div class="prod-img-box">
-        <img src="${item.img}" alt="${item.name}" loading="lazy">
-        ${item.soldOut ? '<div class="prod-badge">Sold Out</div>' : ''}
-      </div>
-      <div class="prod-title">${item.name}</div>
-      <div class="prod-price">$${item.price}.00</div>
-    </div>
-  `).join('');
-}
-
-categoryPills.addEventListener('click', e => {
-  const pill = e.target.closest('.filter-pill');
-  if (!pill) return;
-  $$('.filter-pill').forEach(p => p.classList.remove('active'));
-  pill.classList.add('active');
-  currentCat = pill.dataset.cat;
-  renderCatalog();
-});
-
-sortSelect.addEventListener('change', () => {
-  currentSort = sortSelect.value;
-  renderCatalog();
-});
-
-productGrid.addEventListener('click', e => {
-  const card = e.target.closest('.prod-card');
-  if (!card) return;
-  const idx = parseInt(card.dataset.idx, 10);
-  openItem(idx);
-});
-
-renderCatalog();
-
-/* ================= DRAWER MENU LOGIC ================= */
-const menuBtn = $('#menuBtn');
-const drawerMenu = $('#drawerMenu');
-const drawerBackdrop = $('#drawerBackdrop');
-const drawerClose = $('#drawerClose');
-
-function openDrawer() {
-  drawerMenu.classList.add('open');
-  drawerBackdrop.classList.add('open');
-}
-
-function closeDrawer() {
-  drawerMenu.classList.remove('open');
-  drawerBackdrop.classList.remove('open');
-}
-
-menuBtn.addEventListener('click', openDrawer);
-drawerClose.addEventListener('click', closeDrawer);
-drawerBackdrop.addEventListener('click', closeDrawer);
-
-// Drawer links
-$('.drawer-nav').addEventListener('click', e => {
-  const link = e.target.closest('.drawer-link');
-  if (!link) return;
-  closeDrawer();
-  const action = link.dataset.action;
-  if (action === 'archive') {
-    currentCat = 'all';
-    $$('.filter-pill').forEach(p => p.classList.remove('active'));
-    $('#catalogTitle').textContent = 'ARCHIVE';
-    renderCatalog();
-  } else if (action === 'catalog') {
-    $('#catalogTitle').textContent = 'CATALOGUE';
-    renderCatalog();
-  }
-});
-
-/* ================= SEARCH FILTER LOGIC ================= */
-const searchBox = $('#searchBox');
-const searchToggle = $('#searchToggle');
-const searchInput = $('#searchInput');
-
-searchToggle.addEventListener('click', () => {
-  searchBox.classList.toggle('active');
-  if (searchBox.classList.contains('active')) {
-    searchInput.focus();
+  const buyBtn = $('#buy');
+  if (it.soldOut) {
+    buyBtn.textContent = 'SOLD OUT';
+    buyBtn.classList.add('sold-out');
   } else {
-    searchInput.value = '';
-    renderCatalog();
+    buyBtn.textContent = 'ADD TO CART';
+    buyBtn.classList.remove('sold-out');
   }
-});
 
-searchInput.addEventListener('input', () => {
-  const query = searchInput.value.toLowerCase().trim();
-  if (!query) {
-    renderCatalog();
-    return;
-  }
-  const list = I.filter(item => item.name.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query));
-  $('#catalogCount').textContent = `${list.length} PIECES`;
-  productGrid.innerHTML = list.map(item => `
-    <div class="prod-card" data-idx="${item.i}">
-      <div class="prod-img-box">
-        <img src="${item.img}" alt="${item.name}" loading="lazy">
-        ${item.soldOut ? '<div class="prod-badge">Sold Out</div>' : ''}
-      </div>
-      <div class="prod-title">${item.name}</div>
-      <div class="prod-price">$${item.price}.00</div>
-    </div>
+  [...$('#dots').children].forEach((d, k) => d.classList.toggle('on', k === 0));
+
+  $('#rel').innerHTML = list.map((o, k) => k === idx ? '' : `
+    <button data-k="${k}" aria-label="${o.name}">
+      <div class="t"><img src="${o.img}" alt="${o.name}"></div>
+      <b>${o.name}</b>
+      <span>$${o.price.toFixed(2)}</span>
+    </button>
   `).join('');
-  document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
-});
+}
 
-// Keyboard navigation (Escape key)
-window.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    if (viewer.classList.contains('open')) closeViewer();
-    else if (shootOpen) closeShootModal();
-    else if (drawerMenu.classList.contains('open')) closeDrawer();
+function progress() {
+  let p = clamp(SC.scrollTop / (H * 0.75), 0, 1);
+  p = p * p * (3 - 2 * p);
+  FIRST.style.opacity = 1 - p * 0.88;
+  FIRST.style.transform = `scale(${1 - 0.08 * p}) translateY(${-p * 4}%)`;
+}
+SC.addEventListener('scroll', progress, { passive: true });
+
+let raf = 0;
+TR.addEventListener('scroll', () => {
+  cancelAnimationFrame(raf);
+  raf = requestAnimationFrame(() => {
+    const it = list[idx] || I[activeShootIndex];
+    const k = clamp(Math.round(TR.scrollLeft / TR.clientWidth), 0, it.photos.length - 1);
+    [...$('#dots').children].forEach((d, dotIdx) => d.classList.toggle('on', dotIdx === k));
+  });
+}, { passive: true });
+
+function pick(box, set) {
+  box.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    set(b.textContent);
+    [...box.children].forEach(x => x.setAttribute('aria-checked', x === b));
+  });
+}
+pick($('#sz'), v => size = v);
+pick($('#op'), v => opt = v);
+
+let bt;
+$('#buy').addEventListener('click', () => {
+  const b = $('#buy');
+  const it = list[idx] || I[activeShootIndex];
+  if (it.soldOut) {
+    b.textContent = 'NOTIFY ME';
+    clearTimeout(bt);
+    bt = setTimeout(() => b.textContent = 'SOLD OUT', 1600);
+  } else {
+    b.textContent = 'ADDED: ' + size + ', ' + opt;
+    clearTimeout(bt);
+    bt = setTimeout(() => b.textContent = 'ADD TO CART', 1800);
   }
 });
+
+$('#rel').addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  const targetShoot = list[+b.dataset.k];
+  if (targetShoot) {
+    openShootModal(targetShoot.i);
+  }
+});
+
+$('#close').addEventListener('click', closeViewer);
+addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (opened) closeViewer();
+    else if (shootOpen) closeShootModal();
+  }
+});
+
+
+// ================= STORE NAVIGATION & CATALOG OVERLAY LOGIC =================
+(function() {
+  const menuBtn = $('#menuBtn');
+  const drawerClose = $('#drawerClose');
+  const drawerBackdrop = $('#drawerBackdrop');
+  const drawerMenu = $('#drawerMenu');
+
+  function openMenu() {
+    drawerBackdrop.classList.add('open');
+    drawerMenu.classList.add('open');
+  }
+  function closeMenu() {
+    drawerBackdrop.classList.remove('open');
+    drawerMenu.classList.remove('open');
+  }
+
+  menuBtn?.addEventListener('click', openMenu);
+  drawerClose?.addEventListener('click', closeMenu);
+  drawerBackdrop?.addEventListener('click', closeMenu);
+
+  // Search Toggle
+  const searchToggle = $('#searchToggle');
+  const searchBox = $('#searchBox');
+  const searchInput = $('#searchInput');
+
+  searchToggle?.addEventListener('click', () => {
+    const active = searchBox.classList.toggle('active');
+    if (active) {
+      searchInput.focus();
+    } else {
+      searchInput.value = '';
+    }
+  });
+
+  searchInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const q = searchInput.value.trim();
+      if (q) {
+        openCatalogView('search', q);
+      }
+    }
+  });
+
+  // Hero CTA
+  $('#heroCtaBtn')?.addEventListener('click', () => {
+    document.getElementById('studioSection')?.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // Catalogue Overlay
+  const catalogView = $('#catalogView');
+  const closeCatBtn = $('#closeCatBtn');
+  const catGrid = $('#catGrid');
+  const catTitle = $('#catTitle');
+  const catCount = $('#catCount');
+  const catFilters = $('#catFilters');
+
+  let currentMode = 'all';
+  let currentGroup = 'all';
+  let currentSearch = '';
+
+  window.openCatalogView = function(mode, param) {
+    closeMenu();
+    currentMode = mode || 'all';
+    currentGroup = 'all';
+    currentSearch = param || '';
+
+    // Update filter active pill
+    catFilters.querySelectorAll('.cat-pill').forEach(p => {
+      p.classList.toggle('active', p.dataset.g === 'all');
+    });
+
+    renderCatalogItems();
+    catalogView.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  function closeCatalogView() {
+    catalogView.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  closeCatBtn?.addEventListener('click', closeCatalogView);
+
+  // Category filter clicks
+  catFilters?.addEventListener('click', (e) => {
+    const pill = e.target.closest('.cat-pill');
+    if (!pill) return;
+    catFilters.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    currentGroup = pill.dataset.g;
+    renderCatalogItems();
+  });
+
+  function renderCatalogItems() {
+    let items = CATALOG_50.slice();
+
+    if (currentMode === 'archive') {
+      catTitle.textContent = 'Archive (Sold Out)';
+      items = items.filter(it => it.soldOut);
+    } else if (currentMode === 'search') {
+      catTitle.textContent = `Search: "${currentSearch}"`;
+      const q = currentSearch.toLowerCase();
+      items = items.filter(it => it.name.toLowerCase().includes(q));
+    } else if (currentMode === 'collection') {
+      catTitle.textContent = currentSearch || 'Collection';
+    } else {
+      catTitle.textContent = 'All Pieces';
+    }
+
+    if (currentGroup !== 'all') {
+      items = items.filter(it => it.g === currentGroup);
+    }
+
+    catCount.textContent = `${items.length} Pieces`;
+
+    if (!items.length) {
+      catGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:60px 0;font-family:JetBrains Mono,monospace;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.2em;">No pieces found.</p>';
+      return;
+    }
+
+    catGrid.innerHTML = items.map((it) => `
+      <div class="store-card" data-id="${it.id}">
+        <div class="store-card-img-wrap">
+          <img src="items/${it.f}" alt="${it.name}" class="store-card-img" loading="lazy" onerror="this.src='${it.url}'">
+          ${it.soldOut ? '<div class="store-card-badge">SOLD OUT</div>' : ''}
+        </div>
+        <div class="store-card-info">
+          <h3 class="store-card-name">${it.name}</h3>
+          <span class="store-card-price">$${it.price.toFixed(2)}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Click on any catalog item -> Opens OUR exact #viewer!
+  catGrid?.addEventListener('click', (e) => {
+    const card = e.target.closest('.store-card');
+    if (!card) return;
+    const id = parseInt(card.dataset.id, 10);
+    const item = CATALOG_50.find(o => o.id === id);
+    if (!item) return;
+
+    // Use our openItem function with this item formatted!
+    const rect = card.getBoundingClientRect();
+    
+    // Find matching shoot or construct item object
+    const matchingShootIndex = I.findIndex(s => s.g === item.g);
+    const baseShoot = matchingShootIndex >= 0 ? I[matchingShootIndex] : I[0];
+
+    const productItem = {
+      ...baseShoot,
+      name: item.name,
+      price: item.price,
+      g: item.g,
+      soldOut: item.soldOut,
+      photos: [item.f, ...baseShoot.photos.slice(1)],
+      hero: item.f,
+      img: 'items/' + item.f,
+      slug: item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+    };
+
+    // Temporarily replace list or open directly
+    list = [productItem, ...I.filter(o => o.g === item.g && o !== baseShoot)];
+    idx = 0;
+    opened = true;
+    cursor.classList.remove('visible');
+
+    TR.innerHTML = productItem.photos.map(f => `
+      <div class="slide">
+        <img src="items/${f}" alt="${productItem.name}">
+      </div>
+    `).join('');
+    $('#dots').innerHTML = productItem.photos.map(() => '<i></i>').join('');
+
+    V.style.transition = 'none';
+    V.style.clipPath = rr(rect);
+    V.style.visibility = 'visible';
+
+    SC.scrollTop = 0;
+    progress();
+    opt = null;
+
+    TR.scrollTo({ left: 0, behavior: 'instant' });
+    render(true);
+
+    V.offsetWidth;
+    V.style.transition = 'clip-path .38s cubic-bezier(.22, .8, .2, 1)';
+    V.style.clipPath = 'inset(0px 0px 0px 0px round 0px)';
+    $('#close').focus({ preventScroll: true });
+  });
+
+  // Drawer Nav Links
+  $('#navAllPieces')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    openCatalogView('all');
+  });
+  $('#navArchive')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    openCatalogView('archive');
+  });
+  $$('.collection-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      openCatalogView('collection', link.dataset.coll);
+    });
+  });
+  $('#navStudio')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeMenu();
+    closeCatalogView();
+    document.getElementById('studioSection')?.scrollIntoView({ behavior: 'smooth' });
+  });
+
+})();
 </script>
 </body>
 </html>
