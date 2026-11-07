@@ -109,6 +109,14 @@ button, summary {
   perspective: 1100px;
   perspective-origin: 50% 50%;
   z-index: 1;
+  transition: filter 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: filter, transform;
+}
+
+#space.blurred {
+  filter: blur(24px) brightness(0.65);
+  transform: scale(0.96);
+  pointer-events: none;
 }
 
 #space.drag {
@@ -177,40 +185,41 @@ button, summary {
 /* ================= Zoom Controls ================= */
 .zoom-controls {
   position: fixed;
-  right: 20px;
-  bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  right: 24px;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
   z-index: 20;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .zoom-btn {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-light);
   border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   color: var(--ink);
   transition: all .2s ease;
+  cursor: pointer;
 }
 .zoom-btn:hover { background: #ffffff; transform: scale(1.06); }
 .zoom-btn:active { transform: scale(0.94); }
 
-/* ================= Bottom Bar & Hint ================= */
+/* ================= Bottom Hint ================= */
 .hint {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(28px + env(safe-area-inset-bottom, 0px));
   text-align: center;
   color: var(--mut);
   pointer-events: none;
@@ -219,60 +228,6 @@ button, summary {
   font-size: 11px;
   letter-spacing: .02em;
 }
-
-.pills-wrap {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-  display: flex;
-  justify-content: center;
-  z-index: 20;
-  padding: 0 16px;
-  pointer-events: none;
-}
-
-.pills {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 12px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 9999px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
-  max-width: calc(100vw - 24px);
-  overflow-x: auto;
-  scrollbar-width: none;
-  pointer-events: auto;
-  -webkit-overflow-scrolling: touch;
-  scroll-padding: 0 10px;
-}
-.pills::-webkit-scrollbar { display: none; }
-
-.pills button {
-  background: transparent;
-  border: none;
-  padding: 6px 12px;
-  min-height: 30px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .02em;
-  color: var(--mut);
-  border-radius: 20px;
-  white-space: nowrap;
-  flex-shrink: 0;
-  transition: all .2s cubic-bezier(.16, 1, .3, 1);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.pills button:first-child { margin-left: 1px; }
-.pills button:last-child { margin-right: 4px; }
-.pills button:hover { color: var(--ink); background: rgba(0, 0, 0, 0.04); }
-.pills button.active { background: var(--ink); color: #ffffff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); }
 
 /* Custom Floating Cursor */
 .custom-cursor {
@@ -292,327 +247,299 @@ button, summary {
 .cursor-label { font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: capitalize; color: var(--ink); white-space: nowrap; }
 .custom-cursor.visible { opacity: 1; }
 
-/* ================= INTERMEDIATE MODAL: SHOOT CAROUSEL MODAL ================= */
+/* ================= COVER-FLOW EDITORIAL GALLERY MODAL (VEYRIX STUDIO REF) ================= */
 #shootModal {
   position: fixed;
   inset: 0;
   z-index: 80;
-  background: rgba(14, 14, 15, 0);
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
+  background: rgba(8, 8, 10, 0.78);
+  backdrop-filter: blur(26px);
+  -webkit-backdrop-filter: blur(26px);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
-  transition: opacity .42s cubic-bezier(.16, 1, .3, 1),
-              background .42s cubic-bezier(.16, 1, .3, 1),
-              backdrop-filter .42s ease,
-              -webkit-backdrop-filter .42s ease,
-              visibility .42s;
-  padding: 24px;
+  transition: opacity .42s cubic-bezier(.16, 1, .3, 1), visibility .42s;
+  overflow: hidden;
 }
 
 #shootModal.open {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
-  background: rgba(14, 14, 15, 0.82);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
 }
 
-.shoot-box {
-  width: 95vw;
-  max-width: 1320px;
-  height: 90vh;
-  max-height: 880px;
+/* Minimalist Clean Top Header (White Bar with Emblem) */
+.cf-header {
+  height: 60px;
   background: #ffffff;
-  border-radius: 0; /* Strictly straight corners */
-  overflow: hidden;
-  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.65), 0 10px 30px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  opacity: 0;
-  transform: scale(0.38) translateZ(0);
-  filter: blur(8px);
-  transition: transform .48s cubic-bezier(.16, 1, .3, 1),
-              opacity .36s ease,
-              filter .36s ease;
-  will-change: transform, opacity, filter;
-}
-
-#shootModal.open .shoot-box {
-  opacity: 1;
-  transform: scale(1) translateZ(0);
-  filter: blur(0px);
-}
-
-.shoot-topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 28px;
-  border-bottom: 1px solid var(--border-light);
-  background: #ffffff;
+  padding: 0 28px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
-  opacity: 0;
-  transform: translateY(-16px);
-  transition: opacity .38s ease .08s, transform .45s cubic-bezier(.16, 1, .3, 1) .08s;
+  z-index: 20;
 }
 
-#shootModal.open .shoot-topbar {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.shoot-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.shoot-meta h4 {
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .05em;
-  margin: 0;
-}
-.shoot-meta span {
+.cf-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 11px;
-  color: var(--mut);
-  text-transform: uppercase;
-  letter-spacing: .02em;
-}
-
-.shoot-actions-top {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-}
-
-.shoot-counter {
-  font-size: 12px;
   font-weight: 700;
-  letter-spacing: .06em;
+  letter-spacing: .08em;
   color: var(--ink);
-  font-variant-numeric: tabular-nums;
-  background: #f4f4f2;
-  padding: 4px 10px;
-  border: 1px solid var(--border-light);
+  transition: opacity .2s;
+  padding: 8px 12px;
 }
+.cf-btn:hover { opacity: 0.6; }
+.cf-icon { font-size: 14px; }
 
-.shoot-close-btn {
-  background: none;
-  border: 1px solid var(--border-light);
-  width: 32px;
-  height: 32px;
+.cf-brand {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all .2s;
+  gap: 3px;
+}
+.cf-stars {
   color: var(--ink);
-  padding: 0;
-}
-.shoot-close-btn:hover {
-  background: var(--ink);
-  color: #ffffff;
-  border-color: var(--ink);
-}
-
-/* Big Gallery Carousel Viewport (Maximized height) */
-.shoot-viewport {
-  position: relative;
-  width: 100%;
-  flex: 1;
-  min-height: 0;
-  background: #f6f5f2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  user-select: none;
-}
-
-.shoot-track {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  transition: transform .38s cubic-bezier(.16, 1, .3, 1);
-  will-change: transform;
-}
-
-.shoot-slide {
-  flex: 0 0 100%;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px 72px;
-  box-sizing: border-box;
-}
-
-.shoot-slide img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
   display: block;
-  border-radius: 0;
-  box-shadow: 0 16px 42px rgba(0,0,0,0.13);
-  pointer-events: none;
-  transform: scale(1.08);
-  opacity: 0.85;
-  transition: transform .55s cubic-bezier(.16, 1, .3, 1) .04s,
-              opacity .42s ease .04s;
 }
-
-#shootModal.open .shoot-slide img {
-  transform: scale(1);
-  opacity: 1;
-}
-
-.shoot-nav-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%) scale(0.85);
-  opacity: 0;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  font-weight: 300;
-  line-height: 1;
-  cursor: pointer;
-  z-index: 10;
-  transition: transform .35s cubic-bezier(.16, 1, .3, 1) .12s,
-              opacity .35s ease .12s,
-              background .2s,
-              color .2s;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+.cf-brand-name {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
   color: var(--ink);
 }
 
-#shootModal.open .shoot-nav-btn {
-  opacity: 1;
-  transform: translateY(-50%) scale(1);
-}
-
-#shootModal.open .shoot-nav-btn:hover {
-  background: var(--ink);
-  color: #ffffff;
-  border-color: var(--ink);
-  transform: translateY(-50%) scale(1.06);
-}
-.shoot-nav-btn.prev { left: 20px; }
-.shoot-nav-btn.next { right: 20px; }
-
-/* Shoot Footer: Thumbnails strip + Button to open full product page */
-.shoot-footer {
-  padding: 14px 28px;
-  background: #ffffff;
-  border-top: 1px solid var(--border-light);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  flex-shrink: 0;
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity .38s ease .08s, transform .45s cubic-bezier(.16, 1, .3, 1) .08s;
-}
-
-#shootModal.open .shoot-footer {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.shoot-footer-left {
+.cf-header-right {
   display: flex;
   align-items: center;
   gap: 16px;
-  overflow: hidden;
-  flex: 1;
 }
-
-.shoot-back-link {
-  background: transparent;
-  border: 1px solid var(--soft);
-  color: var(--mut);
-  padding: 9px 15px;
+.cf-counter {
   font-size: 11px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-  cursor: pointer;
-  transition: all .2s;
-  white-space: nowrap;
-  flex-shrink: 0;
+  letter-spacing: .08em;
+  color: var(--mut);
+  font-variant-numeric: tabular-nums;
 }
-.shoot-back-link:hover {
-  border-color: var(--ink);
-  color: var(--ink);
+.cf-btn.close {
+  font-size: 16px;
+  padding: 6px 8px;
 }
 
-.shoot-thumbs {
+/* Cover-Flow Stage */
+.cf-stage {
+  flex: 1;
+  min-height: 0;
+  position: relative;
   display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  padding: 2px 0;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  perspective: 1400px;
+  user-select: none;
 }
-.shoot-thumbs::-webkit-scrollbar { display: none; }
 
-.shoot-thumb {
-  width: 48px;
-  height: 58px;
-  border: 1px solid var(--soft);
+.cf-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+/* Individual Cover-Flow Card */
+.cf-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(280px, 32vw, 460px);
+  height: clamp(400px, 66vh, 660px);
+  margin-top: calc(-1 * clamp(400px, 66vh, 660px) / 2);
+  margin-left: calc(-1 * clamp(280px, 32vw, 460px) / 2);
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.65), 0 8px 24px rgba(0, 0, 0, 0.3);
+  background: #111111;
+  transition: transform 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.42s ease,
+              filter 0.42s ease;
+  will-change: transform, opacity;
   cursor: pointer;
-  opacity: 0.5;
-  transition: all .2s;
-  flex-shrink: 0;
-  background: #eee;
 }
-.shoot-thumb.active, .shoot-thumb:hover {
-  opacity: 1;
-  border-color: var(--ink);
-  box-shadow: 0 0 0 1.5px var(--ink);
+
+.cf-card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
 }
-.shoot-thumb img {
+
+.cf-card-inner img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  pointer-events: none;
 }
 
-.open-product-page-btn {
-  background: var(--ink);
+/* Gradient Overlay on Active Card */
+.cf-overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 36px 24px 20px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.52) 55%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .35s ease .12s, transform .35s ease .12s;
+  pointer-events: none;
+}
+
+.cf-card.active .cf-overlay {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.cf-tag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.cf-title {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
   color: #ffffff;
-  border: 1px solid var(--ink);
-  padding: 12px 24px;
-  font-size: 11px;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.cf-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.cf-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: .03em;
+}
+
+.cf-inspect-btn {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  padding: 6px 14px;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: .05em;
-  white-space: nowrap;
+  letter-spacing: .08em;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: background .2s, transform .1s;
-  flex-shrink: 0;
+  gap: 6px;
+  transition: all .2s;
 }
-.open-product-page-btn:hover { background: #2b2b2b; }
-.open-product-page-btn:active { transform: scale(.98); }
+.cf-inspect-btn:hover {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+/* Nav Buttons on Stage Sides */
+.cf-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: 300;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 30;
+  transition: all .2s;
+}
+.cf-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-50%) scale(1.06);
+}
+.cf-nav-btn.prev { left: 28px; }
+.cf-nav-btn.next { right: 28px; }
+
+/* Bottom Footer Bar with Dashes and TERMINAL Tag */
+.cf-footer {
+  height: 52px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  flex-shrink: 0;
+  padding: 0 28px;
+}
+
+.cf-dashes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cf-dash {
+  width: 28px;
+  height: 2.5px;
+  background: rgba(255, 255, 255, 0.22);
+  cursor: pointer;
+  transition: all .3s cubic-bezier(.16, 1, .3, 1);
+}
+.cf-dash:hover {
+  background: rgba(255, 255, 255, 0.55);
+}
+.cf-dash.active {
+  width: 44px;
+  background: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.cf-terminal {
+  position: absolute;
+  right: 28px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  color: rgba(255, 255, 255, 0.38);
+}
 
 /* ================= PRODUCT PAGE (FULL PAGE WITH DISTRIBUTED EDGE BUTTONS) ================= */
 #viewer {
@@ -869,143 +796,40 @@ th { font-weight: 700; }
 .rel span { margin: 0 8px; color: var(--mut); font-size: 11px; }
 
 @media (max-width: 860px) {
-  #shootModal {
-    padding: 0 !important;
-    background: rgba(12, 12, 14, 0.94) !important;
+  .cols { grid-template-columns: 1fr 1fr; gap: 16px; height: auto; }
+  .mid { grid-column: 1 / -1; grid-row: 1; height: auto; }
+  .track { max-width: 100%; height: min(44svh, 380px); }
+  .left { grid-column: 1; grid-row: 2; align-self: start; }
+  .right { grid-column: 2; grid-row: 2; align-self: start; }
+  .first { padding: calc(64px + env(safe-area-inset-top, 0px)) 16px 20px; }
+  .rel { grid-template-columns: 1fr 1fr; }
+
+  .cf-header {
+    height: 54px;
+    padding: 0 16px;
   }
-  .shoot-box {
-    width: 100vw !important;
-    max-width: 100vw !important;
-    height: 100vh !important;
-    height: 100dvh !important;
-    max-height: 100dvh !important;
-    border: none !important;
-    box-shadow: none !important;
-    display: flex !important;
-    flex-direction: column !important;
-    background: #ffffff !important;
-    transform: scale(0.96) !important;
+  .cf-brand-name {
+    display: none;
   }
-  #shootModal.open .shoot-box {
-    transform: scale(1) !important;
+  .cf-card {
+    width: clamp(260px, 78vw, 340px);
+    height: clamp(380px, 60vh, 500px);
+    margin-top: calc(-1 * clamp(380px, 60vh, 500px) / 2);
+    margin-left: calc(-1 * clamp(260px, 78vw, 340px) / 2);
   }
-  .shoot-topbar {
-    padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 12px !important;
-    background: #ffffff !important;
-    border-bottom: 1px solid var(--border-light) !important;
-    flex-shrink: 0 !important;
+  .cf-nav-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 20px;
   }
-  .shoot-meta {
-    max-width: calc(100% - 90px) !important;
+  .cf-nav-btn.prev { left: 8px; }
+  .cf-nav-btn.next { right: 8px; }
+  .cf-footer {
+    height: 46px;
+    padding: 0 16px;
   }
-  .shoot-meta h4 {
-    font-size: 12px !important;
-    font-weight: 700 !important;
-    letter-spacing: .04em !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-  }
-  .shoot-meta span {
-    font-size: 10px !important;
-    color: var(--mut) !important;
-  }
-  .shoot-actions-top {
-    gap: 8px !important;
-  }
-  .shoot-counter {
-    font-size: 11px !important;
-    padding: 3px 8px !important;
-  }
-  .shoot-close-btn {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 14px !important;
-  }
-  .shoot-viewport {
-    flex: 1 1 0 !important;
-    height: auto !important;
-    min-height: 0 !important;
-    background: #f7f6f3 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    position: relative !important;
-    overflow: hidden !important;
-    padding: 0 !important;
-  }
-  .shoot-slide {
-    flex: 0 0 100% !important;
-    width: 100% !important;
-    height: 100% !important;
-    padding: 12px 16px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    box-sizing: border-box !important;
-  }
-  .shoot-slide img {
-    max-width: 100% !important;
-    max-height: 100% !important;
-    width: auto !important;
-    height: auto !important;
-    object-fit: contain !important;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
-  }
-  .shoot-nav-btn {
-    width: 36px !important;
-    height: 36px !important;
-    font-size: 18px !important;
-    background: rgba(255, 255, 255, 0.88) !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12) !important;
-  }
-  .shoot-nav-btn.prev { left: 8px !important; }
-  .shoot-nav-btn.next { right: 8px !important; }
-  .shoot-footer {
-    padding: 10px 16px calc(14px + env(safe-area-inset-bottom, 0px)) !important;
-    background: #ffffff !important;
-    border-top: 1px solid var(--border-light) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-    align-items: stretch !important;
-    flex-shrink: 0 !important;
-  }
-  .shoot-footer-left {
-    width: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 12px !important;
-  }
-  .shoot-back-link {
-    display: none !important;
-  }
-  .shoot-thumbs {
-    width: 100% !important;
-    display: flex !important;
-    gap: 8px !important;
-    overflow-x: auto !important;
-    padding: 2px 0 !important;
-    justify-content: flex-start !important;
-    scrollbar-width: none !important;
-  }
-  .shoot-thumb {
-    width: 48px !important;
-    height: 58px !important;
-    flex-shrink: 0 !important;
-  }
-  .open-product-page-btn {
-    width: 100% !important;
-    min-height: 48px !important;
-    font-size: 12px !important;
-    font-weight: 700 !important;
-    letter-spacing: .06em !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: var(--ink) !important;
-    color: #ffffff !important;
-    border-radius: 0 !important;
+  .cf-terminal {
+    display: none;
   }
 }
 
@@ -1020,14 +844,9 @@ th { font-weight: 700; }
   .buy { flex: 1; min-height: 48px; }
   .first { padding: calc(56px + env(safe-area-inset-top, 0px)) 16px 24px; }
   .rel { grid-template-columns: 1fr 1fr; }
-  .pills-wrap { padding: 0 6px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
-  .pills { max-width: calc(100vw - 12px); padding: 4px 10px; gap: 3px; }
-  .pills button { padding: 5px 8px; font-size: 10px; min-height: 28px; }
-  .pills button:first-child { margin-left: 0; }
-  .pills button:last-child { margin-right: 4px; }
-  .zoom-controls { right: 12px; bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
-  .zoom-btn { width: 32px; height: 32px; font-size: 14px; }
-  .hint { bottom: calc(60px + env(safe-area-inset-bottom, 0px)); font-size: 10px; padding: 4px 10px; }
+  .zoom-controls { right: 16px; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+  .zoom-btn { width: 34px; height: 34px; font-size: 15px; }
+  .hint { bottom: calc(24px + env(safe-area-inset-bottom, 0px)); font-size: 10px; padding: 4px 10px; }
 }
 </style>
 </head>
@@ -1058,49 +877,62 @@ th { font-weight: 700; }
   <button class="zoom-btn" id="btnZoomOut" title="Zoom out">−</button>
 </div>
 
-<!-- Floating Glass Pill Category Bar -->
-<div class="pills-wrap">
-  <nav class="pills" id="pills" aria-label="Groups"></nav>
-</div>
-
 <!-- Custom Floating Cursor -->
 <div class="custom-cursor" id="cursor">
   <div class="cursor-ring"></div>
   <span class="cursor-label" id="cursorLabel">Explore Shoot</span>
 </div>
 
-<!-- ================= 1. INTERMEDIATE SHOOT CAROUSEL MODAL ================= -->
-<div id="shootModal" role="dialog" aria-modal="true" aria-label="Shoot Carousel">
-  <div class="shoot-box">
-    <div class="shoot-topbar">
-      <div class="shoot-meta">
-        <h4 id="shootTitle">Shoot 01 — Christmas Tragedy Editorial</h4>
-        <span id="shootLocation">Milan Studio Lab / Drop 01</span>
-      </div>
-      <div class="shoot-actions-top">
-        <span class="shoot-counter" id="shootCounter">01 / 04</span>
-        <button class="shoot-close-btn" id="closeShootBtn" title="Close (Esc)">✕</button>
-      </div>
+<!-- ================= 1. COVER-FLOW EDITORIAL GALLERY MODAL (VEYRIX STUDIO REF) ================= -->
+<div id="shootModal" role="dialog" aria-modal="true" aria-label="Editorial Gallery">
+  <!-- Minimalist Clean Top Header (White Bar with Emblem, exactly matching Veyrix ref) -->
+  <header class="cf-header">
+    <button class="cf-btn menu-btn" id="closeShootBtn" title="Back to 3D Space (Esc)">
+      <svg width="22" height="12" viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <line x1="1" y1="2" x2="21" y2="2"/>
+        <line x1="1" y1="10" x2="21" y2="10"/>
+      </svg>
+    </button>
+
+    <div class="cf-brand">
+      <svg class="cf-stars" width="46" height="18" viewBox="0 0 46 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <!-- 3 interconnected editorial stars -->
+        <g stroke-width="1.3">
+          <!-- Center Star (elevated) -->
+          <polygon points="23,1 25,6 30.5,6.5 26.5,10.2 27.8,15.5 23,12.6 18.2,15.5 19.5,10.2 15.5,6.5 21,6" />
+          <line x1="23" y1="2" x2="23" y2="14" stroke-width="1"/>
+          <line x1="17" y1="8" x2="29" y2="8" stroke-width="1"/>
+          <!-- Left Star -->
+          <polygon points="10,4.5 11.5,8 15.5,8.4 12.5,11.2 13.5,15.2 10,13 6.5,15.2 7.5,11.2 4.5,8.4 8.5,8" opacity="0.85" />
+          <!-- Right Star -->
+          <polygon points="36,4.5 37.5,8 41.5,8.4 38.5,11.2 39.5,15.2 36,13 32.5,15.2 33.5,11.2 30.5,8.4 34.5,8" opacity="0.85" />
+        </g>
+      </svg>
     </div>
 
-    <!-- Shoot Gallery Carousel -->
-    <div class="shoot-viewport" id="shootViewport">
-      <button class="shoot-nav-btn prev" id="shootPrev" title="Previous photo (←)">‹</button>
-      <div class="shoot-track" id="shootTrack"></div>
-      <button class="shoot-nav-btn next" id="shootNext" title="Next photo (→)">›</button>
-    </div>
-
-    <!-- Shoot Footer -->
-    <div class="shoot-footer">
-      <div class="shoot-footer-left">
-        <button class="shoot-back-link" id="shootBackLink">← Back to Space</button>
-        <div class="shoot-thumbs" id="shootThumbs"></div>
-      </div>
-      <button class="open-product-page-btn" id="toProductPageBtn">
-        Open Product Page →
+    <div class="cf-header-right">
+      <button class="cf-btn search-btn" title="Search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/>
+          <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+        </svg>
       </button>
+      <button class="cf-btn close" id="cfCloseIcon" title="Close (Esc)">✕</button>
     </div>
+  </header>
+
+  <!-- Cover-Flow Stage -->
+  <div class="cf-stage" id="cfStage">
+    <button class="cf-nav-btn prev" id="shootPrev" title="Previous (←)">‹</button>
+    <div class="cf-track" id="cfTrack"></div>
+    <button class="cf-nav-btn next" id="shootNext" title="Next (→)">›</button>
   </div>
+
+  <!-- Bottom Bar: Dashes Indicator & Terminal Tag -->
+  <footer class="cf-footer">
+    <div class="cf-dashes" id="cfDashes"></div>
+    <div class="cf-terminal">TERMINAL</div>
+  </footer>
 </div>
 
 <!-- ================= 2. FULL PRODUCT DETAIL PAGE (WITH DISTRIBUTED EDGE BUTTONS) ================= -->
@@ -1565,9 +1397,10 @@ I.forEach(it => {
     cursor.classList.remove('visible');
   });
 
-  // Tap opens the Shoot Carousel with cinematic spatial expansion
+  // Tap opens the Shoot Carousel with cinematic spatial expansion (guards against click during drag)
   el.addEventListener('click', (e) => {
     e.stopPropagation();
+    if (moved > 6) return;
     openShootModal(it.i, e);
   });
 
@@ -1595,7 +1428,6 @@ addEventListener('resize', layout);
 layout();
 
 $('#count').textContent = I.length + ' Shoots';
-$('#pills').innerHTML = `<button data-g="all" class="active">All</button>` + Object.keys(G).map(k => `<button data-g="${k}">${G[k].n}</button>`).join('');
 
 /* ================= 3D Space Physics ================= */
 let ry = 0.2, rx = -0.15;
@@ -1669,8 +1501,9 @@ function frame(now) {
     const cardRadius = baseRadius * userZoom * c.rMult;
     const rFloat = cardRadius + (reduce ? 0 : Math.sin(t * c.s + c.p) * 7 * floatDamp);
 
-    // Keep card hit box completely stationary in 3D coordinate space (hover elevation happens purely on inner wrap)
-    c.el.style.transform = `rotateY(${c.th}rad) rotateX(${c.ph}rad) translateZ(${rFloat}px)`;
+    // Dynamic zoom-dependent scale so photos physically shrink and grow with zoom
+    const zoomScale = Math.pow(userZoom, 0.88);
+    c.el.style.transform = `rotateY(${c.th}rad) rotateX(${c.ph}rad) translateZ(${rFloat}px) scale(${zoomScale.toFixed(3)})`;
     c.el.style.zIndex = c.hov ? '99' : String(10 + Math.round((c.ph + 1.2) * 10));
   }
 }
@@ -1761,49 +1594,70 @@ space.addEventListener('wheel', e => {
 $('#btnZoomIn').addEventListener('click', () => { targetZoom = clamp(targetZoom + 0.25, 0.45, 2.4); });
 $('#btnZoomOut').addEventListener('click', () => { targetZoom = clamp(targetZoom - 0.25, 0.45, 2.4); });
 
-$('#pills').addEventListener('click', e => {
-  const b = e.target.closest('button');
-  if (!b) return;
-  $$('#pills button').forEach(x => x.classList.remove('active'));
-  b.classList.add('active');
-
-  const g = b.dataset.g;
-  const l = g === 'all' ? I : I.filter(o => o.g === g);
-  if (!l.length) return;
-
-  tgt = {
-    y: -Math.atan2(l.reduce((a, o) => a + Math.sin(o.th), 0), l.reduce((a, o) => a + Math.cos(o.th), 0)),
-    x: -l.reduce((a, o) => a + o.ph, 0) / l.length
-  };
-});
-
-/* ================= 1. INTERMEDIATE SHOOT CAROUSEL LOGIC ================= */
+/* ================= 1. COVER-FLOW EDITORIAL GALLERY LOGIC ================= */
 const shootModal = $('#shootModal');
-const shootTrack = $('#shootTrack');
-const shootThumbs = $('#shootThumbs');
+const cfTrack = $('#cfTrack');
+const cfDashes = $('#cfDashes');
 const shootCounter = $('#shootCounter');
+const shootTitle = $('#shootTitle');
 let activeShootIndex = 0;
 let activePhotoIndex = 0;
 
-function updateShootCarouselView() {
-  const shoot = I[activeShootIndex];
-  if (!shoot) return;
+function renderCoverFlowPositions() {
+  const cards = $$('.cf-card');
+  if (!cards.length) return;
+  const isMobile = window.innerWidth <= 768;
+  const spacingPercent = isMobile ? 86 : 94;
 
-  // Transform slide track with precision
-  shootTrack.style.transform = `translateX(-${activePhotoIndex * 100}%)`;
+  cards.forEach((card, idx) => {
+    const offset = idx - activePhotoIndex;
+    const absOffset = Math.abs(offset);
+    card.classList.toggle('active', offset === 0);
 
-  // Update counter display (e.g. 01 / 04)
-  const curStr = String(activePhotoIndex + 1).padStart(2, '0');
-  const totStr = String(shoot.photos.length).padStart(2, '0');
-  if (shootCounter) shootCounter.textContent = `${curStr} / ${totStr}`;
-
-  // Update thumbnail states & keep active in view
-  [...shootThumbs.children].forEach((thumb, idx) => {
-    const isActive = idx === activePhotoIndex;
-    thumb.classList.toggle('active', isActive);
-    if (isActive) {
-      thumb.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+    if (offset === 0) {
+      // Center Active Card (Elevated, full color, interactive overlay)
+      card.style.transform = `translate3d(0, 0, 50px) scale(1)`;
+      card.style.opacity = '1';
+      card.style.zIndex = '20';
+      card.style.filter = 'none';
+      card.style.pointerEvents = 'auto';
+    } else if (absOffset === 1) {
+      // Immediate Neighbor (Peeking on sides, dimmed)
+      const sign = Math.sign(offset);
+      card.style.transform = `translate3d(${sign * spacingPercent}%, 0, 0) scale(${isMobile ? 0.88 : 0.90})`;
+      card.style.opacity = isMobile ? '0.36' : '0.44';
+      card.style.zIndex = '10';
+      card.style.filter = 'brightness(0.65)';
+      card.style.pointerEvents = 'auto';
+    } else if (absOffset === 2) {
+      // 2nd Neighbor
+      const sign = Math.sign(offset);
+      card.style.transform = `translate3d(${sign * spacingPercent * 1.82}%, 0, -60px) scale(${isMobile ? 0.74 : 0.78})`;
+      card.style.opacity = isMobile ? '0.1' : '0.18';
+      card.style.zIndex = '5';
+      card.style.filter = 'brightness(0.4)';
+      card.style.pointerEvents = 'auto';
+    } else {
+      // Offscreen
+      const sign = Math.sign(offset);
+      card.style.transform = `translate3d(${sign * spacingPercent * 2.5}%, 0, -120px) scale(0.65)`;
+      card.style.opacity = '0';
+      card.style.zIndex = '1';
+      card.style.pointerEvents = 'none';
     }
+  });
+
+  // Update counter
+  const shoot = I[activeShootIndex];
+  if (shoot) {
+    const curStr = String(activePhotoIndex + 1).padStart(2, '0');
+    const totStr = String(shoot.photos.length).padStart(2, '0');
+    if (shootCounter) shootCounter.textContent = `${curStr} / ${totStr}`;
+  }
+
+  // Update dashes
+  $$('.cf-dash').forEach((dash, idx) => {
+    dash.classList.toggle('active', idx === activePhotoIndex);
   });
 }
 
@@ -1811,14 +1665,14 @@ function prevShootPhoto() {
   const shoot = I[activeShootIndex];
   if (!shoot) return;
   activePhotoIndex = (activePhotoIndex - 1 + shoot.photos.length) % shoot.photos.length;
-  updateShootCarouselView();
+  renderCoverFlowPositions();
 }
 
 function nextShootPhoto() {
   const shoot = I[activeShootIndex];
   if (!shoot) return;
   activePhotoIndex = (activePhotoIndex + 1) % shoot.photos.length;
-  updateShootCarouselView();
+  renderCoverFlowPositions();
 }
 
 function openShootModal(shootIdx, evt) {
@@ -1834,41 +1688,36 @@ function openShootModal(shootIdx, evt) {
     x: -shoot.ph
   };
 
-  // Set transform-origin of modal box to the clicked card's exact screen position
-  const shootBox = $('.shoot-box');
-  if (shootBox) {
-    if (shoot.el) {
-      const r = shoot.el.getBoundingClientRect();
-      const ox = ((r.left + r.width / 2) / window.innerWidth * 100).toFixed(1);
-      const oy = ((r.top + r.height / 2) / window.innerHeight * 100).toFixed(1);
-      shootBox.style.transformOrigin = `${ox}% ${oy}%`;
-    } else if (evt && evt.clientX) {
-      const ox = (evt.clientX / window.innerWidth * 100).toFixed(1);
-      const oy = (evt.clientY / window.innerHeight * 100).toFixed(1);
-      shootBox.style.transformOrigin = `${ox}% ${oy}%`;
-    } else {
-      shootBox.style.transformOrigin = '50% 50%';
-    }
-  }
+  // Blur background 3D space with cinematic transition
+  $('#space').classList.add('blurred');
 
-  $('#shootTitle').textContent = shoot.shootTitle;
-  $('#shootLocation').textContent = shoot.shootLocation + ' • ' + shoot.photos.length + ' photos';
+  if (shootTitle) shootTitle.textContent = shoot.name.toUpperCase();
 
-  // Render Carousel Slides
-  shootTrack.innerHTML = shoot.photos.map((f, pIdx) => `
-    <div class="shoot-slide" data-idx="${pIdx}">
-      <img src="items/${f}" alt="${shoot.name} photo ${pIdx + 1}">
+  // Render Cover-Flow Cards (Matching user screenshot: look tag, title, price, quick inspect button)
+  cfTrack.innerHTML = shoot.photos.map((f, pIdx) => `
+    <div class="cf-card" data-idx="${pIdx}">
+      <div class="cf-card-inner">
+        <img src="items/${f}" alt="${shoot.name}">
+        <div class="cf-overlay">
+          <div class="cf-tag">LOOK 0${pIdx + 1} // ${shoot.g.toUpperCase()}</div>
+          <h3 class="cf-title">${shoot.name}</h3>
+          <div class="cf-card-bottom">
+            <span class="cf-price">$${shoot.price}</span>
+            <button class="cf-inspect-btn" data-action="inspect">
+              QUICK INSPECT <span class="cf-arrow">→</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   `).join('');
 
-  // Render Thumbnails
-  shootThumbs.innerHTML = shoot.photos.map((f, pIdx) => `
-    <div class="shoot-thumb ${pIdx === 0 ? 'active' : ''}" data-idx="${pIdx}">
-      <img src="items/${f}" alt="Thumb">
-    </div>
+  // Render Dashes Indicator (— — — —)
+  cfDashes.innerHTML = shoot.photos.map((_, pIdx) => `
+    <div class="cf-dash ${pIdx === 0 ? 'active' : ''}" data-idx="${pIdx}"></div>
   `).join('');
 
-  updateShootCarouselView();
+  renderCoverFlowPositions();
 
   // Force layout reflow before triggering CSS expansion
   void shootModal.offsetWidth;
@@ -1878,49 +1727,70 @@ function openShootModal(shootIdx, evt) {
 function closeShootModal() {
   shootOpen = false;
   shootModal.classList.remove('open');
+  $('#space').classList.remove('blurred');
   last = performance.now();
 }
 
+// Close handlers
 $('#closeShootBtn').addEventListener('click', closeShootModal);
-const shootBackLink = $('#shootBackLink');
-if (shootBackLink) shootBackLink.addEventListener('click', closeShootModal);
+const cfCloseIcon = $('#cfCloseIcon');
+if (cfCloseIcon) cfCloseIcon.addEventListener('click', closeShootModal);
 
-shootModal.addEventListener('click', (e) => {
-  if (e.target === shootModal) closeShootModal();
+// Close on stage click outside cards
+$('#cfStage').addEventListener('click', e => {
+  if (e.target === $('#cfStage') || e.target === cfTrack) {
+    closeShootModal();
+  }
 });
 
-// Carousel Prev / Next Buttons
-$('#shootPrev').addEventListener('click', (e) => {
+// Cover-Flow Navigation Buttons
+$('#shootPrev').addEventListener('click', e => {
   e.stopPropagation();
   prevShootPhoto();
 });
 
-$('#shootNext').addEventListener('click', (e) => {
+$('#shootNext').addEventListener('click', e => {
   e.stopPropagation();
   nextShootPhoto();
 });
 
-// Click left 38% of slide to go prev, right to go next
-shootTrack.addEventListener('click', (e) => {
-  const rect = shootTrack.getBoundingClientRect();
-  const clickX = e.clientX - rect.left;
-  if (clickX < rect.width * 0.38) {
-    prevShootPhoto();
-  } else {
-    nextShootPhoto();
+// Card Click: clicking active inspect button opens product, clicking side card slides to it!
+cfTrack.addEventListener('click', e => {
+  const card = e.target.closest('.cf-card');
+  if (!card) return;
+  const idx = parseInt(card.dataset.idx, 10);
+  
+  const inspectBtn = e.target.closest('[data-action="inspect"]');
+  if (inspectBtn || (idx === activePhotoIndex && e.target.closest('.cf-overlay'))) {
+    closeShootModal();
+    openItem(activeShootIndex);
+    return;
+  }
+
+  if (idx !== activePhotoIndex) {
+    activePhotoIndex = idx;
+    renderCoverFlowPositions();
   }
 });
 
-// Touch swipe support for smooth mobile carousel
+// Dashes Click
+cfDashes.addEventListener('click', e => {
+  const dash = e.target.closest('.cf-dash');
+  if (!dash) return;
+  activePhotoIndex = parseInt(dash.dataset.idx, 10);
+  renderCoverFlowPositions();
+});
+
+// Touch swipe support for Cover-Flow
 let touchStartX = 0, touchStartY = 0;
-shootTrack.addEventListener('touchstart', e => {
+cfTrack.addEventListener('touchstart', e => {
   if (e.touches.length === 1) {
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
   }
 }, { passive: true });
 
-shootTrack.addEventListener('touchend', e => {
+cfTrack.addEventListener('touchend', e => {
   if (e.changedTouches.length === 1) {
     const dx = e.changedTouches[0].clientX - touchStartX;
     const dy = e.changedTouches[0].clientY - touchStartY;
@@ -1938,19 +1808,6 @@ window.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft') prevShootPhoto();
     if (e.key === 'ArrowRight') nextShootPhoto();
   }
-});
-
-shootThumbs.addEventListener('click', (e) => {
-  const thumb = e.target.closest('.shoot-thumb');
-  if (!thumb) return;
-  activePhotoIndex = parseInt(thumb.dataset.idx, 10);
-  updateShootCarouselView();
-});
-
-// Jump from Carousel to Product Page
-$('#toProductPageBtn').addEventListener('click', () => {
-  closeShootModal();
-  openItem(activeShootIndex);
 });
 
 /* ================= 2. FULL PRODUCT DETAIL PAGE ================= */
