@@ -297,21 +297,30 @@ button, summary {
   position: fixed;
   inset: 0;
   z-index: 80;
-  background: rgba(14, 14, 15, 0.82);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(14, 14, 15, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
   display: flex;
   align-items: center;
   justify-content: center;
   visibility: hidden;
   opacity: 0;
-  transition: opacity .3s cubic-bezier(.16, 1, .3, 1), visibility .3s;
+  pointer-events: none;
+  transition: opacity .42s cubic-bezier(.16, 1, .3, 1),
+              background .42s cubic-bezier(.16, 1, .3, 1),
+              backdrop-filter .42s ease,
+              -webkit-backdrop-filter .42s ease,
+              visibility .42s;
   padding: 24px;
 }
 
 #shootModal.open {
   visibility: visible;
   opacity: 1;
+  pointer-events: auto;
+  background: rgba(14, 14, 15, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .shoot-box {
@@ -322,16 +331,23 @@ button, summary {
   background: #ffffff;
   border-radius: 0; /* Strictly straight corners */
   overflow: hidden;
-  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.65), 0 10px 30px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
   position: relative;
-  transform: scale(0.97) translateY(12px);
-  transition: transform .35s cubic-bezier(.16, 1, .3, 1);
+  opacity: 0;
+  transform: scale(0.38) translateZ(0);
+  filter: blur(8px);
+  transition: transform .48s cubic-bezier(.16, 1, .3, 1),
+              opacity .36s ease,
+              filter .36s ease;
+  will-change: transform, opacity, filter;
 }
 
 #shootModal.open .shoot-box {
-  transform: scale(1) translateY(0);
+  opacity: 1;
+  transform: scale(1) translateZ(0);
+  filter: blur(0px);
 }
 
 .shoot-topbar {
@@ -342,6 +358,14 @@ button, summary {
   border-bottom: 1px solid var(--border-light);
   background: #ffffff;
   flex-shrink: 0;
+  opacity: 0;
+  transform: translateY(-16px);
+  transition: opacity .38s ease .08s, transform .45s cubic-bezier(.16, 1, .3, 1) .08s;
+}
+
+#shootModal.open .shoot-topbar {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .shoot-meta {
@@ -442,12 +466,22 @@ button, summary {
   border-radius: 0;
   box-shadow: 0 16px 42px rgba(0,0,0,0.13);
   pointer-events: none;
+  transform: scale(1.08);
+  opacity: 0.85;
+  transition: transform .55s cubic-bezier(.16, 1, .3, 1) .04s,
+              opacity .42s ease .04s;
+}
+
+#shootModal.open .shoot-slide img {
+  transform: scale(1);
+  opacity: 1;
 }
 
 .shoot-nav-btn {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%) scale(0.85);
+  opacity: 0;
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid rgba(0, 0, 0, 0.12);
   width: 48px;
@@ -460,15 +494,24 @@ button, summary {
   line-height: 1;
   cursor: pointer;
   z-index: 10;
-  transition: all .2s cubic-bezier(.16, 1, .3, 1);
+  transition: transform .35s cubic-bezier(.16, 1, .3, 1) .12s,
+              opacity .35s ease .12s,
+              background .2s,
+              color .2s;
   box-shadow: 0 4px 14px rgba(0,0,0,0.06);
   color: var(--ink);
 }
-.shoot-nav-btn:hover {
+
+#shootModal.open .shoot-nav-btn {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+#shootModal.open .shoot-nav-btn:hover {
   background: var(--ink);
   color: #ffffff;
   border-color: var(--ink);
-  transform: translateY(-50%) scale(1.05);
+  transform: translateY(-50%) scale(1.06);
 }
 .shoot-nav-btn.prev { left: 20px; }
 .shoot-nav-btn.next { right: 20px; }
@@ -483,6 +526,14 @@ button, summary {
   align-items: center;
   gap: 20px;
   flex-shrink: 0;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .38s ease .08s, transform .45s cubic-bezier(.16, 1, .3, 1) .08s;
+}
+
+#shootModal.open .shoot-footer {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .shoot-footer-left {
@@ -1380,10 +1431,10 @@ I.forEach(it => {
     cursor.classList.remove('visible');
   });
 
-  // Tap opens the Shoot Carousel
+  // Tap opens the Shoot Carousel with cinematic spatial expansion
   el.addEventListener('click', (e) => {
     e.stopPropagation();
-    openShootModal(it.i);
+    openShootModal(it.i, e);
   });
 
   world.appendChild(el);
@@ -1434,7 +1485,17 @@ function frame(now) {
   curY += (mouseY - curY) * 0.25;
   cursor.style.transform = `translate3d(${curX}px, ${curY}px, 0)`;
 
-  if (opened || shootOpen) return;
+  if (opened) return;
+  if (shootOpen) {
+    if (tgt) {
+      const dy = wrap(tgt.y - ry);
+      ry += dy * 0.08;
+      rx += (tgt.x - rx) * 0.08;
+      if (Math.abs(dy) + Math.abs(tgt.x - rx) < 0.002) tgt = null;
+      world.style.transform = `rotateX(${rx}rad) rotateY(${ry}rad)`;
+    }
+    return;
+  }
   const t = now / 1000;
 
   userZoom += (targetZoom - userZoom) * 0.12;
@@ -1626,12 +1687,35 @@ function nextShootPhoto() {
   updateShootCarouselView();
 }
 
-function openShootModal(shootIdx) {
+function openShootModal(shootIdx, evt) {
   activeShootIndex = shootIdx;
   activePhotoIndex = 0;
   const shoot = I[shootIdx];
   shootOpen = true;
   cursor.classList.remove('visible');
+
+  // Smoothly center the 3D space camera towards the selected piece
+  tgt = {
+    y: -shoot.th,
+    x: -shoot.ph
+  };
+
+  // Set transform-origin of modal box to the clicked card's exact screen position
+  const shootBox = $('.shoot-box');
+  if (shootBox) {
+    if (shoot.el) {
+      const r = shoot.el.getBoundingClientRect();
+      const ox = ((r.left + r.width / 2) / window.innerWidth * 100).toFixed(1);
+      const oy = ((r.top + r.height / 2) / window.innerHeight * 100).toFixed(1);
+      shootBox.style.transformOrigin = `${ox}% ${oy}%`;
+    } else if (evt && evt.clientX) {
+      const ox = (evt.clientX / window.innerWidth * 100).toFixed(1);
+      const oy = (evt.clientY / window.innerHeight * 100).toFixed(1);
+      shootBox.style.transformOrigin = `${ox}% ${oy}%`;
+    } else {
+      shootBox.style.transformOrigin = '50% 50%';
+    }
+  }
 
   $('#shootTitle').textContent = shoot.shootTitle;
   $('#shootLocation').textContent = shoot.shootLocation + ' • ' + shoot.photos.length + ' photos';
@@ -1651,6 +1735,9 @@ function openShootModal(shootIdx) {
   `).join('');
 
   updateShootCarouselView();
+
+  // Force layout reflow before triggering CSS expansion
+  void shootModal.offsetWidth;
   shootModal.classList.add('open');
 }
 
