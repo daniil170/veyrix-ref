@@ -869,23 +869,157 @@ th { font-weight: 700; }
 .rel span { margin: 0 8px; color: var(--mut); font-size: 11px; }
 
 @media (max-width: 860px) {
-  .cols { grid-template-columns: 1fr 1fr; gap: 16px; height: auto; }
-  .mid { grid-column: 1 / -1; grid-row: 1; height: auto; }
-  .track { max-width: 100%; height: min(44svh, 380px); }
-  .left { grid-column: 1; grid-row: 2; align-self: start; }
-  .right { grid-column: 2; grid-row: 2; align-self: start; }
-  .first { padding: calc(64px + env(safe-area-inset-top, 0px)) 16px 20px; }
-  .rel { grid-template-columns: 1fr 1fr; }
-  .shoot-box { width: 98vw; height: 94vh; }
-  .shoot-slide { padding: 16px 36px; }
-  .shoot-footer { padding: 10px 14px; flex-direction: column; gap: 10px; align-items: stretch; }
-  .shoot-footer-left { justify-content: space-between; }
-  .shoot-nav-btn { width: 40px; height: 40px; font-size: 20px; }
-  .shoot-nav-btn.prev { left: 8px; }
-  .shoot-nav-btn.next { right: 8px; }
+  #shootModal {
+    padding: 0 !important;
+    background: rgba(12, 12, 14, 0.94) !important;
+  }
+  .shoot-box {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    border: none !important;
+    box-shadow: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: #ffffff !important;
+    transform: scale(0.96) !important;
+  }
+  #shootModal.open .shoot-box {
+    transform: scale(1) !important;
+  }
+  .shoot-topbar {
+    padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 12px !important;
+    background: #ffffff !important;
+    border-bottom: 1px solid var(--border-light) !important;
+    flex-shrink: 0 !important;
+  }
+  .shoot-meta {
+    max-width: calc(100% - 90px) !important;
+  }
+  .shoot-meta h4 {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    letter-spacing: .04em !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .shoot-meta span {
+    font-size: 10px !important;
+    color: var(--mut) !important;
+  }
+  .shoot-actions-top {
+    gap: 8px !important;
+  }
+  .shoot-counter {
+    font-size: 11px !important;
+    padding: 3px 8px !important;
+  }
+  .shoot-close-btn {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 14px !important;
+  }
+  .shoot-viewport {
+    flex: 1 1 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    background: #f7f6f3 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+  }
+  .shoot-slide {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 12px 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+  }
+  .shoot-slide img {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+  }
+  .shoot-nav-btn {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 18px !important;
+    background: rgba(255, 255, 255, 0.88) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12) !important;
+  }
+  .shoot-nav-btn.prev { left: 8px !important; }
+  .shoot-nav-btn.next { right: 8px !important; }
+  .shoot-footer {
+    padding: 10px 16px calc(14px + env(safe-area-inset-bottom, 0px)) !important;
+    background: #ffffff !important;
+    border-top: 1px solid var(--border-light) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+    flex-shrink: 0 !important;
+  }
+  .shoot-footer-left {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+  .shoot-back-link {
+    display: none !important;
+  }
+  .shoot-thumbs {
+    width: 100% !important;
+    display: flex !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    padding: 2px 0 !important;
+    justify-content: flex-start !important;
+    scrollbar-width: none !important;
+  }
+  .shoot-thumb {
+    width: 48px !important;
+    height: 58px !important;
+    flex-shrink: 0 !important;
+  }
+  .open-product-page-btn {
+    width: 100% !important;
+    min-height: 48px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    letter-spacing: .06em !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: var(--ink) !important;
+    color: #ffffff !important;
+    border-radius: 0 !important;
+  }
 }
 
 @media (max-width: 600px) {
+  .cols { display: flex; flex-direction: column; gap: 18px; }
+  .mid { order: 1; width: 100%; }
+  .track { width: 100%; max-width: 100%; height: 50vh; height: 50svh; }
+  .right { order: 2; width: 100%; }
+  .left { order: 3; width: 100%; }
+  .buyrow { display: flex; width: 100%; }
+  .buyrow input { width: 60px; min-height: 48px; }
+  .buy { flex: 1; min-height: 48px; }
+  .first { padding: calc(56px + env(safe-area-inset-top, 0px)) 16px 24px; }
+  .rel { grid-template-columns: 1fr 1fr; }
   .pills-wrap { padding: 0 6px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
   .pills { max-width: calc(100vw - 12px); padding: 4px 10px; gap: 3px; }
   .pills button { padding: 5px 8px; font-size: 10px; min-height: 28px; }
@@ -893,7 +1027,7 @@ th { font-weight: 700; }
   .pills button:last-child { margin-right: 4px; }
   .zoom-controls { right: 12px; bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
   .zoom-btn { width: 32px; height: 32px; font-size: 14px; }
-  .hint { bottom: calc(60px + env(safe-area-inset-bottom, 0px)); }
+  .hint { bottom: calc(60px + env(safe-area-inset-bottom, 0px)); font-size: 10px; padding: 4px 10px; }
 }
 </style>
 </head>
