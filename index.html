@@ -191,6 +191,7 @@ button, summary {
 /* ================= Zoom Controls ================= */
 
 .studio-info-badge {
+  display: none !important;
   position: absolute;
   top: 24px;
   right: 28px;
@@ -209,6 +210,7 @@ button, summary {
   pointer-events: none;
 }
 .scroll-hero-btn {
+  display: none !important;
   position: absolute;
   top: 24px;
   left: 28px;
@@ -237,6 +239,7 @@ button, summary {
 }
 
 .zoom-controls {
+  display: none !important;
   position: fixed;
   right: 24px;
   bottom: calc(24px + env(safe-area-inset-bottom, 0px));
@@ -593,7 +596,15 @@ button, summary {
   z-index: 500;
   background: #ffffff;
   border-bottom: 1px solid #f0f0f0;
-  transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s ease;
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s ease;
+}
+#siteHeader.visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .header-inner {
@@ -973,6 +984,24 @@ button, summary {
 }
 
 /* ================= 3D STUDIO SECTION ================= */
+
+/* ================= 3D GALLERY STICKY PINNING ================= */
+.studio-pinned-wrapper {
+  position: relative;
+  width: 100%;
+  height: 250vh; /* Scroll track for pinning */
+  background: var(--bg);
+}
+.studio-section-sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--bg);
+}
+
 #studioSection {
   position: relative;
   height: 100vh;
@@ -1576,6 +1605,7 @@ th { font-weight: 700; }
   .rel { grid-template-columns: 1fr 1fr; }
   
 .studio-info-badge {
+  display: none !important;
   position: absolute;
   top: 24px;
   right: 28px;
@@ -1594,6 +1624,7 @@ th { font-weight: 700; }
   pointer-events: none;
 }
 .scroll-hero-btn {
+  display: none !important;
   position: absolute;
   top: 24px;
   left: 28px;
@@ -1621,7 +1652,8 @@ th { font-weight: 700; }
   color: #ffffff;
 }
 
-.zoom-controls { right: 16px; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+.zoom-controls {
+  display: none !important; right: 16px; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
   .zoom-btn { width: 34px; height: 34px; font-size: 15px; }
   .hint { bottom: calc(24px + env(safe-area-inset-bottom, 0px)); font-size: 10px; padding: 4px 10px; }
 }
@@ -1691,9 +1723,9 @@ th { font-weight: 700; }
         <a href="#editorial" class="drawer-link collection-link" data-coll="Editorial">Editorial</a>
       </li>
 
-      <li class="drawer-group-title">Spatial Studio</li>
+      <li class="drawer-group-title">Gallery</li>
       <li>
-        <a href="#studio" class="drawer-link" id="navStudio">3D Spatial Studio</a>
+        <a href="#studio" class="drawer-link" id="navStudio">Gallery</a>
       </li>
     </ul>
   </nav>
@@ -1739,14 +1771,15 @@ th { font-weight: 700; }
   <div class="hero-inner">
     <img src="logo.png" alt="VEYRIX" class="hero-logo">
     <button class="hero-cta-btn" id="heroCtaBtn">
-      <span class="btn-text">EXPLORE GALLERY</span>
+      <span class="btn-text">EXPLORE</span>
       <div class="btn-bg"></div>
     </button>
   </div>
 </section>
 
-<!-- ================= 4. 3D SPATIAL STUDIO SECTION ================= -->
-<section id="studioSection">
+<!-- ================= 4. 3D SPATIAL STUDIO SECTION WITH STICKY PINNING ================= -->
+<section id="studioPinnedWrapper" class="studio-pinned-wrapper">
+<section id="studioSection" class="studio-section-sticky">
 
 
 
@@ -1792,6 +1825,7 @@ th { font-weight: 700; }
 </div>
 
 
+</section>
 </section>
 
 <!-- ================= 5. FULL PRODUCT DETAIL VIEWER (EXACT 3-COLUMN VERSION) ================= -->
@@ -1893,7 +1927,7 @@ th { font-weight: 700; }
       <img src="black-logo.svg" alt="VEYRIX" class="footer-logo">
       <ul class="footer-links">
         <li><a href="#hero" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">Home</a></li>
-        <li><a href="#studio" onclick="document.getElementById('studioSection')?.scrollIntoView({ behavior: 'smooth' })">3D Studio</a></li>
+        <li><a href="#studio" onclick="document.getElementById('studioPinnedWrapper')?.scrollIntoView({ behavior: 'smooth' })">Gallery</a></li>
         <li><a href="#all" onclick="openCatalogView('all')">Catalogue</a></li>
         <li><a href="https://www.instagram.com/veyrix.co" target="_blank" rel="noopener">Instagram</a></li>
       </ul>
@@ -3146,7 +3180,7 @@ function openShootModal(shootIdx, evt) {
           <div class="cf-card-bottom">
             <span class="cf-price">$${shoot.price}</span>
             <button class="cf-inspect-btn" data-action="inspect">
-              QUICK INSPECT <span class="cf-arrow">→</span>
+              VIEW <span class="cf-arrow">→</span>
             </button>
           </div>
         </div>
@@ -3542,6 +3576,28 @@ addEventListener('keydown', e => {
     drawerMenu.classList.remove('open');
   }
 
+  
+// Header visibility: Hide on Hero video, slide down when scrolling down to gallery
+function updateHeaderVisibility() {
+  const header = document.getElementById('siteHeader');
+  if (!header) return;
+  const isPastHero = window.scrollY > window.innerHeight * 0.45;
+  if (isPastHero) {
+    header.classList.add('visible');
+  } else {
+    header.classList.remove('visible');
+  }
+}
+window.addEventListener('scroll', updateHeaderVisibility, { passive: true });
+window.addEventListener('resize', updateHeaderVisibility, { passive: true });
+updateHeaderVisibility();
+
+// Update hero CTA button scroll target
+document.getElementById('heroCtaBtn')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('studioPinnedWrapper')?.scrollIntoView({ behavior: 'smooth' });
+});
+
   menuBtn?.addEventListener('click', openMenu);
   drawerClose?.addEventListener('click', closeMenu);
   drawerBackdrop?.addEventListener('click', closeMenu);
@@ -3571,7 +3627,7 @@ addEventListener('keydown', e => {
 
   // Hero CTA
   $('#heroCtaBtn')?.addEventListener('click', () => {
-    document.getElementById('studioSection')?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('studioPinnedWrapper')?.scrollIntoView({ behavior: 'smooth' });
   });
 
   // Catalogue Overlay
@@ -3735,7 +3791,7 @@ addEventListener('keydown', e => {
     e.preventDefault();
     closeMenu();
     closeCatalogView();
-    document.getElementById('studioSection')?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('studioPinnedWrapper')?.scrollIntoView({ behavior: 'smooth' });
   });
 
 })();
