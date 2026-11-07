@@ -122,36 +122,29 @@ button, summary {
   width: 0;
   height: 0;
   transform-style: preserve-3d;
-  will-change: transform;
 }
 
-/* ================= Space Cards (NO WHITE BORDERS, BORDERLESS NATURAL CUTS) ================= */
+/* ================= Space Cards (STRAIGHT RECTANGULAR CORNERS, NO ROUNDING) ================= */
 .card {
   position: absolute;
   left: 0;
   top: 0;
   background: transparent;
-  will-change: transform, opacity;
   cursor: pointer;
   transform-style: preserve-3d;
-  border-radius: 6px;
+  border-radius: 0; /* Strictly straight rectangular corners */
   overflow: hidden;
   border: none;
   padding: 0;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15), 0 2px 6px rgba(0, 0, 0, 0.08);
-  transition: box-shadow .25s ease, filter .25s ease;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: box-shadow .2s ease;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: auto;
+  transform: translateZ(0);
 }
 
 .card:hover {
-  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.28), 0 4px 12px rgba(0, 0, 0, 0.12);
-  filter: brightness(1.03);
-}
-
-/* Hardware performance tuning on mobile without visual loss */
-@media (max-width: 860px) {
-  .card {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
-  }
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.28), 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .card-img-wrap {
@@ -160,6 +153,7 @@ button, summary {
   display: block;
   background: transparent;
   position: relative;
+  overflow: hidden;
 }
 
 .card-img-wrap img {
@@ -169,9 +163,28 @@ button, summary {
   display: block;
   pointer-events: none;
   background: #e0ded9;
+  border-radius: 0;
+  image-rendering: -webkit-optimize-contrast;
 }
 
-/* ================= Zoom Controls Indicator & Reset ================= */
+/* Badge on card indicating photos count in shoot */
+.card-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  padding: 2px 6px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* ================= Zoom Controls ================= */
 .zoom-controls {
   position: fixed;
   right: 20px;
@@ -199,15 +212,10 @@ button, summary {
   color: var(--ink);
   transition: all .2s ease;
 }
-.zoom-btn:hover {
-  background: #ffffff;
-  transform: scale(1.06);
-}
-.zoom-btn:active {
-  transform: scale(0.94);
-}
+.zoom-btn:hover { background: #ffffff; transform: scale(1.06); }
+.zoom-btn:active { transform: scale(0.94); }
 
-/* ================= Bottom Bar & Floating Hint ================= */
+/* ================= Bottom Bar & Hint ================= */
 .hint {
   position: fixed;
   left: 0;
@@ -237,19 +245,20 @@ button, summary {
 .pills {
   display: flex;
   align-items: center;
-  gap: 3px;
-  padding: 4px 6px;
-  background: rgba(255, 255, 255, 0.88);
+  gap: 4px;
+  padding: 5px 12px;
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-radius: 40px;
+  border-radius: 9999px;
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
-  max-width: calc(100vw - 32px);
+  max-width: calc(100vw - 24px);
   overflow-x: auto;
   scrollbar-width: none;
   pointer-events: auto;
   -webkit-overflow-scrolling: touch;
+  scroll-padding: 0 10px;
 }
 .pills::-webkit-scrollbar { display: none; }
 
@@ -270,48 +279,12 @@ button, summary {
   align-items: center;
   justify-content: center;
 }
+.pills button:first-child { margin-left: 1px; }
+.pills button:last-child { margin-right: 4px; }
+.pills button:hover { color: var(--ink); background: rgba(0, 0, 0, 0.04); }
+.pills button.active { background: var(--ink); color: #ffffff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); }
 
-.pills button:hover {
-  color: var(--ink);
-  background: rgba(0, 0, 0, 0.04);
-}
-
-.pills button.active {
-  background: var(--ink);
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-@media (max-width: 600px) {
-  .pills-wrap {
-    padding: 0 8px;
-    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-  }
-  .pills {
-    max-width: calc(100vw - 16px);
-    padding: 3px 4px;
-    gap: 2px;
-  }
-  .pills button {
-    padding: 5px 9px;
-    font-size: 10.5px;
-    min-height: 28px;
-  }
-  .zoom-controls {
-    right: 12px;
-    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
-  }
-  .zoom-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 14px;
-  }
-  .hint {
-    bottom: calc(60px + env(safe-area-inset-bottom, 0px));
-  }
-}
-
-/* ================= Custom Floating Cursor (GN.D style) ================= */
+/* Custom Floating Cursor */
 .custom-cursor {
   position: fixed;
   top: 0;
@@ -324,31 +297,210 @@ button, summary {
   transform: translate(-50%, -50%);
   opacity: 0;
   transition: opacity .2s ease;
-  will-change: transform, opacity;
+}
+.cursor-ring { width: 11px; height: 11px; border: 1.5px solid var(--ink); border-radius: 50%; background: transparent; }
+.cursor-label { font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: capitalize; color: var(--ink); white-space: nowrap; }
+.custom-cursor.visible { opacity: 1; }
+
+/* ================= INTERMEDIATE MODAL: SHOOT CAROUSEL MODAL ================= */
+#shootModal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(18, 18, 19, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .3s cubic-bezier(.16, 1, .3, 1), visibility .3s;
+  padding: 24px;
 }
 
-.cursor-ring {
-  width: 11px;
-  height: 11px;
-  border: 1.5px solid var(--ink);
-  border-radius: 50%;
-  background: transparent;
-}
-
-.cursor-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .04em;
-  text-transform: capitalize;
-  color: var(--ink);
-  white-space: nowrap;
-}
-
-.custom-cursor.visible {
+#shootModal.open {
+  visibility: visible;
   opacity: 1;
 }
 
-/* ================= PRODUCT PAGE / VIEWER MODAL ================= */
+.shoot-box {
+  width: 100%;
+  max-width: 960px;
+  background: #ffffff;
+  border-radius: 0; /* Strictly straight corners */
+  overflow: hidden;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transform: scale(0.96) translateY(15px);
+  transition: transform .35s cubic-bezier(.16, 1, .3, 1);
+}
+
+#shootModal.open .shoot-box {
+  transform: scale(1) translateY(0);
+}
+
+.shoot-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border-light);
+  background: #ffffff;
+}
+
+.shoot-meta h4 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.shoot-meta span {
+  font-size: 11px;
+  color: var(--mut);
+}
+
+.shoot-actions-top {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.shoot-back-btn {
+  background: none;
+  border: 1px solid var(--ink);
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  transition: all .2s;
+}
+.shoot-back-btn:hover {
+  background: var(--ink);
+  color: #ffffff;
+}
+
+/* Big Gallery Carousel Viewport */
+.shoot-viewport {
+  position: relative;
+  width: 100%;
+  height: min(56vh, 520px);
+  background: #f7f7f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.shoot-track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.shoot-track::-webkit-scrollbar { display: none; }
+
+.shoot-slide {
+  flex: 0 0 100%;
+  height: 100%;
+  scroll-snap-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.shoot-slide img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 0;
+  filter: drop-shadow(0 12px 28px rgba(0,0,0,0.12));
+}
+
+.shoot-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border-light);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+  transition: background .2s;
+}
+.shoot-nav-btn:hover { background: #ffffff; }
+.shoot-nav-btn.prev { left: 16px; }
+.shoot-nav-btn.next { right: 16px; }
+
+/* Shoot Footer: Thumbnails strip + Button to open full product page */
+.shoot-footer {
+  padding: 16px 24px;
+  background: #ffffff;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.shoot-thumbs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.shoot-thumb {
+  width: 48px;
+  height: 56px;
+  border: 1px solid var(--soft);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all .2s;
+  flex-shrink: 0;
+}
+.shoot-thumb.active, .shoot-thumb:hover {
+  opacity: 1;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink);
+}
+.shoot-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.open-product-page-btn {
+  background: var(--ink);
+  color: #ffffff;
+  border: none;
+  padding: 12px 22px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: opacity .2s, transform .1s;
+}
+.open-product-page-btn:hover { opacity: .88; }
+.open-product-page-btn:active { transform: scale(.98); }
+
+/* ================= PRODUCT PAGE (FULL PAGE WITH DISTRIBUTED EDGE BUTTONS) ================= */
 #viewer {
   position: fixed;
   inset: 0;
@@ -381,7 +533,6 @@ button, summary {
   background: #ffffff;
 }
 
-/* First Screen: Screen 1 of Product View (Enhanced: Buttons distributed to edges, photo maximized) */
 .first {
   height: 100%;
   display: flex;
@@ -392,7 +543,6 @@ button, summary {
   will-change: transform, opacity;
 }
 
-/* Edge-to-Edge Desktop Layout: Left column glued to left edge, right column glued to right edge, photo takes full center */
 .cols {
   display: grid;
   grid-template-columns: 240px 1fr 280px;
@@ -404,7 +554,6 @@ button, summary {
   height: 100%;
 }
 
-/* Middle: Maximized Product Photo */
 .mid {
   grid-column: 2;
   grid-row: 1;
@@ -445,6 +594,7 @@ button, summary {
   max-height: 100%;
   object-fit: contain;
   display: block;
+  border-radius: 0;
   filter: drop-shadow(0 14px 28px rgba(0,0,0,0.09));
 }
 
@@ -461,11 +611,8 @@ button, summary {
   background: var(--soft);
   transition: background .2s;
 }
-.dots i.on {
-  background: var(--ink);
-}
+.dots i.on { background: var(--ink); }
 
-/* Left Edge Column: Size, Variant, Size Guide */
 .left {
   grid-column: 1;
   grid-row: 1;
@@ -500,50 +647,20 @@ button, summary {
   font-weight: 700;
   text-transform: uppercase;
   color: var(--mut);
+  border-radius: 0;
   transition: border-color .15s, color .15s, box-shadow .15s;
 }
+.opts button:hover { border-color: var(--ink); color: var(--ink); }
+.opts button[aria-checked="true"] { border-color: var(--ink); color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
 
-.opts button:hover {
-  border-color: var(--ink);
-  color: var(--ink);
-}
-
-.opts button[aria-checked="true"] {
-  border-color: var(--ink);
-  color: var(--ink);
-  box-shadow: inset 0 0 0 1px var(--ink);
-}
-
-details {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-top: 6px;
-}
-
-summary {
-  display: inline-block;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--ink);
-  list-style: none;
-}
+details { font-size: 11px; font-weight: 700; text-transform: uppercase; margin-top: 6px; }
+summary { display: inline-block; padding: 6px 0; border-bottom: 1px solid var(--ink); list-style: none; }
 summary::-webkit-details-marker { display: none; }
 
-table {
-  border-collapse: collapse;
-  margin-top: 10px;
-  font-weight: 400;
-  text-transform: none;
-  font-size: 11px;
-}
-td, th {
-  border-bottom: 1px solid var(--soft);
-  padding: 5px 12px 5px 0;
-  text-align: left;
-}
+table { border-collapse: collapse; margin-top: 10px; font-weight: 400; text-transform: none; font-size: 11px; }
+td, th { border-bottom: 1px solid var(--soft); padding: 5px 12px 5px 0; text-align: left; }
 th { font-weight: 700; }
 
-/* Right Edge Column: Title, Price, Buy Row, Details, Shipping */
 .right {
   grid-column: 3;
   grid-row: 1;
@@ -563,30 +680,10 @@ th { font-weight: 700; }
   letter-spacing: .03em;
 }
 
-.pr {
-  margin-bottom: 16px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.buyrow {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.buyrow input {
-  width: 52px;
-  min-height: 44px;
-  border: 1px solid var(--soft);
-  text-align: center;
-  background: #ffffff;
-  font-weight: 600;
-}
-.buyrow input:hover, .buyrow input:focus {
-  border-color: var(--ink);
-}
+.pr { margin-bottom: 16px; font-size: 14px; font-weight: 600; }
+.buyrow { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 16px; }
+.buyrow input { width: 52px; min-height: 44px; border: 1px solid var(--soft); text-align: center; background: #ffffff; font-weight: 600; border-radius: 0; }
+.buyrow input:hover, .buyrow input:focus { border-color: var(--ink); }
 
 .buy {
   min-height: 44px;
@@ -599,33 +696,16 @@ th { font-weight: 700; }
   text-transform: uppercase;
   font-size: 11px;
   letter-spacing: .04em;
-  transition: opacity .2s, transform .1s, background .2s;
+  border-radius: 0;
+  transition: opacity .2s, transform .1s;
 }
-
-.buy.sold-out {
-  background: #888888;
-  border-color: #888888;
-  color: #ffffff;
-  cursor: pointer;
-}
-
+.buy.sold-out { background: #888888; border-color: #888888; color: #ffffff; cursor: pointer; }
 .buy:hover { opacity: .85; }
 .buy:active { transform: scale(.98); }
 
-.right p {
-  margin: 0 0 8px;
-  font-size: 11px;
-  text-transform: uppercase;
-  font-weight: 500;
-  line-height: 1.45;
-  letter-spacing: .02em;
-}
+.right p { margin: 0 0 8px; font-size: 11px; text-transform: uppercase; font-weight: 500; line-height: 1.45; letter-spacing: .02em; }
+.right p.ship { font-weight: 700; }
 
-.right p.ship {
-  font-weight: 700;
-}
-
-/* Close / Back button */
 .x {
   position: fixed;
   top: calc(14px + env(safe-area-inset-top, 0px));
@@ -639,17 +719,15 @@ th { font-weight: 700; }
   font-weight: 700;
   letter-spacing: .03em;
   text-transform: uppercase;
+  border-radius: 0;
   transition: background .2s, color .2s;
   display: inline-flex;
   align-items: center;
   gap: 6px;
 }
-.x:hover, .x:active {
-  background: var(--ink);
-  color: #ffffff;
-}
+.x:hover, .x:active { background: var(--ink); color: #ffffff; }
 
-/* ================= 2ND SCREEN: SCROLL SECTION (Curving Sheet, Specs & Related) ================= */
+/* 2nd Screen */
 .detail {
   position: relative;
   z-index: 2;
@@ -661,126 +739,42 @@ th { font-weight: 700; }
   padding: 48px 24px calc(64px + env(safe-area-inset-bottom, 0px));
 }
 
-.dw {
-  max-width: 820px;
-  margin: 0 auto;
-}
+.dw { max-width: 820px; margin: 0 auto; }
+.detail h3 { margin: 0 0 14px; font-size: 15px; text-transform: uppercase; letter-spacing: .04em; font-weight: 700; }
+.detail p { margin: 0 0 18px; max-width: 65ch; line-height: 1.6; color: #333333; }
+.spec { list-style: none; padding: 0; margin: 0 0 48px; border-top: 1px solid var(--ink); }
+.spec li { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--soft); font-size: 12px; }
+.spec span { color: var(--mut); }
 
-.detail h3 {
-  margin: 0 0 14px;
-  font-size: 15px;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-  font-weight: 700;
-}
+.rel { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.rel button { background: #ffffff; border: 1px solid var(--soft); padding: 0 0 10px; text-align: left; border-radius: 0; transition: border-color .15s; }
+.rel button:hover { border-color: var(--ink); }
+.rel .t { aspect-ratio: 4/5; background: #fafafa; display: flex; align-items: center; justify-content: center; padding: 8px; }
+.rel .t img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rel b { display: block; margin: 8px 8px 0; font-size: 11px; text-transform: uppercase; }
+.rel span { margin: 0 8px; color: var(--mut); font-size: 11px; }
 
-.detail p {
-  margin: 0 0 18px;
-  max-width: 65ch;
-  line-height: 1.6;
-  color: #333333;
-}
-
-.spec {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 48px;
-  border-top: 1px solid var(--ink);
-}
-
-.spec li {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--soft);
-  font-size: 12px;
-}
-
-.spec span {
-  color: var(--mut);
-}
-
-.rel {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-}
-
-.rel button {
-  background: #ffffff;
-  border: 1px solid var(--soft);
-  padding: 0 0 10px;
-  text-align: left;
-  transition: border-color .15s, box-shadow .15s;
-}
-
-.rel button:hover, .rel button:active {
-  border-color: var(--ink);
-  box-shadow: 0 6px 16px rgba(0,0,0,.06);
-}
-
-.rel .t {
-  aspect-ratio: 4/5;
-  background: #fafafa;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-}
-.rel .t img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.rel b {
-  display: block;
-  margin: 8px 8px 0;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: .02em;
-}
-
-.rel span {
-  margin: 0 8px;
-  color: var(--mut);
-  font-size: 11px;
-}
-
-/* ================= Mobile Layout Adaptations ================= */
 @media (max-width: 860px) {
-  .cols {
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    height: auto;
-  }
-  .mid {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    height: auto;
-  }
-  .track {
-    max-width: 100%;
-    height: min(44svh, 380px);
-  }
-  .left {
-    grid-column: 1;
-    grid-row: 2;
-    align-self: start;
-  }
-  .right {
-    grid-column: 2;
-    grid-row: 2;
-    align-self: start;
-  }
-  .first {
-    padding: calc(64px + env(safe-area-inset-top, 0px)) 16px 20px;
-  }
-  .rel {
-    grid-template-columns: 1fr 1fr;
-  }
+  .cols { grid-template-columns: 1fr 1fr; gap: 16px; height: auto; }
+  .mid { grid-column: 1 / -1; grid-row: 1; height: auto; }
+  .track { max-width: 100%; height: min(44svh, 380px); }
+  .left { grid-column: 1; grid-row: 2; align-self: start; }
+  .right { grid-column: 2; grid-row: 2; align-self: start; }
+  .first { padding: calc(64px + env(safe-area-inset-top, 0px)) 16px 20px; }
+  .rel { grid-template-columns: 1fr 1fr; }
+  .shoot-box { height: 90vh; }
+  .shoot-viewport { height: 48vh; }
+}
+
+@media (max-width: 600px) {
+  .pills-wrap { padding: 0 6px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
+  .pills { max-width: calc(100vw - 12px); padding: 4px 10px; gap: 3px; }
+  .pills button { padding: 5px 8px; font-size: 10px; min-height: 28px; }
+  .pills button:first-child { margin-left: 0; }
+  .pills button:last-child { margin-right: 4px; }
+  .zoom-controls { right: 12px; bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
+  .zoom-btn { width: 32px; height: 32px; font-size: 14px; }
+  .hint { bottom: calc(60px + env(safe-area-inset-bottom, 0px)); }
 }
 </style>
 </head>
@@ -790,7 +784,7 @@ th { font-weight: 700; }
 <div class="top">
   <div class="top-brand">
     <b>STUDIO</b>
-    <span id="count">50 pieces</span>
+    <span id="count">18 Shoots</span>
   </div>
   <div class="top-zoom-info" id="zoomInfo">
     <span id="zoomPercent">100%</span>
@@ -803,10 +797,9 @@ th { font-weight: 700; }
   <div id="world"></div>
 </main>
 
-<!-- Floating Hint -->
-<div class="hint" id="hint">Drag to rotate • Pinch / Wheel to zoom in/out • Tap piece to open</div>
+<div class="hint" id="hint">Drag to rotate • Pinch / Wheel to zoom • Tap piece to open shoot gallery</div>
 
-<!-- On-screen Zoom +/- Buttons for Easy Touch Navigation -->
+<!-- Zoom Controls -->
 <div class="zoom-controls">
   <button class="zoom-btn" id="btnZoomIn" title="Zoom in">+</button>
   <button class="zoom-btn" id="btnZoomOut" title="Zoom out">−</button>
@@ -817,15 +810,45 @@ th { font-weight: 700; }
   <nav class="pills" id="pills" aria-label="Groups"></nav>
 </div>
 
-<!-- Custom Floating Cursor (Desktop GN.D style) -->
+<!-- Custom Floating Cursor -->
 <div class="custom-cursor" id="cursor">
   <div class="cursor-ring"></div>
-  <span class="cursor-label" id="cursorLabel">View</span>
+  <span class="cursor-label" id="cursorLabel">Explore Shoot</span>
 </div>
 
-<!-- ================= Product Detail Modal (Viewer with Edge Buttons & Huge Photo) ================= -->
-<div id="viewer" role="dialog" aria-modal="true" aria-label="Product">
-  <button class="x" id="close">← Back to space</button>
+<!-- ================= 1. INTERMEDIATE SHOOT CAROUSEL MODAL ================= -->
+<div id="shootModal" role="dialog" aria-modal="true" aria-label="Shoot Carousel">
+  <div class="shoot-box">
+    <div class="shoot-topbar">
+      <div class="shoot-meta">
+        <h4 id="shootTitle">Shoot 01 — Christmas Tragedy Editorial</h4>
+        <span id="shootLocation">Milan Studio Lab / Drop 01</span>
+      </div>
+      <div class="shoot-actions-top">
+        <button class="shoot-back-btn" id="closeShootBtn">Back to Space ✕</button>
+      </div>
+    </div>
+
+    <!-- Shoot Gallery Carousel -->
+    <div class="shoot-viewport">
+      <button class="shoot-nav-btn prev" id="shootPrev">‹</button>
+      <div class="shoot-track" id="shootTrack"></div>
+      <button class="shoot-nav-btn next" id="shootNext">›</button>
+    </div>
+
+    <!-- Shoot Footer -->
+    <div class="shoot-footer">
+      <div class="shoot-thumbs" id="shootThumbs"></div>
+      <button class="open-product-page-btn" id="toProductPageBtn">
+        Open Product Page →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 2. FULL PRODUCT DETAIL PAGE (WITH DISTRIBUTED EDGE BUTTONS) ================= -->
+<div id="viewer" role="dialog" aria-modal="true" aria-label="Product Page">
+  <button class="x" id="close">← Back to Shoot</button>
   <div class="scroll" id="scroll">
     <div class="stage">
       <div class="pin">
@@ -873,7 +896,7 @@ th { font-weight: 700; }
       </div>
     </div>
 
-    <!-- Scroll Details Section (2nd screen) -->
+    <!-- Scroll Details Section -->
     <section class="detail">
       <div class="dw">
         <h3>Details</h3>
@@ -891,7 +914,6 @@ const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-// Groups metadata
 const G = {
   tees: {
     n: 'Tees',
@@ -943,103 +965,324 @@ const G = {
   }
 };
 
-// 50 Curated Pieces with varied aspect ratios (3/4, 4/5, 1/1, 4/3)
-const RAW_ITEMS = [
-  { id: 1, f: "item_01.jpg", aspect: "3/4", name: "Christmas Tragedy Tee", price: 50, g: "tees", soldOut: true },
-  { id: 2, f: "item_02.jpg", aspect: "3/4", name: "Quiet Hour Tee", price: 48, g: "tees", soldOut: false },
-  { id: 3, f: "item_03.jpg", aspect: "4/5", name: "Ash Cutoff Tee", price: 52, g: "tees", soldOut: false },
-  { id: 4, f: "item_04.jpg", aspect: "3/4", name: "Winter Ledger Tee", price: 46, g: "tees", soldOut: false },
-  { id: 5, f: "item_05.jpg", aspect: "1/1", name: "Raw Seam Pocket Tee", price: 55, g: "tees", soldOut: false },
-  { id: 6, f: "item_06.jpg", aspect: "4/3", name: "Bleach Treated Tee", price: 54, g: "tees", soldOut: false },
-  { id: 7, f: "item_07.jpg", aspect: "3/4", name: "Solar Dye Boxy Tee", price: 58, g: "tees", soldOut: false },
-  { id: 8, f: "item_08.jpg", aspect: "4/5", name: "Echo Print Cutoff", price: 49, g: "tees", soldOut: false },
-  { id: 9, f: "item_09.jpg", aspect: "3/4", name: "Anti Ballet L/S", price: 80, g: "ls", soldOut: true },
-  { id: 10, f: "item_10.jpg", aspect: "4/5", name: "Blown Elbow L/S", price: 85, g: "ls", soldOut: false },
-  { id: 11, f: "item_11.jpg", aspect: "3/4", name: "Salt Thermal L/S", price: 78, g: "ls", soldOut: false },
-  { id: 12, f: "item_12.jpg", aspect: "1/1", name: "Hollow Cuff L/S", price: 82, g: "ls", soldOut: false },
-  { id: 13, f: "item_13.jpg", aspect: "4/3", name: "Ribbed Base Layer", price: 72, g: "ls", soldOut: false },
-  { id: 14, f: "item_14.jpg", aspect: "3/4", name: "Double Sleeve Raglan", price: 88, g: "ls", soldOut: false },
-  { id: 15, f: "item_15.jpg", aspect: "4/5", name: "Distressed Stripe L/S", price: 76, g: "ls", soldOut: false },
-  { id: 16, f: "item_16.jpg", aspect: "3/4", name: "Cold Room Hoodie", price: 140, g: "hd", soldOut: false },
-  { id: 17, f: "item_17.jpg", aspect: "4/5", name: "Ash Rib Hoodie", price: 135, g: "hd", soldOut: false },
-  { id: 18, f: "item_18.jpg", aspect: "1/1", name: "Bark Heavy Hoodie", price: 145, g: "hd", soldOut: false },
-  { id: 19, f: "item_19.jpg", aspect: "3/4", name: "Static Studio Hoodie", price: 138, g: "hd", soldOut: false },
-  { id: 20, f: "item_20.jpg", aspect: "4/5", name: "Raw Neckline Pullover", price: 128, g: "hd", soldOut: false },
-  { id: 21, f: "item_21.jpg", aspect: "3/4", name: "Cropped Mineral Hoodie", price: 142, g: "hd", soldOut: false },
-  { id: 22, f: "item_22.jpg", aspect: "3/4", name: "Type-III Denim Jacket", price: 220, g: "out", soldOut: false },
-  { id: 23, f: "item_23.jpg", aspect: "4/5", name: "Flight Overshirt", price: 180, g: "out", soldOut: false },
-  { id: 24, f: "item_24.jpg", aspect: "1/1", name: "Waxed Canvas Parka", price: 260, g: "out", soldOut: false },
-  { id: 25, f: "item_25.jpg", aspect: "4/3", name: "Leather Moto Blouson", price: 340, g: "out", soldOut: false },
-  { id: 26, f: "item_26.jpg", aspect: "3/4", name: "Down Studio Vest", price: 175, g: "out", soldOut: false },
-  { id: 27, f: "item_27.jpg", aspect: "4/5", name: "Quilted Liner Jacket", price: 165, g: "out", soldOut: false },
-  { id: 28, f: "item_28.jpg", aspect: "3/4", name: "GLOE Skull Bones Jeans", price: 85, g: "pants", soldOut: false },
-  { id: 29, f: "item_29.jpg", aspect: "4/5", name: "Raw Selvedge Denim", price: 135, g: "pants", soldOut: false },
-  { id: 30, f: "item_30.jpg", aspect: "1/1", name: "Double Knee Workpant", price: 125, g: "pants", soldOut: false },
-  { id: 31, f: "item_31.jpg", aspect: "3/4", name: "Wide Pleated Trouser", price: 130, g: "pants", soldOut: false },
-  { id: 32, f: "item_32.jpg", aspect: "4/5", name: "Mud-Washed Cargo", price: 145, g: "pants", soldOut: false },
-  { id: 33, f: "item_33.jpg", aspect: "3/4", name: "Relaxed Sweatpant", price: 95, g: "pants", soldOut: false },
-  { id: 34, f: "item_34.jpg", aspect: "3/4", name: "Chunky Mockneck", price: 165, g: "out", soldOut: false },
-  { id: 35, f: "item_35.jpg", aspect: "4/5", name: "Open-Weave Cardigan", price: 155, g: "out", soldOut: false },
-  { id: 36, f: "item_36.jpg", aspect: "1/1", name: "Distressed Wool Knit", price: 170, g: "out", soldOut: false },
-  { id: 37, f: "item_37.jpg", aspect: "1/1", name: "Unstructured 6-Panel", price: 45, g: "acc", soldOut: false },
-  { id: 38, f: "item_38.jpg", aspect: "3/4", name: "Heavy Duty Tote", price: 55, g: "acc", soldOut: false },
-  { id: 39, f: "item_39.jpg", aspect: "4/3", name: "Combat Derby Shoe", price: 210, g: "acc", soldOut: false },
-  { id: 40, f: "item_40.jpg", aspect: "1/1", name: "Vibram Sole Runner", price: 190, g: "acc", soldOut: false },
-  { id: 41, f: "item_41.jpg", aspect: "4/3", name: "Studio Leather Mule", price: 160, g: "acc", soldOut: false },
-  { id: 42, f: "item_42.jpg", aspect: "3/4", name: "Silver Link Ring", price: 65, g: "acc", soldOut: false },
-  { id: 43, f: "item_43.jpg", aspect: "3/4", name: "Milan Lookbook 01", price: 95, g: "tees", soldOut: false },
-  { id: 44, f: "item_44.jpg", aspect: "4/5", name: "Street Volume Study", price: 110, g: "ls", soldOut: false },
-  { id: 45, f: "item_45.jpg", aspect: "1/1", name: "Raw Texture Macro", price: 75, g: "tees", soldOut: false },
-  { id: 46, f: "item_46.jpg", aspect: "3/4", name: "Drape & Motion Shirt", price: 85, g: "tees", soldOut: false },
-  { id: 47, f: "item_47.jpg", aspect: "4/3", name: "Architectural Coat", price: 280, g: "out", soldOut: false },
-  { id: 48, f: "item_48.jpg", aspect: "3/4", name: "Silk Blend Overshirt", price: 120, g: "tees", soldOut: false },
-  { id: 49, f: "item_49.jpg", aspect: "4/5", name: "Monochrome Outerwear", price: 195, g: "out", soldOut: false },
-  { id: 50, f: "item_50.jpg", aspect: "1/1", name: "Studio Hardware Bag", price: 90, g: "acc", soldOut: false }
+// 18 Curated Shoots with multi-photo series
+const SHOOTS = [
+  {
+    id: 1,
+    name: "Christmas Tragedy Drop",
+    price: 50,
+    g: "tees",
+    soldOut: true,
+    hero: "item_01.jpg",
+    aspect: "3/4",
+    photos: ["item_01.jpg", "item_02.jpg", "item_08.jpg", "item_43.jpg"],
+    desc: "Hand printed, treated, and distressed cotton jersey tee with vintage «Рождество» graphic.",
+    shootTitle: "Shoot 01 — Christmas Tragedy Editorial",
+    shootLocation: "Milan Studio Lab / Drop 01",
+    material: "Cotton jersey, 240 gsm"
+  },
+  {
+    id: 2,
+    name: "Quiet Hour Tee",
+    price: 48,
+    g: "tees",
+    soldOut: false,
+    hero: "item_02.jpg",
+    aspect: "4/5",
+    photos: ["item_02.jpg", "item_03.jpg", "item_07.jpg"],
+    desc: "Garment washed minimal tee with reinforced ribbing and boxy drop shoulder.",
+    shootTitle: "Shoot 02 — Quiet Hour Series",
+    shootLocation: "Industrial Studio / Daylight",
+    material: "Combed Cotton, 260 gsm"
+  },
+  {
+    id: 3,
+    name: "Anti Ballet L/S",
+    price: 80,
+    g: "ls",
+    soldOut: true,
+    hero: "item_09.jpg",
+    aspect: "3/4",
+    photos: ["item_09.jpg", "item_10.jpg", "item_15.jpg", "item_44.jpg"],
+    desc: "Distressed by hand one piece at a time. Blown out elbows and elongated cuffs.",
+    shootTitle: "Shoot 03 — Anti Ballet Movement",
+    shootLocation: "Milan Concrete Warehouse",
+    material: "Cotton jersey, 260 gsm"
+  },
+  {
+    id: 4,
+    name: "Blown Elbow L/S",
+    price: 85,
+    g: "ls",
+    soldOut: false,
+    hero: "item_10.jpg",
+    aspect: "1/1",
+    photos: ["item_10.jpg", "item_11.jpg", "item_14.jpg"],
+    desc: "Extended sleeve rib, heavy wash fade, and artisanal blown elbow distressing.",
+    shootTitle: "Shoot 04 — Deconstructed Knits",
+    shootLocation: "Studio B Lookbook",
+    material: "Cotton jersey, 280 gsm"
+  },
+  {
+    id: 5,
+    name: "GLOE Skull Bones Jeans",
+    price: 85,
+    g: "pants",
+    soldOut: false,
+    hero: "item_28.jpg",
+    aspect: "3/4",
+    photos: ["item_28.jpg", "item_29.jpg", "item_30.jpg", "item_32.jpg"],
+    desc: "Black faded wide leg jeans with custom crossbones embroidery on back pocket.",
+    shootTitle: "Shoot 05 — GLOE Skull Denim Campaign",
+    shootLocation: "Night Rooftop & Studio Archive",
+    material: "14oz Washed Black Denim"
+  },
+  {
+    id: 6,
+    name: "Raw Selvedge Denim",
+    price: 135,
+    g: "pants",
+    soldOut: false,
+    hero: "item_29.jpg",
+    aspect: "4/5",
+    photos: ["item_29.jpg", "item_31.jpg", "item_33.jpg"],
+    desc: "Japanese selvedge denim cut in a modern relaxed wide silhouette.",
+    shootTitle: "Shoot 06 — Raw Selvedge Lookbook",
+    shootLocation: "Artisan Mill / Daylight",
+    material: "14.5oz Japanese Selvedge"
+  },
+  {
+    id: 7,
+    name: "Cold Room Hoodie",
+    price: 140,
+    g: "hd",
+    soldOut: false,
+    hero: "item_16.jpg",
+    aspect: "3/4",
+    photos: ["item_16.jpg", "item_17.jpg", "item_19.jpg", "item_20.jpg"],
+    desc: "Brushed heavyweight fleece 450gsm with architectural double-wall hood.",
+    shootTitle: "Shoot 07 — Cold Room Heavyweight Drop",
+    shootLocation: "Minimal Grey Studio",
+    material: "Cotton fleece, 450 gsm"
+  },
+  {
+    id: 8,
+    name: "Ash Rib Hoodie",
+    price: 135,
+    g: "hd",
+    soldOut: false,
+    hero: "item_17.jpg",
+    aspect: "1/1",
+    photos: ["item_17.jpg", "item_18.jpg", "item_21.jpg"],
+    desc: "Heather ash tone fleece featuring raw hem and kangaroo pocket.",
+    shootTitle: "Shoot 08 — Ash Capsule",
+    shootLocation: "Daylight Concrete Studio",
+    material: "Cotton fleece, 380 gsm"
+  },
+  {
+    id: 9,
+    name: "Type-III Denim Jacket",
+    price: 220,
+    g: "out",
+    soldOut: false,
+    hero: "item_22.jpg",
+    aspect: "3/4",
+    photos: ["item_22.jpg", "item_23.jpg", "item_26.jpg", "item_27.jpg"],
+    desc: "Classic studio trucker cut constructed from raw indigo selvedge denim.",
+    shootTitle: "Shoot 09 — Type-III Outerwear",
+    shootLocation: "Studio Lookbook Capsule",
+    material: "14oz Indigo Selvedge"
+  },
+  {
+    id: 10,
+    name: "Flight Overshirt",
+    price: 180,
+    g: "out",
+    soldOut: false,
+    hero: "item_23.jpg",
+    aspect: "4/3",
+    photos: ["item_23.jpg", "item_24.jpg", "item_25.jpg"],
+    desc: "Technical compact twill overshirt with hidden snap placket.",
+    shootTitle: "Shoot 10 — Technical Outerwear",
+    shootLocation: "Architectural Studio",
+    material: "Technical Twill, 310 gsm"
+  },
+  {
+    id: 11,
+    name: "Chunky Mockneck",
+    price: 165,
+    g: "out",
+    soldOut: false,
+    hero: "item_34.jpg",
+    aspect: "4/5",
+    photos: ["item_34.jpg", "item_35.jpg", "item_36.jpg"],
+    desc: "7-gauge fisherman rib knit in soft extrafine merino wool.",
+    shootTitle: "Shoot 11 — Winter Merino Knitwear",
+    shootLocation: "Milan Winter Lookbook",
+    material: "100% Extrafine Merino"
+  },
+  {
+    id: 12,
+    name: "Raw Seam Pocket Tee",
+    price: 55,
+    g: "tees",
+    soldOut: false,
+    hero: "item_05.jpg",
+    aspect: "1/1",
+    photos: ["item_05.jpg", "item_06.jpg", "item_04.jpg"],
+    desc: "Boxy pocket tee with external exposed seams and vintage wash fade.",
+    shootTitle: "Shoot 12 — Raw Seam Essentials",
+    shootLocation: "Daylight Studio",
+    material: "Organic Cotton, 250 gsm"
+  },
+  {
+    id: 13,
+    name: "Leather Moto Blouson",
+    price: 340,
+    g: "out",
+    soldOut: false,
+    hero: "item_25.jpg",
+    aspect: "4/3",
+    photos: ["item_25.jpg", "item_24.jpg", "item_47.jpg"],
+    desc: "Supple lambskin blouson with custom antiqued silver hardware.",
+    shootTitle: "Shoot 13 — Moto Leather Archive",
+    shootLocation: "Studio B Darkroom",
+    material: "100% Full-Grain Lambskin"
+  },
+  {
+    id: 14,
+    name: "Wide Pleated Trouser",
+    price: 130,
+    g: "pants",
+    soldOut: false,
+    hero: "item_31.jpg",
+    aspect: "3/4",
+    photos: ["item_31.jpg", "item_32.jpg", "item_33.jpg"],
+    desc: "Deep front double pleats with tailored drape and slant pockets.",
+    shootTitle: "Shoot 14 — Tailored Silhouette",
+    shootLocation: "Gallery Interior",
+    material: "Wool & Technical Viscose"
+  },
+  {
+    id: 15,
+    name: "Combat Derby Shoe",
+    price: 210,
+    g: "acc",
+    soldOut: false,
+    hero: "item_39.jpg",
+    aspect: "4/3",
+    photos: ["item_39.jpg", "item_40.jpg", "item_41.jpg"],
+    desc: "Commando lug sole leather derby shoe handcrafted in Portugal.",
+    shootTitle: "Shoot 15 — Studio Footwear",
+    shootLocation: "Product Lab",
+    material: "Calf Leather & Vibram Sole"
+  },
+  {
+    id: 16,
+    name: "Unstructured 6-Panel",
+    price: 45,
+    g: "acc",
+    soldOut: false,
+    hero: "item_37.jpg",
+    aspect: "1/1",
+    photos: ["item_37.jpg", "item_38.jpg", "item_50.jpg"],
+    desc: "Washed chino twill cap with curved brim and brass hardware buckle.",
+    shootTitle: "Shoot 16 — Everyday Accessories",
+    shootLocation: "Studio Neutral",
+    material: "100% Washed Chino Twill"
+  },
+  {
+    id: 17,
+    name: "Milan Lookbook Capsule",
+    price: 95,
+    g: "tees",
+    soldOut: false,
+    hero: "item_43.jpg",
+    aspect: "3/4",
+    photos: ["item_43.jpg", "item_44.jpg", "item_46.jpg", "item_48.jpg"],
+    desc: "Seasonal visual study capturing movement and volume across drops.",
+    shootTitle: "Shoot 17 — Milan Runway & Street",
+    shootLocation: "Milan Exterior / Daylight",
+    material: "Editorial Capsule Collection"
+  },
+  {
+    id: 18,
+    name: "Drape & Motion Shirt",
+    price: 85,
+    g: "tees",
+    soldOut: false,
+    hero: "item_46.jpg",
+    aspect: "4/5",
+    photos: ["item_46.jpg", "item_45.jpg", "item_49.jpg"],
+    desc: "Fluid drape studio shirt with raw edging and relaxed boxy cut.",
+    shootTitle: "Shoot 18 — Motion Exploration",
+    shootLocation: "Studio Editorial",
+    material: "Fluid Cotton & Lyocell"
+  }
 ];
 
-const I = RAW_ITEMS.map((o, i) => {
+// Chaotic, organic 3D spatial layout for 18 Shoots
+// Pseudorandom deterministic jitter so each piece sits at varied depth and scattered angle
+function pseudoRand(seed) {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
+const N = SHOOTS.length;
+const I = SHOOTS.map((o, i) => {
   const slug = o.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  
+  // Base golden spiral
+  const yBase = 1 - (i + 0.5) * 2 / N;
+  const rBase = Math.sqrt(1 - yBase * yBase);
+  const fBase = i * 2.3999632;
+  const xBase = Math.cos(fBase) * rBase;
+  const zBase = Math.sin(fBase) * rBase;
+
+  // Add organic chaotic jitter
+  const jX = (pseudoRand(i * 12.3) - 0.5) * 0.45;
+  const jY = (pseudoRand(i * 34.7) - 0.5) * 0.35;
+  const th = Math.atan2(xBase, zBase) + jX;
+  const ph = clamp(Math.asin(yBase) + jY, -1.05, 1.05);
+
+  // Depth layering: varying radius multiplier so cards float at different distances
+  const rMult = 0.85 + (i % 4) * 0.08 + (pseudoRand(i * 7.1) - 0.5) * 0.1;
+
+  let ratio = 1.33;
+  if (o.aspect === '4/5') ratio = 1.25;
+  if (o.aspect === '1/1') ratio = 1.0;
+  if (o.aspect === '4/3') ratio = 0.75;
+
   return {
     ...o,
     slug,
-    img: `items/${o.f}`,
-    thumb: `items/thumbs/${o.f}`,
+    img: `items/${o.hero}`,
+    th,
+    ph,
+    rMult,
+    ratio,
+    sc: 0.95 + (i % 3) * 0.10,
+    s: 0.5 + (i % 5) * 0.12,
+    p: i * 1.9,
+    h: 0,
+    hov: 0,
     i
   };
 });
 
-// Fibonacci 3D Distribution for 50 items
-const N = I.length;
-I.forEach((it, i) => {
-  const y = 1 - (i + 0.5) * 2 / N;
-  const r = Math.sqrt(1 - y * y);
-  const f = i * 2.3999632;
-  const x = Math.cos(f) * r;
-  const z = Math.sin(f) * r;
-  it.th = Math.atan2(x, z);
-  it.ph = Math.asin(y);
-  it.sc = 0.90 + (i % 3) * 0.10;
-  it.s = 0.5 + (i % 5) * 0.12;
-  it.p = i * 1.9;
-  it.h = 0;
-  it.hov = 0;
-});
-
-/* ================= 3D Space Setup & Zoom State ================= */
+/* ================= 3D Space Setup & Zoom ================= */
 const world = $('#world'), space = $('#space');
 const cursor = $('#cursor'), cursorLabel = $('#cursorLabel');
 const zoomPercent = $('#zoomPercent');
 
 let W = innerWidth, H = innerHeight;
-// Default starting diameter is COMPACT (as requested: smaller starting sphere diameter)
-let baseRadius = 310;
-let userZoom = 1.0; // Interactive zoom factor: 0.5 (far/wide) to 2.2 (macro zoom in)
+let baseRadius = 340;
+let userZoom = 1.0;
 let targetZoom = 1.0;
-
-let CW = 95;
+let CW = 110;
 const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
 
-// Create card DOM elements with borderless cuts and diverse aspect ratios
+// Create card DOM elements (STRAIGHT RECTANGULAR EDGES, FULL RESOLUTION)
 I.forEach(it => {
   const el = document.createElement('div');
   el.className = 'card';
@@ -1047,24 +1290,17 @@ I.forEach(it => {
   el.setAttribute('role', 'button');
   el.setAttribute('aria-label', it.name);
 
-  // Aspect ratio calculation
-  let ratio = 1.33; // 3/4 default
-  if (it.aspect === '4/5') ratio = 1.25;
-  if (it.aspect === '1/1') ratio = 1.0;
-  if (it.aspect === '4/3') ratio = 0.75;
-  it.ratio = ratio;
-
-  // Full high-resolution crystal clear images
   el.innerHTML = `
     <div class="card-img-wrap">
-      <img src="${it.img}" alt="${it.name}" loading="lazy">
+      <img src="${it.img}" alt="${it.name}">
+      <div class="card-badge">${it.photos.length} photos</div>
     </div>
   `;
 
-  // Gentle hover zoom: comfortable and subtle
+  // Hover state (crystal clear, no blur)
   el.addEventListener('mouseenter', () => {
     it.hov = 1;
-    cursorLabel.textContent = 'View';
+    cursorLabel.textContent = 'Explore Shoot';
     cursor.classList.add('visible');
   });
 
@@ -1073,17 +1309,10 @@ I.forEach(it => {
     cursor.classList.remove('visible');
   });
 
-  el.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      openItem(it.i, el.getBoundingClientRect());
-    }
-  });
-
-  // Support direct click / tap on cards
+  // Tap opens the Shoot Carousel
   el.addEventListener('click', (e) => {
     e.stopPropagation();
-    openItem(it.i, el.getBoundingClientRect());
+    openShootModal(it.i);
   });
 
   world.appendChild(el);
@@ -1093,9 +1322,8 @@ I.forEach(it => {
 function layout() {
   W = innerWidth;
   H = innerHeight;
-  // Compact base radius for 50 pieces at start
-  baseRadius = clamp(Math.min(W, H) * 0.48, 260, 420);
-  CW = clamp(W * 0.09, 85, 125);
+  baseRadius = clamp(Math.min(W, H) * 0.52, 280, 480);
+  CW = clamp(W * 0.12, 95, 145);
 
   I.forEach(it => {
     const w = CW * it.sc;
@@ -1110,13 +1338,13 @@ function layout() {
 addEventListener('resize', layout);
 layout();
 
-$('#count').textContent = I.length + ' pieces';
+$('#count').textContent = I.length + ' Shoots';
 $('#pills').innerHTML = `<button data-g="all" class="active">All</button>` + Object.keys(G).map(k => `<button data-g="${k}">${G[k].n}</button>`).join('');
 
-/* ================= 3D Space Physics, Orbit & Multi-touch Pinch Zoom ================= */
+/* ================= 3D Space Physics ================= */
 let ry = 0.2, rx = -0.15;
 let vy = 0, vx = 0;
-let drag = false, tgt = null, opened = false, last = 0;
+let drag = false, tgt = null, opened = false, shootOpen = false, last = 0;
 let mouseX = W / 2, mouseY = H / 2;
 let curX = mouseX, curY = mouseY;
 
@@ -1130,17 +1358,14 @@ const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
 function frame(now) {
   requestAnimationFrame(frame);
 
-  // Smooth custom cursor follower
   curX += (mouseX - curX) * 0.25;
   curY += (mouseY - curY) * 0.25;
   cursor.style.transform = `translate3d(${curX}px, ${curY}px, 0)`;
 
-  if (opened) return;
+  if (opened || shootOpen) return;
   const t = now / 1000;
 
-  // Smooth zoom interpolation
   userZoom += (targetZoom - userZoom) * 0.12;
-  const effectiveRadius = baseRadius * userZoom;
   zoomPercent.textContent = Math.round(userZoom * 100) + '%';
 
   if (!drag) {
@@ -1156,7 +1381,7 @@ function frame(now) {
       vy *= 0.93;
       vx *= 0.93;
       if (!reduce && now - last > 2200) {
-        ry += 0.0012; // slow ambient drift
+        ry += 0.0012;
       }
     }
   }
@@ -1164,57 +1389,24 @@ function frame(now) {
   rx = clamp(rx, -1.05, 1.05);
   world.style.transform = `rotateX(${rx}rad) rotateY(${ry}rad)`;
 
-  // High performance 3D depth computation & Backface Culling for smooth 60fps on mobile
-  const cosRx = Math.cos(rx), sinRx = Math.sin(rx);
-  const cosRy = Math.cos(ry), sinRy = Math.sin(ry);
-
   for (const c of I) {
-    // Spherical position vector
-    const cosPh = Math.cos(c.ph), sinPh = Math.sin(c.ph);
-    const cosTh = Math.cos(c.th), sinTh = Math.sin(c.th);
-    const x0 = sinTh * cosPh;
-    const y0 = sinPh;
-    const z0 = cosTh * cosPh;
+    // Each card maintains its unique chaotic distance (rMult)
+    const cardRadius = baseRadius * userZoom * c.rMult;
+    const rFloat = cardRadius + (reduce ? 0 : Math.sin(t * c.s + c.p) * 8);
 
-    // Transformed Z in camera space (depth towards viewer)
-    // Rotate Y:
-    const x1 = x0 * cosRy + z0 * sinRy;
-    const z1 = -x0 * sinRy + z0 * cosRy;
-    // Rotate X:
-    const y2 = y0 * cosRx - z1 * sinRx;
-    const z2 = y0 * sinRx + z1 * cosRx;
-
-    // Smooth, cinematic atmospheric fog/depth curve instead of abrupt pop-in
-    // z2 goes from +1.0 (nearest to camera) to -1.0 (furthest back)
-    // Front hemisphere: opacity 1.0; Back hemisphere: soft, organic dissolve down to 0.18
-    let depthOpacity = 1.0;
-    if (z2 < 0.1) {
-      // Gentle cosine S-curve transition
-      const norm = clamp((z2 - (-0.9)) / 1.0, 0, 1);
-      depthOpacity = 0.18 + 0.82 * (norm * norm * (3 - 2 * norm));
-    }
-    // If user hovers, it's always crisp and fully visible
-    if (c.hov) depthOpacity = 1.0;
-
-    c.curOpacity = (c.curOpacity === undefined) ? depthOpacity : c.curOpacity + (depthOpacity - c.curOpacity) * 0.15;
-    c.el.style.opacity = c.curOpacity.toFixed(3);
-    c.el.style.pointerEvents = z2 < -0.4 ? 'none' : 'auto';
-
-    // Subtle float
-    const rFloat = effectiveRadius + (reduce ? 0 : Math.sin(t * c.s + c.p) * 10);
+    // Hover pulls smoothly towards camera with ZERO blur or opacity artifacts
     c.h += (c.hov - c.h) * 0.16;
+    const hoverZ = c.h * 36;
+    const hoverScale = 1 + 0.15 * c.h;
 
-    // Gentle hover zoom: pulls +34px toward camera & scales +16%
-    const hoverZ = c.h * 34;
-    const hoverScale = 1 + 0.16 * c.h;
-
+    // Fully sharp at all times
     c.el.style.transform = `rotateY(${c.th}rad) rotateX(${c.ph}rad) translateZ(${rFloat + hoverZ}px) scale(${hoverScale})`;
-    c.el.style.zIndex = c.hov ? '50' : (z2 > 0 ? '20' : '10');
+    c.el.style.zIndex = c.hov ? '50' : '10';
   }
 }
 requestAnimationFrame(frame);
 
-/* ================= Pointer & Touch Interactions (Orbit & Pinch-Zoom) ================= */
+/* Pointer Orbit & Pinch Zoom */
 let sx, sy, lx, ly, moved = 0, hinted = false;
 let activeTouches = new Map();
 let initialPinchDist = null;
@@ -1233,7 +1425,6 @@ space.addEventListener('pointerdown', e => {
     last = performance.now();
     space.classList.add('drag');
   } else if (activeTouches.size === 2) {
-    // Multi-touch pinch zoom initiation
     drag = false;
     const pts = Array.from(activeTouches.values());
     initialPinchDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
@@ -1247,7 +1438,6 @@ space.addEventListener('pointermove', e => {
   }
 
   if (activeTouches.size === 2 && initialPinchDist) {
-    // Pinch to zoom on phone
     const pts = Array.from(activeTouches.values());
     const currentDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
     const scaleFactor = currentDist / initialPinchDist;
@@ -1276,21 +1466,8 @@ space.addEventListener('pointermove', e => {
 
 function endPointer(e) {
   activeTouches.delete(e.pointerId);
-  if (activeTouches.size < 2) {
-    initialPinchDist = null;
-  }
+  if (activeTouches.size < 2) initialPinchDist = null;
   if (activeTouches.size === 0) {
-    if (drag && moved < 10) {
-      // Use tap coordinates from sx, sy (e.clientX on touch end in emulation can be off-screen/cancelled)
-      const tapX = (e.clientX && e.clientX > 0) ? e.clientX : sx;
-      const tapY = (e.clientY && e.clientY > 0) ? e.clientY : sy;
-      const el = document.elementFromPoint(tapX, tapY);
-      const cd = el && el.closest('.card');
-      if (cd) {
-        const it = I.find(o => o.el === cd);
-        if (it) openItem(it.i, cd.getBoundingClientRect());
-      }
-    }
     drag = false;
     space.classList.remove('drag');
     last = performance.now();
@@ -1300,30 +1477,20 @@ function endPointer(e) {
 space.addEventListener('pointerup', endPointer);
 space.addEventListener('pointercancel', endPointer);
 
-// Mouse Wheel: Orbit horizontally, Zoom on vertical wheel (or Pinch gesture on Mac trackpad)
 space.addEventListener('wheel', e => {
   e.preventDefault();
   last = performance.now();
-
-  // If ctrlKey is pressed (Mac trackpad pinch gesture) or standard vertical scroll -> ZOOM!
   if (e.ctrlKey || Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
     const zoomDelta = -e.deltaY * 0.002;
     targetZoom = clamp(targetZoom + zoomDelta, 0.45, 2.4);
   } else {
-    // Horizontal scroll -> orbit
     ry += e.deltaX * 0.003;
   }
 }, { passive: false });
 
-// On-screen Zoom Buttons
-$('#btnZoomIn').addEventListener('click', () => {
-  targetZoom = clamp(targetZoom + 0.25, 0.45, 2.4);
-});
-$('#btnZoomOut').addEventListener('click', () => {
-  targetZoom = clamp(targetZoom - 0.25, 0.45, 2.4);
-});
+$('#btnZoomIn').addEventListener('click', () => { targetZoom = clamp(targetZoom + 0.25, 0.45, 2.4); });
+$('#btnZoomOut').addEventListener('click', () => { targetZoom = clamp(targetZoom - 0.25, 0.45, 2.4); });
 
-// Category Switcher
 $('#pills').addEventListener('click', e => {
   const b = e.target.closest('button');
   if (!b) return;
@@ -1340,11 +1507,101 @@ $('#pills').addEventListener('click', e => {
   };
 });
 
-/* ================= PRODUCT PAGE / VIEWER MODAL ================= */
+/* ================= 1. INTERMEDIATE SHOOT CAROUSEL LOGIC ================= */
+const shootModal = $('#shootModal');
+const shootTrack = $('#shootTrack');
+const shootThumbs = $('#shootThumbs');
+let activeShootIndex = 0;
+let activePhotoIndex = 0;
+
+function openShootModal(shootIdx) {
+  activeShootIndex = shootIdx;
+  activePhotoIndex = 0;
+  const shoot = I[shootIdx];
+  shootOpen = true;
+  cursor.classList.remove('visible');
+
+  $('#shootTitle').textContent = shoot.shootTitle;
+  $('#shootLocation').textContent = shoot.shootLocation + ' • ' + shoot.photos.length + ' photos';
+
+  // Render Carousel Slides
+  shootTrack.innerHTML = shoot.photos.map((f, pIdx) => `
+    <div class="shoot-slide" data-idx="${pIdx}">
+      <img src="items/${f}" alt="${shoot.name} photo ${pIdx + 1}">
+    </div>
+  `).join('');
+
+  // Render Thumbnails
+  shootThumbs.innerHTML = shoot.photos.map((f, pIdx) => `
+    <div class="shoot-thumb ${pIdx === 0 ? 'active' : ''}" data-idx="${pIdx}">
+      <img src="items/${f}" alt="Thumb">
+    </div>
+  `).join('');
+
+  shootTrack.scrollTo({ left: 0, behavior: 'instant' });
+  shootModal.classList.add('open');
+}
+
+function closeShootModal() {
+  shootOpen = false;
+  shootModal.classList.remove('open');
+  last = performance.now();
+}
+
+$('#closeShootBtn').addEventListener('click', closeShootModal);
+shootModal.addEventListener('click', (e) => {
+  if (e.target === shootModal) closeShootModal();
+});
+
+// Carousel Prev / Next Buttons
+$('#shootPrev').addEventListener('click', () => {
+  const shoot = I[activeShootIndex];
+  activePhotoIndex = Math.max(0, activePhotoIndex - 1);
+  shootTrack.scrollTo({ left: activePhotoIndex * shootTrack.clientWidth, behavior: 'smooth' });
+  updateShootThumbs();
+});
+
+$('#shootNext').addEventListener('click', () => {
+  const shoot = I[activeShootIndex];
+  activePhotoIndex = Math.min(shoot.photos.length - 1, activePhotoIndex + 1);
+  shootTrack.scrollTo({ left: activePhotoIndex * shootTrack.clientWidth, behavior: 'smooth' });
+  updateShootThumbs();
+});
+
+shootTrack.addEventListener('scroll', () => {
+  const shoot = I[activeShootIndex];
+  const idx = clamp(Math.round(shootTrack.scrollLeft / shootTrack.clientWidth), 0, shoot.photos.length - 1);
+  if (idx !== activePhotoIndex) {
+    activePhotoIndex = idx;
+    updateShootThumbs();
+  }
+}, { passive: true });
+
+function updateShootThumbs() {
+  [...shootThumbs.children].forEach((thumb, idx) => {
+    thumb.classList.toggle('active', idx === activePhotoIndex);
+  });
+}
+
+shootThumbs.addEventListener('click', (e) => {
+  const thumb = e.target.closest('.shoot-thumb');
+  if (!thumb) return;
+  activePhotoIndex = parseInt(thumb.dataset.idx, 10);
+  shootTrack.scrollTo({ left: activePhotoIndex * shootTrack.clientWidth, behavior: 'smooth' });
+  updateShootThumbs();
+});
+
+// Jump from Carousel to Product Page
+$('#toProductPageBtn').addEventListener('click', () => {
+  closeShootModal();
+  openItem(activeShootIndex);
+});
+
+/* ================= 2. FULL PRODUCT DETAIL PAGE ================= */
 const V = $('#viewer'), SC = $('#scroll'), TR = $('#track'), FIRST = $('#first');
 let list = [], idx = 0, size = 'XS', opt = null;
 
-const rr = r => `inset(${r.top}px ${W - r.right}px ${H - r.bottom}px ${r.left}px round 6px)`;
+const rr = r => `inset(${r.top}px ${W - r.right}px ${H - r.bottom}px ${r.left}px round 0px)`;
 const cRect = (w, h) => ({
   top: H / 2 - h / 2,
   bottom: H / 2 + h / 2,
@@ -1361,14 +1618,14 @@ function openItem(i, rect) {
   opened = true;
   cursor.classList.remove('visible');
 
-  // Render product slides
-  TR.innerHTML = list.map(o => `
+  // Render product slides using this shoot's photos
+  TR.innerHTML = it.photos.map(f => `
     <div class="slide">
-      <img src="${o.img}" alt="${o.name}">
+      <img src="items/${f}" alt="${it.name}">
     </div>
   `).join('');
 
-  $('#dots').innerHTML = list.map(() => '<i></i>').join('');
+  $('#dots').innerHTML = it.photos.map(() => '<i></i>').join('');
 
   V.style.transition = 'none';
   V.style.clipPath = rr(rect || cRect(140, 180));
@@ -1378,19 +1635,15 @@ function openItem(i, rect) {
   progress();
   opt = null;
 
-  TR.scrollTo({ left: idx * TR.clientWidth, behavior: 'instant' });
+  TR.scrollTo({ left: 0, behavior: 'instant' });
   render(true);
 
-  // In file:// protocol Chrome security blocks pushState with full URLs, use safe hash or try/catch
   try {
-    if (location.protocol !== 'file:') {
-      history.pushState(null, '', '#' + it.slug);
-    } else {
-      location.hash = it.slug;
-    }
+    if (location.protocol !== 'file:') history.pushState(null, '', '#' + it.slug);
+    else location.hash = it.slug;
   } catch(e) {}
 
-  V.offsetWidth; // force reflow
+  V.offsetWidth;
   V.style.transition = 'clip-path .38s cubic-bezier(.22, .8, .2, 1)';
   V.style.clipPath = 'inset(0px 0px 0px 0px round 0px)';
   $('#close').focus({ preventScroll: true });
@@ -1398,7 +1651,7 @@ function openItem(i, rect) {
 
 function closeViewer() {
   if (!opened) return;
-  const c = list[idx];
+  const c = list[idx] || I[activeShootIndex];
   SC.scrollTop = 0;
 
   ry = -c.th;
@@ -1429,7 +1682,7 @@ const chips = (el, arr, sel) => {
 };
 
 function render(first) {
-  const it = list[idx], g = G[it.g] || G.tees;
+  const it = list[idx] || I[activeShootIndex], g = G[it.g] || G.tees;
   $('#nm').textContent = it.name;
   $('#pr').textContent = '$' + it.price.toFixed(2);
   $('#ds').textContent = g.d;
@@ -1441,10 +1694,7 @@ function render(first) {
     <li><span>Shipping</span>Allow 2–3 weeks shipping time</li>
   `;
 
-  // Size chips
   chips($('#sz'), ['XS', 'S', 'M', 'L'], size);
-
-  // Variant chips
   $('#ol').textContent = g.ol;
   if (!g.o.includes(opt)) opt = g.o[0];
   chips($('#op'), g.o, opt);
@@ -1458,7 +1708,7 @@ function render(first) {
     buyBtn.classList.remove('sold-out');
   }
 
-  [...$('#dots').children].forEach((d, k) => d.classList.toggle('on', k === idx));
+  [...$('#dots').children].forEach((d, k) => d.classList.toggle('on', k === 0));
 
   $('#rel').innerHTML = list.map((o, k) => k === idx ? '' : `
     <button data-k="${k}" aria-label="${o.name}">
@@ -1467,19 +1717,8 @@ function render(first) {
       <span>$${o.price.toFixed(2)}</span>
     </button>
   `).join('');
-
-  if (!first) {
-    try {
-      if (location.protocol !== 'file:') {
-        history.replaceState(null, '', '#' + it.slug);
-      } else {
-        location.hash = it.slug;
-      }
-    } catch(e) {}
-  }
 }
 
-// Scroll animation for 2nd screen
 function progress() {
   let p = clamp(SC.scrollTop / (H * 0.75), 0, 1);
   p = p * p * (3 - 2 * p);
@@ -1488,16 +1727,13 @@ function progress() {
 }
 SC.addEventListener('scroll', progress, { passive: true });
 
-// Track swipe sync
 let raf = 0;
 TR.addEventListener('scroll', () => {
   cancelAnimationFrame(raf);
   raf = requestAnimationFrame(() => {
-    const k = clamp(Math.round(TR.scrollLeft / TR.clientWidth), 0, list.length - 1);
-    if (k !== idx) {
-      idx = k;
-      render();
-    }
+    const it = list[idx] || I[activeShootIndex];
+    const k = clamp(Math.round(TR.scrollLeft / TR.clientWidth), 0, it.photos.length - 1);
+    [...$('#dots').children].forEach((d, dotIdx) => d.classList.toggle('on', dotIdx === k));
   });
 }, { passive: true });
 
@@ -1515,7 +1751,7 @@ pick($('#op'), v => opt = v);
 let bt;
 $('#buy').addEventListener('click', () => {
   const b = $('#buy');
-  const it = list[idx];
+  const it = list[idx] || I[activeShootIndex];
   if (it.soldOut) {
     b.textContent = 'NOTIFY ME';
     clearTimeout(bt);
@@ -1530,24 +1766,19 @@ $('#buy').addEventListener('click', () => {
 $('#rel').addEventListener('click', e => {
   const b = e.target.closest('button');
   if (!b) return;
-  TR.scrollTo({ left: +b.dataset.k * TR.clientWidth, behavior: 'instant' });
-  SC.scrollTo({ top: 0, behavior: 'smooth' });
+  const targetShoot = list[+b.dataset.k];
+  if (targetShoot) {
+    openShootModal(targetShoot.i);
+  }
 });
 
 $('#close').addEventListener('click', closeViewer);
 addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeViewer();
+  if (e.key === 'Escape') {
+    if (opened) closeViewer();
+    else if (shootOpen) closeShootModal();
+  }
 });
-
-function fromHash() {
-  const h = location.hash.slice(1);
-  const it = I.find(o => o.slug === h);
-  if (it && !opened) openItem(it.i, null);
-  else if (!h && opened) closeViewer();
-}
-addEventListener('hashchange', fromHash);
-addEventListener('popstate', fromHash);
-fromHash();
 </script>
 </body>
 </html>

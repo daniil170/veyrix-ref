@@ -1,0 +1,332 @@
+[
+  {
+    "id": 1,
+    "name": "Christmas Tragedy Drop",
+    "price": 50,
+    "g": "tees",
+    "soldOut": true,
+    "hero": "item_01.jpg",
+    "aspect": "3/4",
+    "photos": [
+      "item_01.jpg",
+      "item_02.jpg",
+      "item_08.jpg",
+      "item_43.jpg"
+    ],
+    "desc": "Hand printed, treated, and distressed cotton jersey tee with vintage \u00ab\u0420\u043e\u0436\u0434\u0435\u0441\u0442\u0432\u043e\u00bb graphic.",
+    "shootTitle": "Shoot 01 \u2014 Christmas Tragedy Editorial",
+    "shootLocation": "Milan Studio Lab / Drop 01",
+    "material": "Cotton jersey, 240 gsm"
+  },
+  {
+    "id": 2,
+    "name": "Quiet Hour Tee",
+    "price": 48,
+    "g": "tees",
+    "soldOut": false,
+    "hero": "item_02.jpg",
+    "aspect": "4/5",
+    "photos": [
+      "item_02.jpg",
+      "item_03.jpg",
+      "item_07.jpg"
+    ],
+    "desc": "Garment washed minimal tee with reinforced ribbing and boxy drop shoulder.",
+    "shootTitle": "Shoot 02 \u2014 Quiet Hour Series",
+    "shootLocation": "Industrial Studio / Daylight",
+    "material": "Combed Cotton, 260 gsm"
+  },
+  {
+    "id": 3,
+    "name": "Anti Ballet L/S",
+    "price": 80,
+    "g": "ls",
+    "soldOut": true,
+    "hero": "item_09.jpg",
+    "aspect": "3/4",
+    "photos": [
+      "item_09.jpg",
+      "item_10.jpg",
+      "item_15.jpg",
+      "item_44.jpg"
+    ],
+    "desc": "Distressed by hand one piece at a time. Blown out elbows and elongated cuffs.",
+    "shootTitle": "Shoot 03 \u2014 Anti Ballet Movement",
+    "shootLocation": "Milan Concrete Warehouse",
+    "material": "Cotton jersey, 260 gsm"
+  },
+  {
+    "id": 4,
+    "name": "Blown Elbow L/S",
+    "price": 85,
+    "g": "ls",
+    "soldOut": false,
+    "hero": "item_10.jpg",
+    "aspect": "1/1",
+    "photos": [
+      "item_10.jpg",
+      "item_11.jpg",
+      "item_14.jpg"
+    ],
+    "desc": "Extended sleeve rib, heavy wash fade, and artisanal blown elbow distressing.",
+    "shootTitle": "Shoot 04 \u2014 Deconstructed Knits",
+    "shootLocation": "Studio B Lookbook",
+    "material": "Cotton jersey, 280 gsm"
+  },
+  {
+    "id": 5,
+    "name": "GLOE Skull Bones Jeans",
+    "price": 85,
+    "g": "pants",
+    "soldOut": false,
+    "hero": "item_28.jpg",
+    "aspect": "3/4",
+    "photos": [
+      "item_28.jpg",
+      "item_29.jpg",
+      "item_30.jpg",
+      "item_32.jpg"
+    ],
+    "desc": "Black faded wide leg jeans with custom crossbones embroidery on back pocket.",
+    "shootTitle": "Shoot 05 \u2014 GLOE Skull Denim Campaign",
+    "shootLocation": "Night Rooftop & Studio Archive",
+    "material": "14oz Washed Black Denim"
+  },
+  {
+    "id": 6,
+    "name": "Raw Selvedge Denim",
+    "price": 135,
+    "g": "pants",
+    "soldOut": false,
+    "hero": "item_29.jpg",
+    "aspect": "4/5",
+    "photos": [
+      "item_29.jpg",
+      "item_31.jpg",
+      "item_33.jpg"
+    ],
+    "desc": "Japanese selvedge denim cut in a modern relaxed wide silhouette.",
+    "shootTitle": "Shoot 06 \u2014 Raw Selvedge Lookbook",
+    "shootLocation": "Artisan Mill / Daylight",
+    "material": "14.5oz Japanese Selvedge"
+  },
+  {
+    "id": 7,
+    "name": "Cold Room Hoodie",
+    "price": 140,
+    "g": "hd",
+    "soldOut": false,
+    "hero": "item_16.jpg",
+    "aspect": "3/4",
+    "photos": [
+      "item_16.jpg",
+      "item_17.jpg",
+      "item_19.jpg",
+      "item_20.jpg"
+    ],
+    "desc": "Brushed heavyweight fleece 450gsm with architectural double-wall hood.",
+    "shootTitle": "Shoot 07 \u2014 Cold Room Heavyweight Drop",
+    "shootLocation": "Minimal Grey Studio",
+    "material": "Cotton fleece, 450 gsm"
+  },
+  {
+    "id": 8,
+    "name": "Ash Rib Hoodie",
+    "price": 135,
+    "g": "hd",
+    "soldOut": false,
+    "hero": "item_17.jpg",
+    "aspect": "1/1",
+    "photos": [
+      "item_17.jpg",
+      "item_18.jpg",
+      "item_21.jpg"
+    ],
+    "desc": "Heather ash tone fleece featuring raw hem and kangaroo pocket.",
+    "shootTitle": "Shoot 08 \u2014 Ash Capsule",
+    "shootLocation": "Daylight Concrete Studio",
+    "material": "Cotton fleece, 380 gsm"
+  },
+  {
+    "id": 9,
+    "name": "Type-III Denim Jacket",
+    "price": 220,
+    "g": "out",
+    "soldOut": false,
+    "hero": "item_22.jpg",
+    "aspect": "3/4",
+    "photos": [
+      "item_22.jpg",
+      "item_23.jpg",
+      "item_26.jpg",
+      "item_27.jpg"
+    ],
+    "desc": "Classic studio trucker cut constructed from raw indigo selvedge denim.",
+    "shootTitle": "Shoot 09 \u2014 Type-III Outerwear",
+    "shootLocation": "Studio Lookbook Capsule",
+    "material": "14oz Indigo Selvedge"
+  },
+  {
+    "id": 10,
+    "name": "Flight Overshirt",
+    "price": 180,
+    "g": "out",
+    "soldOut": false,
+    "hero": "item_23.jpg",
+    "aspect": "4/3",
+    "photos": [
+      "item_23.jpg",
+      "item_24.jpg",
+      "item_25.jpg"
+    ],
+    "desc": "Technical compact twill overshirt with hidden snap placket.",
+    "shootTitle": "Shoot 10 \u2014 Technical Outerwear",
+    "shootLocation": "Architectural Studio",
+    "material": "Technical Twill, 310 gsm"
+  },
+  {
+    "id": 11,
+    "name": "Chunky Mockneck",
+    "price": 165,
+    "g": "out",
+    "soldOut": false,
+    "hero": "item_34.jpg",
+    "aspect": "4/5",
+    "photos": [
+      "item_34.jpg",
+      "item_35.jpg",
+      "item_36.jpg"
+    ],
+    "desc": "7-gauge fisherman rib knit in soft extrafine merino wool.",
+    "shootTitle": "Shoot 11 \u2014 Winter Merino Knitwear",
+    "shootLocation": "Milan Winter Lookbook",
+    "material": "100% Extrafine Merino"
+  },
+  {
+    "id": 12,
+    "name": "Raw Seam Pocket Tee",
+    "price": 55,
+    "g": "tees",
+    "soldOut": false,
+    "hero": "item_05.jpg",
+    "aspect": "1/1",
+    "photos": [
+      "item_05.jpg",
+      "item_06.jpg",
+      "item_04.jpg"
+    ],
+    "desc": "Boxy pocket tee with external exposed seams and vintage wash fade.",
+    "shootTitle": "Shoot 12 \u2014 Raw Seam Essentials",
+    "shootLocation": "Daylight Studio",
+    "material": "Organic Cotton, 250 gsm"
+  },
+  {
+    "id": 13,
+    "name": "Leather Moto Blouson",
+    "price": 340,
+    "g": "out",
+    "soldOut": false,
+    "hero": "item_25.jpg",
+    "aspect": "4/3",
+    "photos": [
+      "item_25.jpg",
+      "item_24.jpg",
+      "item_47.jpg"
+    ],
+    "desc": "Supple lambskin blouson with custom antiqued silver hardware.",
+    "shootTitle": "Shoot 13 \u2014 Moto Leather Archive",
+    "shootLocation": "Studio B Darkroom",
+    "material": "100% Full-Grain Lambskin"
+  },
+  {
+    "id": 14,
+    "name": "Wide Pleated Trouser",
+    "price": 130,
+    "g": "pants",
+    "soldOut": false,
+    "hero": "item_31.jpg",
+    "aspect": "3/4",
+    "photos": [
+      "item_31.jpg",
+      "item_32.jpg",
+      "item_33.jpg"
+    ],
+    "desc": "Deep front double pleats with tailored drape and slant pockets.",
+    "shootTitle": "Shoot 14 \u2014 Tailored Silhouette",
+    "shootLocation": "Gallery Interior",
+    "material": "Wool & Technical Viscose"
+  },
+  {
+    "id": 15,
+    "name": "Combat Derby Shoe",
+    "price": 210,
+    "g": "acc",
+    "soldOut": false,
+    "hero": "item_39.jpg",
+    "aspect": "4/3",
+    "photos": [
+      "item_39.jpg",
+      "item_40.jpg",
+      "item_41.jpg"
+    ],
+    "desc": "Commando lug sole leather derby shoe handcrafted in Portugal.",
+    "shootTitle": "Shoot 15 \u2014 Studio Footwear",
+    "shootLocation": "Product Lab",
+    "material": "Calf Leather & Vibram Sole"
+  },
+  {
+    "id": 16,
+    "name": "Unstructured 6-Panel",
+    "price": 45,
+    "g": "acc",
+    "soldOut": false,
+    "hero": "item_37.jpg",
+    "aspect": "1/1",
+    "photos": [
+      "item_37.jpg",
+      "item_38.jpg",
+      "item_50.jpg"
+    ],
+    "desc": "Washed chino twill cap with curved brim and brass hardware buckle.",
+    "shootTitle": "Shoot 16 \u2014 Everyday Accessories",
+    "shootLocation": "Studio Neutral",
+    "material": "100% Washed Chino Twill"
+  },
+  {
+    "id": 17,
+    "name": "Milan Lookbook Capsule",
+    "price": 95,
+    "g": "tees",
+    "soldOut": false,
+    "hero": "item_43.jpg",
+    "aspect": "3/4",
+    "photos": [
+      "item_43.jpg",
+      "item_44.jpg",
+      "item_46.jpg",
+      "item_48.jpg"
+    ],
+    "desc": "Seasonal visual study capturing movement and volume across drops.",
+    "shootTitle": "Shoot 17 \u2014 Milan Runway & Street",
+    "shootLocation": "Milan Exterior / Daylight",
+    "material": "Editorial Capsule Collection"
+  },
+  {
+    "id": 18,
+    "name": "Drape & Motion Shirt",
+    "price": 85,
+    "g": "tees",
+    "soldOut": false,
+    "hero": "item_46.jpg",
+    "aspect": "4/5",
+    "photos": [
+      "item_46.jpg",
+      "item_45.jpg",
+      "item_49.jpg"
+    ],
+    "desc": "Fluid drape studio shirt with raw edging and relaxed boxy cut.",
+    "shootTitle": "Shoot 18 \u2014 Motion Exploration",
+    "shootLocation": "Studio Editorial",
+    "material": "Fluid Cotton & Lyocell"
+  }
+]
