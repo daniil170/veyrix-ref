@@ -271,77 +271,43 @@ button, summary {
   pointer-events: auto;
 }
 
-/* Minimalist Clean Top Header (White Bar with Emblem) */
-.cf-header {
-  height: 60px;
-  background: #ffffff;
+/* Minimalist Floating Close Button on Dark Background */
+.cf-close-btn {
+  position: absolute;
+  top: calc(24px + env(safe-area-inset-top, 0px));
+  right: calc(28px + env(safe-area-inset-right, 0px));
+  z-index: 50;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
+  font-size: 18px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0 28px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  flex-shrink: 0;
-  z-index: 30;
-  transform: translateY(-100%);
-  opacity: 0;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
-}
-
-#shootModal.open .cf-header {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.cf-btn {
-  background: transparent;
-  border: none;
+  justify-content: center;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .08em;
-  color: var(--ink);
-  transition: opacity .2s;
-  padding: 8px 12px;
-}
-.cf-btn:hover { opacity: 0.6; }
-.cf-icon { font-size: 14px; }
-
-.cf-brand {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-}
-.cf-stars {
-  color: var(--ink);
-  display: block;
-}
-.cf-brand-name {
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--ink);
+  border-radius: 50%;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  transform: scale(0.8);
 }
 
-.cf-header-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+#shootModal.open .cf-close-btn {
+  opacity: 1;
+  transform: scale(1);
 }
-.cf-counter {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .08em;
-  color: var(--mut);
-  font-variant-numeric: tabular-nums;
+
+.cf-close-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: scale(1.08);
 }
-.cf-btn.close {
-  font-size: 16px;
-  padding: 6px 8px;
+
+.cf-close-btn:active {
+  transform: scale(0.92);
 }
 
 /* Cover-Flow Stage */
@@ -827,12 +793,12 @@ th { font-weight: 700; }
   .first { padding: calc(64px + env(safe-area-inset-top, 0px)) 16px 20px; }
   .rel { grid-template-columns: 1fr 1fr; }
 
-  .cf-header {
-    height: 54px;
-    padding: 0 16px;
-  }
-  .cf-brand-name {
-    display: none;
+  .cf-close-btn {
+    top: calc(16px + env(safe-area-inset-top, 0px));
+    right: calc(16px + env(safe-area-inset-right, 0px));
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
   }
   .cf-card {
     width: clamp(260px, 78vw, 340px);
@@ -908,41 +874,8 @@ th { font-weight: 700; }
 
 <!-- ================= 1. COVER-FLOW EDITORIAL GALLERY MODAL (VEYRIX STUDIO REF) ================= -->
 <div id="shootModal" role="dialog" aria-modal="true" aria-label="Editorial Gallery">
-  <!-- Minimalist Clean Top Header (White Bar with Emblem, exactly matching Veyrix ref) -->
-  <header class="cf-header">
-    <button class="cf-btn menu-btn" id="closeShootBtn" title="Back to 3D Space (Esc)">
-      <svg width="22" height="12" viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-        <line x1="1" y1="2" x2="21" y2="2"/>
-        <line x1="1" y1="10" x2="21" y2="10"/>
-      </svg>
-    </button>
-
-    <div class="cf-brand">
-      <svg class="cf-stars" width="46" height="18" viewBox="0 0 46 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-        <!-- 3 interconnected editorial stars -->
-        <g stroke-width="1.3">
-          <!-- Center Star (elevated) -->
-          <polygon points="23,1 25,6 30.5,6.5 26.5,10.2 27.8,15.5 23,12.6 18.2,15.5 19.5,10.2 15.5,6.5 21,6" />
-          <line x1="23" y1="2" x2="23" y2="14" stroke-width="1"/>
-          <line x1="17" y1="8" x2="29" y2="8" stroke-width="1"/>
-          <!-- Left Star -->
-          <polygon points="10,4.5 11.5,8 15.5,8.4 12.5,11.2 13.5,15.2 10,13 6.5,15.2 7.5,11.2 4.5,8.4 8.5,8" opacity="0.85" />
-          <!-- Right Star -->
-          <polygon points="36,4.5 37.5,8 41.5,8.4 38.5,11.2 39.5,15.2 36,13 32.5,15.2 33.5,11.2 30.5,8.4 34.5,8" opacity="0.85" />
-        </g>
-      </svg>
-    </div>
-
-    <div class="cf-header-right">
-      <button class="cf-btn search-btn" title="Search">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="7"/>
-          <line x1="16.5" y1="16.5" x2="22" y2="22"/>
-        </svg>
-      </button>
-      <button class="cf-btn close" id="cfCloseIcon" title="Close (Esc)">✕</button>
-    </div>
-  </header>
+  <!-- Minimalist Floating Close Button on Dark Cinematic Stage -->
+  <button class="cf-close-btn" id="closeShootBtn" title="Back to Space (Esc)">✕</button>
 
   <!-- Cover-Flow Stage -->
   <div class="cf-stage" id="cfStage">
