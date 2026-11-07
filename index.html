@@ -2969,11 +2969,12 @@ function frame(now) {
 
     // Dampen floating oscillation to 0 when hovered so card stays 100% still under mouse pointer
     const floatDamp = 1 - c.h;
-    const cardRadius = baseRadius * userZoom * c.rMult;
+    // Decoupled radius and exponential scale so photos visibly shrink and grow dramatically with zoom
+    const cardRadius = baseRadius * (0.55 + userZoom * 0.45) * c.rMult;
     const rFloat = cardRadius + (reduce ? 0 : Math.sin(t * c.s + c.p) * 7 * floatDamp);
 
-    // Dynamic zoom-dependent scale so photos physically shrink and grow with zoom
-    const zoomScale = Math.pow(userZoom, 0.88) * 0.48;
+    // Photos shrink down to mini-cards at min zoom, and expand large at max zoom
+    const zoomScale = Math.pow(userZoom, 1.35) * 0.48;
     c.el.style.transform = `rotateY(${c.th}rad) rotateX(${c.ph}rad) translateZ(${rFloat}px) scale(${zoomScale.toFixed(3)})`;
     c.el.style.zIndex = c.hov ? '99' : String(10 + Math.round((c.ph + 1.2) * 10));
   }
@@ -3015,7 +3016,7 @@ space.addEventListener('pointermove', e => {
     const pts = Array.from(activeTouches.values());
     const currentDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
     const scaleFactor = currentDist / initialPinchDist;
-    targetZoom = clamp(initialPinchZoom * scaleFactor, 0.45, 2.4);
+    targetZoom = clamp(initialPinchZoom * scaleFactor, 0.4, 2.5);
     last = performance.now();
     return;
   }
@@ -3053,18 +3054,31 @@ space.addEventListener('pointercancel', endPointer);
 
 space.addEventListener('wheel', e => {
   if (e.ctrlKey || e.metaKey) {
-    // Zoom only when Ctrl / Cmd is held (or trackpad pinch)
+    // Trackpad pinch-to-zoom or Ctrl+wheel
     e.preventDefault();
-    const zoomDelta = -e.deltaY * 0.0025;
-    targetZoom = clamp(targetZoom + zoomDelta, 0.45, 2.4);
+    const zoomDelta = -e.deltaY * 0.003;
+    targetZoom = clamp(targetZoom + zoomDelta, 0.4, 2.5);
     last = performance.now();
-  } else if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 1.5) {
-    // Horizontal wheel / swipe rotates horizontally
+    return;
+  }
+
+  // Horizontal trackpad swipe rotates horizontally
+  if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 1.4) {
     e.preventDefault();
     ry += e.deltaX * 0.003;
     last = performance.now();
+    return;
   }
-  // Vertical scroll without modifier is NOT prevented, allowing smooth page scroll up to Hero and down!
+
+  // Vertical wheel: zoom the 3D space directly!
+  const zoomDelta = -e.deltaY * 0.002;
+  if ((zoomDelta > 0 && targetZoom < 2.45) || (zoomDelta < 0 && targetZoom > 0.45)) {
+    e.preventDefault();
+    targetZoom = clamp(targetZoom + zoomDelta, 0.4, 2.5);
+    last = performance.now();
+  }
+  // When at minimum zoom (0.4) and scrolling UP, or at maximum zoom (2.5) and scrolling DOWN,
+  // allow natural page scroll to Hero or Footer!
 }, { passive: false });
 
 $('#btnZoomIn').addEventListener('click', () => { targetZoom = clamp(targetZoom + 0.25, 0.45, 2.4); });
