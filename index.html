@@ -183,9 +183,13 @@ button, summary {
   object-fit: cover;
   display: block;
   pointer-events: none;
-  background: #e0ded9;
+  background: transparent;
   border-radius: 0;
+  image-rendering: auto;
   image-rendering: -webkit-optimize-contrast;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 /* ================= Zoom Controls ================= */
@@ -2508,9 +2512,9 @@ const SHOOTS = [
     price: 50,
     g: "tees",
     soldOut: true,
-    hero: "tee_black.jpg",
+    hero: "mood_streetwear.jpg",
     aspect: "3/4",
-    photos: ["tee_black.jpg", "item_02.jpg", "item_08.jpg", "item_04.jpg"],
+    photos: ["mood_streetwear.jpg", "tee_black.jpg", "item_02.jpg", "item_08.jpg", "item_04.jpg"],
     desc: "Hand printed, treated, and distressed cotton jersey tee with vintage «Рождество» graphic.",
     shootTitle: "Shoot 01 — Christmas Tragedy Editorial",
     shootLocation: "Milan Studio Lab / Drop 01",
@@ -2536,9 +2540,9 @@ const SHOOTS = [
     price: 80,
     g: "ls",
     soldOut: true,
-    hero: "ls_black.jpg",
+    hero: "mood_lookbook_1.jpg",
     aspect: "3/4",
-    photos: ["ls_black.jpg", "item_14.jpg", "mood_lookbook_2.jpg", "item_44.jpg"],
+    photos: ["mood_lookbook_1.jpg", "ls_black.jpg", "item_14.jpg", "mood_lookbook_2.jpg", "item_44.jpg"],
     desc: "Distressed by hand one piece at a time. Blown out elbows and elongated cuffs.",
     shootTitle: "Shoot 03 — Anti Ballet Movement",
     shootLocation: "Milan Concrete Warehouse",
@@ -2718,9 +2722,9 @@ const SHOOTS = [
     price: 45,
     g: "acc",
     soldOut: false,
-    hero: "cap_charcoal.jpg",
-    aspect: "1/1",
-    photos: ["cap_charcoal.jpg", "item_37.jpg", "item_38.jpg", "tote_canvas.jpg"],
+    hero: "mood_lookbook_2.jpg",
+    aspect: "3/4",
+    photos: ["mood_lookbook_2.jpg", "cap_charcoal.jpg", "item_37.jpg", "item_38.jpg", "tote_canvas.jpg"],
     desc: "Washed chino twill cap with curved brim and brass hardware buckle.",
     shootTitle: "Shoot 16 — Everyday Accessories",
     shootLocation: "Studio Neutral",
@@ -2879,7 +2883,7 @@ function layout() {
   W = innerWidth;
   H = innerHeight;
   baseRadius = clamp(Math.min(W, H) * 0.52, 280, 480);
-  CW = clamp(W * 0.12, 95, 145);
+  CW = clamp(W * 0.25, 240, 360);
 
   I.forEach(it => {
     const w = CW * it.sc;
@@ -2969,7 +2973,7 @@ function frame(now) {
     const rFloat = cardRadius + (reduce ? 0 : Math.sin(t * c.s + c.p) * 7 * floatDamp);
 
     // Dynamic zoom-dependent scale so photos physically shrink and grow with zoom
-    const zoomScale = Math.pow(userZoom, 0.88);
+    const zoomScale = Math.pow(userZoom, 0.88) * 0.48;
     c.el.style.transform = `rotateY(${c.th}rad) rotateX(${c.ph}rad) translateZ(${rFloat}px) scale(${zoomScale.toFixed(3)})`;
     c.el.style.zIndex = c.hov ? '99' : String(10 + Math.round((c.ph + 1.2) * 10));
   }
